@@ -4,6 +4,7 @@ import { defineConfig } from 'vite';
 import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig({
+  base: '/TacticsBoard/',
   plugins: [
     react(),
     tailwindcss(),
