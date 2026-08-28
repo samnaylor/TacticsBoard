@@ -14,7 +14,7 @@ interface Props {
 const PitchHeader = ({ formation, onPlayers, onReset, onExport, setFormation }: Props) => {
   return (
     <header className="sticky top-0 z-50 border-b border-white/10 bg-[#0d1b14]/95 px-3 py-3 backdrop-blur">
-      <div className="mx-auto flex max-w-190 items-center justify-between gap-3">
+      <div className="mx-auto flex items-center justify-between gap-3">
         <div className="flex flex-row justify-center items-center gap-1.5">
           <select
             value={formation}
@@ -27,7 +27,10 @@ const PitchHeader = ({ formation, onPlayers, onReset, onExport, setFormation }: 
               </option>
             ))}
           </select>
+
         </div>
+
+        <input type="text" id="squad-title" placeholder="Title..." className="flex-1 rounded border border-white /25 bg-[#14261c] px-1.5 py-0.5 text-[13px] text-[#f1faf0] outline-none focus:border-[#e9c46a]" />
 
         <div className="flex shrink-0 items-center gap-1.5">
           <button

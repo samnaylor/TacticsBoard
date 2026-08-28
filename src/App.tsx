@@ -7,9 +7,9 @@ import { defaultNames, type Formation } from "./data";
 const App = () => {
   const [screen, setScreen] = useState<"pitch" | "players">("pitch");
   const [formation, setFormation] = useState<Formation>("4-4-2");
+  const [names, setNames] = useState(defaultNames);
 
-  const [names, setNames] =
-    useState(defaultNames);
+  // TODO - desktop export is broken
 
   const exportPng = async () => {
     const node =
@@ -17,8 +17,14 @@ const App = () => {
 
     if (!node) return;
 
+    let title = (document.getElementById("squad-title")! as HTMLInputElement).value;
+
+    if (title.trim() === "") {
+      title = "football-formation";
+    }
+
     const dataUrl = await toPng(node, {
-      pixelRatio: 3,
+      pixelRatio: 1,
       backgroundColor: "#1e4d3a",
       filter: (element) => {
         if (!(element instanceof Element)) {
@@ -31,7 +37,7 @@ const App = () => {
 
     const link = document.createElement("a");
 
-    link.download = "football-formation.png";
+    link.download = `${title}.png`;
     link.href = dataUrl;
 
     link.click();
