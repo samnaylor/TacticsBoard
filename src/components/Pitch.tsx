@@ -18,6 +18,42 @@ interface Props {
 
 const Pitch = ({ names, formation, onPlayers, onExport, setFormation }: Props) => {
   const [players, setPlayers] = useState(defaultPlayers);
+  const [selectedSlot, setSelectedSlot] = useState<string | null>(null);
+
+  const swapPlayers = (fromSlot: string, toSlot: string) => {
+    const from = getSlotIndex(fromSlot);
+    const to = getSlotIndex(toSlot);
+
+    if (from === -1 || to === -1) {
+      return;
+    }
+
+    setPlayers(current => {
+      const next = [...current];
+
+      [next[from], next[to]] = [next[to], next[from]];
+
+      return next;
+    });
+  };
+
+  const handlePlayerClick = (slotId: string) => {
+    console.log(`clicked on ${slotId}`);
+
+    switch (selectedSlot) {
+      case null:
+        setSelectedSlot(slotId);
+        break;
+
+      case slotId:
+        setSelectedSlot(null);
+        break;
+
+      default:
+        setSelectedSlot(null);
+        swapPlayers(selectedSlot, slotId);
+    }
+  };
 
   const getName = (playerNumber: number) => {
     return names[playerNumber - 1] ?? "";
@@ -50,23 +86,7 @@ const Pitch = ({ names, formation, onPlayers, onExport, setFormation }: Props) =
           return;
         }
 
-        const from = getSlotIndex(String(source!.id));
-        const to = getSlotIndex(String(target.id));
-
-        if (from === -1 || to === -1) {
-          return;
-        }
-
-        setPlayers((current) => {
-          const next = [...current];
-
-          [next[from], next[to]] = [
-            next[to],
-            next[from],
-          ];
-
-          return next;
-        });
+        swapPlayers(String(source!.id), String(target.id));
       }}
     >
 
@@ -99,6 +119,8 @@ const Pitch = ({ names, formation, onPlayers, onExport, setFormation }: Props) =
                     slotId={`pitch-${index}`}
                     name={getName(player)}
                     position={slot}
+                    selected={selectedSlot === `pitch-${index}`}
+                    onClick={() => handlePlayerClick(`pitch-${index}`)}
                   />
                 );
               })}
@@ -106,9 +128,11 @@ const Pitch = ({ names, formation, onPlayers, onExport, setFormation }: Props) =
 
             <div className="mt-3 w-full md:w-1/5">
               <Bench
-                players={players.slice(11)}
+                players={players}
                 setPlayers={setPlayers}
                 getName={getName}
+                selectedSlot={selectedSlot}
+                onPlayerClick={handlePlayerClick}
               />
             </div>
           </div>

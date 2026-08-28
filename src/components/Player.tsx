@@ -6,9 +6,11 @@ interface Props {
   slotId: string;
   position?: { x: number; y: number; };
   compact?: boolean;
+  selected?: boolean;
+  onClick?: () => void;
 };
 
-const Player = ({ id, name, slotId, position, compact = false }: Props) => {
+const Player = ({ id, name, slotId, position, compact = false, selected = false, onClick = () => { } }: Props) => {
   const { ref: draggableRef } = useDraggable({ id: slotId });
   const { ref: droppableRef } = useDroppable({ id: slotId });
 
@@ -19,11 +21,16 @@ const Player = ({ id, name, slotId, position, compact = false }: Props) => {
         droppableRef(node);
       }}
 
+      onClick={onClick}
+
       className={[
-        "group select-none flex items-center justify-center flex-col",
+        "group select-none flex items-center justify-center flex-col p-1",
         position
           ? "absolute z-10 -translate-x-1/2 -translate-y-1/2"
           : "relative flex shrink-0 flex-col items-center",
+        selected
+          ? "ring-4 ring-[#c59154]/60 rounded-md"
+          : ""
       ].join(" ")}
 
       style={
@@ -36,7 +43,7 @@ const Player = ({ id, name, slotId, position, compact = false }: Props) => {
       <div
         className={[
           "relative flex cursor-grab items-center justify-center",
-          "rounded-full border-2 border-amber-300 bg-blue-600",
+          "rounded-full border-2 border-[#c59154] bg-[#020165]",
           "font-bold text-white shadow-[0_3px_10px_rgba(0,0,0,.35)]",
           "transition-transform active:scale-95",
           compact

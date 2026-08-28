@@ -4,11 +4,13 @@ import Player from "./Player";
 interface Props {
   players: number[];
   setPlayers: React.Dispatch<React.SetStateAction<number[]>>;
-
   getName: (player: number) => string;
+
+  selectedSlot: string | null;
+  onPlayerClick: (slotId: string) => void;
 }
 
-const Bench = ({ players, setPlayers, getName }: Props) => {
+const Bench = ({ players, setPlayers, getName, selectedSlot, onPlayerClick }: Props) => {
   return (
     <section className="w-full">
       <div className="mb-2 flex items-end justify-between px-1">
@@ -20,18 +22,24 @@ const Bench = ({ players, setPlayers, getName }: Props) => {
 
             <div data-export-ignore className="flex items-center justify-center">
               <button
-                disabled={players.length >= 5}
+                disabled={players.length >= 16}
                 onClick={() => setPlayers(players => {
                   if (players.length >= 16) {
                     return players;
                   }
 
-                  return [...players, players[players.length - 1] + 1];
+                  const nextNumber = [12, 13, 14, 15, 16].find(number => !players.includes(number));
+
+                  if (!nextNumber) {
+                    return players;
+                  }
+
+                  return [...players, nextNumber];
                 })}
                 className="rounded-lg px-2 py-2 text-md font-extrabold text-white/50 transition hover:bg-white/10 hover:text-white disabled:cursor-not-allowed disabled:opacity-20">+</button>
 
               <span className="min-w-8 text-center text-[10px] font-bold tabular-nums text-white/40">
-                {players.length}/5
+                {players.length - 11}/5
               </span>
 
               <button
@@ -49,17 +57,20 @@ const Bench = ({ players, setPlayers, getName }: Props) => {
         </div>
       </div>
 
-      <div className="flex w-fullflex-row md:flex-col min-h-22 items-center justify-center gap-5 overflow-x-auto rounded-xl border border-white/10 bg-black/10 px-4 py-3">
-        {players.map((player, index) => (
-          <Player
-            key={index}
-            id={12 + index}
-            slotId={`bench-${index}`}
-            name={getName(player)}
-            compact
-          />
-        ))}
-      </div>
+      {players.length > 11 &&
+        <div className="flex w-fullflex-row md:flex-col min-h-22 items-center justify-center gap-5 overflow-x-auto rounded-xl border border-white/10 bg-black/10 px-4 py-3">
+          {players.slice(11).map((player, index) => (
+            <Player
+              key={index}
+              id={player}
+              slotId={`bench-${index}`}
+              name={getName(player)}
+              selected={selectedSlot === `bench-${index}`}
+              onClick={() => onPlayerClick(`bench-${index}`)}
+            />
+          ))}
+        </div>
+      }
     </section >
   );
 };
