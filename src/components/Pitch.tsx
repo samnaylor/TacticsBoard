@@ -5,6 +5,7 @@ import PitchHeader from "./PitchHeader";
 import PitchMarkings from "./PitchMarkings";
 import Player from "./Player";
 import { defaultPlayers, formations, type Formation } from "../data";
+import logo from "../assets/addinghamfc.png";
 
 interface Props {
   names: string[];
@@ -108,6 +109,12 @@ const Pitch = ({ names, formation, onPlayers, onExport, setFormation }: Props) =
               <div className="pointer-events-none absolute inset-0 z-1 bg-[radial-gradient(circle_at_50%_18%,rgba(255,255,255,.07),transparent_35%)]" />
 
               <PitchMarkings />
+
+              <img
+                src={logo}
+                className="pointer-events-none absolute left-1/2 top-1/2 z-0 w-full -translate-x-1/2 -translate-y-1/2 opacity-10"
+                draggable={false}
+              />
 
               {formations[formation].map((slot, index) => {
                 const player = players[index];

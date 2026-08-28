@@ -1,5 +1,6 @@
 import type React from "react";
 import { formations, type Formation } from "../data";
+import logo from "../assets/addinghamfc.png";
 
 interface Props {
   formation: string;
@@ -14,7 +15,9 @@ interface Props {
 const PitchHeader = ({ formation, onPlayers, onReset, onExport, setFormation }: Props) => {
   return (
     <header className="sticky top-0 z-50 border-b border-white/10 bg-[#0d1b14]/95 px-3 py-3 backdrop-blur">
-      <div className="mx-auto flex items-center justify-between gap-3">
+      <div className="mx-auto max-w-190 flex items-center justify-between gap-3">
+        <img src={logo} draggable={false} className="w-8 h-8" />
+
         <div className="flex flex-row justify-center items-center gap-1.5">
           <select
             value={formation}

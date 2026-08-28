@@ -1,5 +1,6 @@
 import type React from "react";
 import { defaultNames } from "../data";
+import logo from "../assets/addinghamfc.png";
 
 interface Props {
   setNames: React.Dispatch<React.SetStateAction<string[]>>;
@@ -10,6 +11,8 @@ const PlayerEditorHeader = ({ setNames, onBack }: Props) => {
   return (
     <header className="sticky top-0 z-50 border-b border-white/10 bg-[#0d1b14]/95 px-3 py-3 backdrop-blur">
       <div className="mx-auto flex max-w-190 items-center justify-between gap-3">
+        <img src={logo} draggable={false} className="w-8 h-8" />
+
         <div className="flex flex-row justify-center items-center gap-1.5" />
 
         <div className="flex shrink-0 items-center gap-1.5">
