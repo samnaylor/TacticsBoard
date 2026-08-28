@@ -58,7 +58,7 @@ const Bench = ({ players, setPlayers, getName, selectedSlot, onPlayerClick }: Pr
       </div>
 
       {players.length > 11 &&
-        <div className="flex w-fullflex-row md:flex-col min-h-22 items-center justify-center gap-5 overflow-x-auto rounded-xl border border-white/10 bg-black/10 px-4 py-3">
+        <div className="flex w-full flex-row md:flex-col min-h-22 items-center justify-center gap-5 overflow-x-auto rounded-xl border border-white/10 bg-black/10 px-4 py-3">
           {players.slice(11).map((player, index) => (
             <Player
               key={index}
