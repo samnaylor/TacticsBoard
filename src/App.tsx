@@ -2,10 +2,11 @@ import { toPng } from "html-to-image";
 import { useState } from "react";
 import Pitch from "./components/Pitch";
 import PlayerEditor from "./components/PlayerEditor";
-import { defaultNames } from "./data";
+import { defaultNames, type Formation } from "./data";
 
 const App = () => {
   const [screen, setScreen] = useState<"pitch" | "players">("pitch");
+  const [formation, setFormation] = useState<Formation>("4-4-2");
 
   const [names, setNames] =
     useState(defaultNames);
@@ -41,8 +42,10 @@ const App = () => {
       {screen === "pitch" ? (
         <Pitch
           names={names}
+          formation={formation}
           onPlayers={() => setScreen("players")}
           onExport={exportPng}
+          setFormation={setFormation}
         />
       ) : (
         <PlayerEditor

@@ -1,22 +1,25 @@
 import { DragDropProvider } from "@dnd-kit/react";
-import { useState } from "react";
+import React, { useState } from "react";
 import Bench from "./Bench";
 import Header from "./Header";
 import PitchMarkings from "./PitchMarkings";
 import Player from "./Player";
-import { defaultPlayers, formations } from "../data";
+import { defaultPlayers, formations, type Formation } from "../data";
 
 interface Props {
   names: string[];
+  formation: Formation;
+
   onPlayers: () => void;
   onExport: () => void;
+
+  setFormation: React.Dispatch<React.SetStateAction<Formation>>;
 }
 
 // TODO: state - formation changes when we come back from the players name screen
 
-const Pitch = ({ names, onPlayers, onExport }: Props) => {
+const Pitch = ({ names, formation, onPlayers, onExport, setFormation }: Props) => {
   const [players, setPlayers] = useState(defaultPlayers);
-  const [formation, setFormation] = useState<"4-4-2" | "4-2-3-1">("4-4-2");
 
   const getName = (playerNumber: number) => {
     return names[playerNumber - 1] ?? "";

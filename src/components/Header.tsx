@@ -1,5 +1,5 @@
 import type React from "react";
-import { formations } from "../data";
+import { formations, type Formation } from "../data";
 
 interface Props {
   formation: string;
@@ -8,7 +8,7 @@ interface Props {
   onReset: () => void;
   onExport: () => void;
 
-  setFormation: React.Dispatch<React.SetStateAction<"4-4-2" | "4-2-3-1">>;
+  setFormation: React.Dispatch<React.SetStateAction<Formation>>;
 }
 
 const Header = ({ formation, onPlayers, onReset, onExport, setFormation }: Props) => {
@@ -18,7 +18,7 @@ const Header = ({ formation, onPlayers, onReset, onExport, setFormation }: Props
         <div className="flex flex-row justify-center items-center gap-1.5">
           <select
             value={formation}
-            onChange={(event) => setFormation(event.target.value as "4-4-2" | "4-2-3-1")}
+            onChange={(event) => setFormation(event.target.value as Formation)}
             className="w-full rounded border border-white/25 bg-[#14261c] px-1.5 py-0.5 text-[13px] text-[#f1faf0] outline-none focus:border-[#e9c46a]"
           >
             {Object.keys(formations).map((name) => (
