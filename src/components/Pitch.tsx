@@ -79,10 +79,10 @@ const Pitch = ({ names, formation, onPlayers, onExport, setFormation }: Props) =
         setFormation={setFormation}
       />
 
-      <main className="mx-auto flex w-full max-w-190 flex-col items-center gap-5 px-3 py-4 sm:px-5">
+      <main className="mx-auto flex w-full max-w-190 items-center justify-center gap-5 px-3 py-4 sm:px-5">
         <div
           id="formation-export"
-          className="w-full max-w-130 py-2"
+          className="w-full max-w-130 py-2 flex flex-col md:flex-row gap-4"
         >
           <div className="relative aspect-2/3 w-full overflow-hidden rounded-2xl bg-[#1e4d3a] shadow-[0_12px_40px_rgba(0,0,0,.35)]">
             <div className="pointer-events-none absolute inset-0 z-1 bg-[radial-gradient(circle_at_50%_18%,rgba(255,255,255,.07),transparent_35%)]" />
@@ -104,7 +104,7 @@ const Pitch = ({ names, formation, onPlayers, onExport, setFormation }: Props) =
             })}
           </div>
 
-          <div className="mt-3 w-full">
+          <div className="mt-3 w-full md:w-1/6">
             <Bench
               players={players.slice(11)}
               setPlayers={setPlayers}
@@ -113,7 +113,7 @@ const Pitch = ({ names, formation, onPlayers, onExport, setFormation }: Props) =
           </div>
         </div>
       </main>
-    </DragDropProvider>
+    </DragDropProvider >
   );
 };
 

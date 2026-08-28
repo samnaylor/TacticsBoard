@@ -13,12 +13,12 @@ const Bench = ({ players, setPlayers, getName }: Props) => {
     <section className="w-full">
       <div className="mb-2 flex items-end justify-between px-1">
         <div className="w-full">
-          <div className="flex w-full items-center justify-between">
+          <div className="flex flex-row md:flex-col w-full items-center justify-between">
             <h2 className="text-md font-bold uppercase tracking-wider">
               Bench
             </h2>
 
-            <div data-export-ignore className="flex gap-1.5 items-center">
+            <div data-export-ignore className="flex gap-1.5 items-center justify-center">
               <button
                 disabled={players.length >= 5}
                 onClick={() => setPlayers(players => {
@@ -49,7 +49,7 @@ const Bench = ({ players, setPlayers, getName }: Props) => {
         </div>
       </div>
 
-      <div className="flex min-h-22 items-center justify-center gap-5 overflow-x-auto rounded-xl border border-white/10 bg-black/10 px-4 py-3">
+      <div className="flex w-fullflex-row md:flex-col min-h-22 items-center justify-center gap-5 overflow-x-auto rounded-xl border border-white/10 bg-black/10 px-4 py-3">
         {players.map((player, index) => (
           <Player
             key={index}
