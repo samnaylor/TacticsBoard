@@ -5,12 +5,11 @@ interface Props {
   name: string;
   slotId: string;
   position?: { x: number; y: number; };
-  compact?: boolean;
   selected?: boolean;
   onClick?: () => void;
 };
 
-const Player = ({ id, name, slotId, position, compact = false, selected = false, onClick = () => { } }: Props) => {
+const Player = ({ id, name, slotId, position, selected = false, onClick = () => { } }: Props) => {
   const { ref: draggableRef } = useDraggable({ id: slotId });
   const { ref: droppableRef } = useDroppable({ id: slotId });
 
@@ -46,9 +45,7 @@ const Player = ({ id, name, slotId, position, compact = false, selected = false,
           "rounded-full border-2 border-[#c59154] bg-[#020165]",
           "font-bold text-white shadow-[0_3px_10px_rgba(0,0,0,.35)]",
           "transition-transform active:scale-95",
-          compact
-            ? "h-9 w-9 text-xs"
-            : "h-10 w-10 text-sm sm:h-11 sm:w-11 sm:text-base",
+          "h-10 w-10 text-sm sm:h-11 sm:w-11 sm:text-base",
         ].join(" ")}
       >
         {id}
