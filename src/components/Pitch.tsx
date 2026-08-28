@@ -1,7 +1,7 @@
 import { DragDropProvider } from "@dnd-kit/react";
 import React, { useState } from "react";
 import Bench from "./Bench";
-import Header from "./Header";
+import PitchHeader from "./PitchHeader";
 import PitchMarkings from "./PitchMarkings";
 import Player from "./Player";
 import { defaultPlayers, formations, type Formation } from "../data";
@@ -15,8 +15,6 @@ interface Props {
 
   setFormation: React.Dispatch<React.SetStateAction<Formation>>;
 }
-
-// TODO: state - formation changes when we come back from the players name screen
 
 const Pitch = ({ names, formation, onPlayers, onExport, setFormation }: Props) => {
   const [players, setPlayers] = useState(defaultPlayers);
@@ -71,48 +69,51 @@ const Pitch = ({ names, formation, onPlayers, onExport, setFormation }: Props) =
         });
       }}
     >
-      <Header
-        formation={formation}
-        onPlayers={onPlayers}
-        onReset={resetFormation}
-        onExport={onExport}
-        setFormation={setFormation}
-      />
 
-      <main className="mx-auto flex w-full max-w-190 items-center justify-center gap-5 px-3 py-4 sm:px-5">
-        <div
-          id="formation-export"
-          className="w-full max-w-130 py-2 flex flex-col md:flex-row gap-4"
-        >
-          <div className="relative aspect-2/3 w-full overflow-hidden rounded-2xl bg-[#1e4d3a] shadow-[0_12px_40px_rgba(0,0,0,.35)]">
-            <div className="pointer-events-none absolute inset-0 z-1 bg-[radial-gradient(circle_at_50%_18%,rgba(255,255,255,.07),transparent_35%)]" />
+      <div className="flex min-h-dvh flex-col bg-[#0d1b14] font-body text-[#f1faf0]">
+        <PitchHeader
+          formation={formation}
+          onPlayers={onPlayers}
+          onReset={resetFormation}
+          onExport={onExport}
+          setFormation={setFormation}
+        />
 
-            <PitchMarkings />
+        <main className="mx-auto flex-1 flex w-full max-w-190 items-center justify-center gap-5 px-3 py-4 sm:px-5">
+          <div
+            id="formation-export"
+            className="w-full max-w-130 md:max-w-[70%] flex flex-col md:flex-row md:gap-4 p-2"
+          >
+            <div className="relative aspect-2/3 w-full overflow-hidden rounded-2xl bg-[#1e4d3a] shadow-[0_12px_40px_rgba(0,0,0,.35)]">
+              <div className="pointer-events-none absolute inset-0 z-1 bg-[radial-gradient(circle_at_50%_18%,rgba(255,255,255,.07),transparent_35%)]" />
 
-            {formations[formation].map((slot, index) => {
-              const player = players[index];
+              <PitchMarkings />
 
-              return (
-                <Player
-                  key={slot.number}
-                  id={slot.number}
-                  slotId={`pitch-${index}`}
-                  name={getName(player)}
-                  position={slot}
-                />
-              );
-            })}
+              {formations[formation].map((slot, index) => {
+                const player = players[index];
+
+                return (
+                  <Player
+                    key={slot.number}
+                    id={slot.number}
+                    slotId={`pitch-${index}`}
+                    name={getName(player)}
+                    position={slot}
+                  />
+                );
+              })}
+            </div>
+
+            <div className="mt-3 w-full md:w-1/5">
+              <Bench
+                players={players.slice(11)}
+                setPlayers={setPlayers}
+                getName={getName}
+              />
+            </div>
           </div>
-
-          <div className="mt-3 w-full md:w-1/6">
-            <Bench
-              players={players.slice(11)}
-              setPlayers={setPlayers}
-              getName={getName}
-            />
-          </div>
-        </div>
-      </main>
+        </main>
+      </div>
     </DragDropProvider >
   );
 };

@@ -11,7 +11,7 @@ interface Props {
   setFormation: React.Dispatch<React.SetStateAction<Formation>>;
 }
 
-const Header = ({ formation, onPlayers, onReset, onExport, setFormation }: Props) => {
+const PitchHeader = ({ formation, onPlayers, onReset, onExport, setFormation }: Props) => {
   return (
     <header className="sticky top-0 z-50 border-b border-white/10 bg-[#0d1b14]/95 px-3 py-3 backdrop-blur">
       <div className="mx-auto flex max-w-190 items-center justify-between gap-3">
@@ -56,4 +56,4 @@ const Header = ({ formation, onPlayers, onReset, onExport, setFormation }: Props
   );
 };
 
-export default Header;
+export default PitchHeader;

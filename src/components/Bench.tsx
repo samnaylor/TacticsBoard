@@ -18,7 +18,7 @@ const Bench = ({ players, setPlayers, getName }: Props) => {
               Bench
             </h2>
 
-            <div data-export-ignore className="flex gap-1.5 items-center justify-center">
+            <div data-export-ignore className="flex items-center justify-center">
               <button
                 disabled={players.length >= 5}
                 onClick={() => setPlayers(players => {
