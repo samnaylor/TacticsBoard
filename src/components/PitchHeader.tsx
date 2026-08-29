@@ -16,9 +16,10 @@ const PitchHeader = ({ formation, onPlayers, onReset, onExport, setFormation }: 
   return (
     <header className="sticky top-0 z-50 border-b border-white/10 bg-[#0d1b14]/95 px-3 py-3 backdrop-blur">
       <div className="mx-auto max-w-190 flex items-center justify-between gap-3">
-        <img src={logo} draggable={false} className="w-8 h-8" />
 
         <div className="flex flex-row justify-center items-center gap-1.5">
+          <img src={logo} draggable={false} className="w-8 h-8" />
+
           <select
             value={formation}
             onChange={(event) => setFormation(event.target.value as Formation)}
@@ -32,8 +33,6 @@ const PitchHeader = ({ formation, onPlayers, onReset, onExport, setFormation }: 
           </select>
 
         </div>
-
-        <input type="text" id="squad-title" placeholder="Title..." className="flex-1 rounded border border-white /25 bg-[#14261c] px-1.5 py-0.5 text-[13px] text-[#f1faf0] outline-none focus:border-[#e9c46a]" />
 
         <div className="flex shrink-0 items-center gap-1.5">
           <button

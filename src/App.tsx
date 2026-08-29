@@ -17,12 +17,6 @@ const App = () => {
 
     if (!node) return;
 
-    let title = (document.getElementById("squad-title")! as HTMLInputElement).value;
-
-    if (title.trim() === "") {
-      title = "football-formation";
-    }
-
     const dataUrl = await toPng(node, {
       pixelRatio: 1,
       backgroundColor: "#1e4d3a",
@@ -37,7 +31,7 @@ const App = () => {
 
     const link = document.createElement("a");
 
-    link.download = `${title}.png`;
+    link.download = `football-squad.png`;
     link.href = dataUrl;
 
     link.click();
