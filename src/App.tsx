@@ -18,7 +18,7 @@ const App = () => {
     if (!node) return;
 
     const dataUrl = await toPng(node, {
-      pixelRatio: 1,
+      pixelRatio: 3,
       backgroundColor: "#1e4d3a",
       filter: (element) => {
         if (!(element instanceof Element)) {

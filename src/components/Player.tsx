@@ -53,7 +53,7 @@ const Player = ({ id, name, slotId, position, selected = false, onClick = () => 
         <div className="absolute inset-0 rounded-full border border-white/20" />
       </div>
 
-      <div className="mt-1 max-w-24 truncate rounded-md bg-[#092016]/90 px-1.5 py-0.5 text-[9px] font-semibold leading-tight text-[#f1faf0] shadow-sm sm:max-w-28 sm:text-[10px]">
+      <div className="mt-1 max-w-24 truncate rounded-md bg-[#092016]/90 px-1.5 py-0.5 text-[8px] font-semibold leading-tight text-[#f1faf0] shadow-sm sm:max-w-28 sm:text-[10px]">
         {name}
       </div>
 
