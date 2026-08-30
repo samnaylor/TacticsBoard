@@ -1,9 +1,7 @@
-import type React from "react";
 import Player from "./Player";
+import { useTacticsState } from "../store/tactics";
 
 interface Props {
-  players: number[];
-  setPlayers: React.Dispatch<React.SetStateAction<number[]>>;
   getName: (player: number) => string;
 
   selectedSlot: string | null;
@@ -11,7 +9,10 @@ interface Props {
   handleEditPlayer: (playerNumber: number) => void;
 }
 
-const Bench = ({ players, setPlayers, getName, selectedSlot, onPlayerClick, handleEditPlayer }: Props) => {
+const Bench = ({ getName, selectedSlot, onPlayerClick, handleEditPlayer }: Props) => {
+  const players = useTacticsState(state => state.players);
+  const setPlayers = useTacticsState(state => state.setPlayers);
+
   return (
     <section className="w-full">
       <div className="mb-2 flex items-end justify-between px-1">
@@ -24,7 +25,7 @@ const Bench = ({ players, setPlayers, getName, selectedSlot, onPlayerClick, hand
             <div data-export-ignore className="flex items-center justify-center">
               <button
                 disabled={players.length >= 16}
-                onClick={() => setPlayers(players => {
+                onClick={() => {
                   if (players.length >= 16) {
                     return players;
                   }
@@ -35,8 +36,8 @@ const Bench = ({ players, setPlayers, getName, selectedSlot, onPlayerClick, hand
                     return players;
                   }
 
-                  return [...players, nextNumber];
-                })}
+                  setPlayers([...players, nextNumber]);
+                }}
                 className="rounded-lg px-2 py-2 text-md font-extrabold text-white/50 transition hover:bg-white/10 hover:text-white disabled:cursor-not-allowed disabled:opacity-20">+</button>
 
               <span className="min-w-8 text-center text-[10px] font-bold tabular-nums text-white/40">
@@ -45,20 +46,21 @@ const Bench = ({ players, setPlayers, getName, selectedSlot, onPlayerClick, hand
 
               <button
                 disabled={players.length <= 0}
-                onClick={() => setPlayers(players => {
+                onClick={() => {
                   if (players.length <= 11) {
                     return players;
                   }
 
-                  return players.slice(0, -1);
-                })}
+                  setPlayers(players.slice(0, -1));
+                }}
                 className="rounded-lg px-2 py-2 text-md font-extrabold text-white/50 transition hover:bg-white/10 hover:text-white disabled:cursor-not-allowed disabled:opacity-20">-</button>
             </div>
           </div>
         </div>
       </div>
 
-      {players.length > 11 &&
+      {
+        players.length > 11 &&
         <div className="flex w-full flex-row md:flex-col min-h-22 items-center justify-center gap-5 overflow-x-hidden rounded-xl border border-white/10 bg-black/10 px-4 py-3">
           {players.slice(11).map((player, index) => (
             <Player

@@ -16,9 +16,11 @@ interface Props {
 const Pitch = ({ onExport }: Props) => {
   const formation = useTacticsState(state => state.formation);
   const names = useTacticsState(state => state.names);
-  const setNames = useTacticsState(state => state.setNames);
+  const players = useTacticsState(state => state.players);
 
-  const [players, setPlayers] = useState(defaultPlayers);
+  const setNames = useTacticsState(state => state.setNames);
+  const setPlayers = useTacticsState(state => state.setPlayers);
+
   const [selectedSlot, setSelectedSlot] = useState<string | null>(null);
   const [editingPlayer, setEditingPlayer] = useState<number | null>(null);
 
@@ -32,13 +34,11 @@ const Pitch = ({ onExport }: Props) => {
       return;
     }
 
-    setPlayers(current => {
-      const next = [...current];
+    const next = [...players];
 
-      [next[from], next[to]] = [next[to], next[from]];
+    [next[from], next[to]] = [next[to], next[from]];
 
-      return next;
-    });
+    setPlayers(next);
   };
 
   const handlePlayerClick = (slotId: string) => {
@@ -154,8 +154,6 @@ const Pitch = ({ onExport }: Props) => {
 
             <div className="mt-3 w-full md:w-1/5">
               <Bench
-                players={players}
-                setPlayers={setPlayers}
                 getName={getName}
                 selectedSlot={selectedSlot}
                 onPlayerClick={handlePlayerClick}
