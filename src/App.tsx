@@ -2,14 +2,13 @@ import { toPng } from "html-to-image";
 import { useState } from "react";
 import Pitch from "./components/Pitch";
 import PlayerEditor from "./components/PlayerEditor";
-import { defaultNames, type Formation } from "./data";
+import { defaultNames } from "./data";
 import Footer from "./components/Footer";
 import { useTacticsState } from "./store/tactics";
 
 const App = () => {
   const screen = useTacticsState(state => state.screen);
 
-  const [formation, setFormation] = useState<Formation>("4-4-2");
   const [names, setNames] = useState(defaultNames);
 
   // TODO - desktop export is broken
@@ -46,9 +45,7 @@ const App = () => {
         {screen === "pitch" ? (
           <Pitch
             names={names}
-            formation={formation}
             onExport={exportPng}
-            setFormation={setFormation}
             setNames={setNames}
           />
         ) : (

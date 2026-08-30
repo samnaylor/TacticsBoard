@@ -4,22 +4,21 @@ import Bench from "./Bench";
 import PitchHeader from "./PitchHeader";
 import PitchMarkings from "./PitchMarkings";
 import Player from "./Player";
-import { defaultPlayers, formations, type Formation } from "../data";
+import { defaultPlayers, formations } from "../data";
 import logo from "../assets/addinghamfc.png";
 import EditPlayerModal from "./EditPlayerModal";
 import { useTacticsState } from "../store/tactics";
 
 interface Props {
   names: string[];
-  formation: Formation;
-
   onExport: () => void;
 
   setNames: React.Dispatch<React.SetStateAction<string[]>>;
-  setFormation: React.Dispatch<React.SetStateAction<Formation>>;
 }
 
-const Pitch = ({ names, formation, onExport, setNames, setFormation }: Props) => {
+const Pitch = ({ names, onExport, setNames }: Props) => {
+  const formation = useTacticsState(state => state.formation);
+
   const [players, setPlayers] = useState(defaultPlayers);
   const [selectedSlot, setSelectedSlot] = useState<string | null>(null);
   const [editingPlayer, setEditingPlayer] = useState<number | null>(null);
@@ -117,11 +116,9 @@ const Pitch = ({ names, formation, onExport, setNames, setFormation }: Props) =>
 
       <div className="flex min-h-0 w-full flex-1 flex-col overflow-hidden bg-[#0d1b14] font-body text-[#f1faf0]">
         <PitchHeader
-          formation={formation}
           onPlayers={() => setScreen("players")}
           onReset={resetFormation}
           onExport={onExport}
-          setFormation={setFormation}
         />
 
         <main className="mx-auto flex w-full max-w-190 flex-1 min-w-0 items-center justify-center gap-5 px-3 py-4 sm:px-5">
