@@ -8,9 +8,10 @@ interface Props {
 
   selectedSlot: string | null;
   onPlayerClick: (slotId: string) => void;
+  handleEditPlayer: (playerNumber: number) => void;
 }
 
-const Bench = ({ players, setPlayers, getName, selectedSlot, onPlayerClick }: Props) => {
+const Bench = ({ players, setPlayers, getName, selectedSlot, onPlayerClick, handleEditPlayer }: Props) => {
   return (
     <section className="w-full">
       <div className="mb-2 flex items-end justify-between px-1">
@@ -67,6 +68,7 @@ const Bench = ({ players, setPlayers, getName, selectedSlot, onPlayerClick }: Pr
               name={getName(player)}
               selected={selectedSlot === `bench-${index}`}
               onClick={() => onPlayerClick(`bench-${index}`)}
+              onEdit={() => handleEditPlayer(player)}
             />
           ))}
         </div>

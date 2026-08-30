@@ -1,4 +1,5 @@
 import { useDraggable, useDroppable } from "@dnd-kit/react";
+import { useRef } from "react";
 
 interface Props {
   id: number;
@@ -7,11 +8,29 @@ interface Props {
   position?: { x: number; y: number; };
   selected?: boolean;
   onClick?: () => void;
+
+  onEdit: () => void;
 };
 
-const Player = ({ id, name, slotId, position, selected = false, onClick = () => { } }: Props) => {
+const Player = ({ id, name, slotId, position, selected = false, onClick = () => { }, onEdit }: Props) => {
   const { ref: draggableRef } = useDraggable({ id: slotId });
   const { ref: droppableRef } = useDroppable({ id: slotId });
+
+  const longPressTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const handlePointerDown = () => {
+    longPressTimer.current = setTimeout(() => {
+      onEdit();
+      longPressTimer.current = null;
+    }, 500);
+  };
+
+  const handlePointerUp = () => {
+    if (longPressTimer.current) {
+      clearTimeout(longPressTimer.current);
+      longPressTimer.current = null;
+    }
+  }
 
   return (
     <div
@@ -19,6 +38,11 @@ const Player = ({ id, name, slotId, position, selected = false, onClick = () => 
         draggableRef(node);
         droppableRef(node);
       }}
+
+      onPointerDown={handlePointerDown}
+      onPointerUp={handlePointerUp}
+      onPointerCancel={handlePointerUp}
+      onPointerLeave={handlePointerUp}
 
       onClick={onClick}
 

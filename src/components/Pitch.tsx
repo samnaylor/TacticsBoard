@@ -6,6 +6,7 @@ import PitchMarkings from "./PitchMarkings";
 import Player from "./Player";
 import { defaultPlayers, formations, type Formation } from "../data";
 import logo from "../assets/addinghamfc.png";
+import EditPlayerModal from "./EditPlayerModal";
 
 interface Props {
   names: string[];
@@ -14,12 +15,14 @@ interface Props {
   onPlayers: () => void;
   onExport: () => void;
 
+  setNames: React.Dispatch<React.SetStateAction<string[]>>;
   setFormation: React.Dispatch<React.SetStateAction<Formation>>;
 }
 
-const Pitch = ({ names, formation, onPlayers, onExport, setFormation }: Props) => {
+const Pitch = ({ names, formation, onPlayers, onExport, setNames, setFormation }: Props) => {
   const [players, setPlayers] = useState(defaultPlayers);
   const [selectedSlot, setSelectedSlot] = useState<string | null>(null);
+  const [editingPlayer, setEditingPlayer] = useState<number | null>(null);
 
   const swapPlayers = (fromSlot: string, toSlot: string) => {
     const from = getSlotIndex(fromSlot);
@@ -76,6 +79,25 @@ const Pitch = ({ names, formation, onPlayers, onExport, setFormation }: Props) =
     setPlayers(defaultPlayers);
   };
 
+  const handleEditPlayer = (playerNumber: number) => {
+    setSelectedSlot(null);
+    setEditingPlayer(playerNumber);
+  };
+
+  const handleSavePlayerName = (name: string) => {
+    if (editingPlayer === null) {
+      return;
+    }
+
+    setNames(current => {
+      const next = [...current];
+
+      next[editingPlayer - 1] = name;
+
+      return next;
+    })
+  }
+
   return (
     <DragDropProvider
       onDragEnd={(event) => {
@@ -91,7 +113,7 @@ const Pitch = ({ names, formation, onPlayers, onExport, setFormation }: Props) =
       }}
     >
 
-      <div className="flex min-h-dvh flex-col bg-[#0d1b14] font-body text-[#f1faf0]">
+      <div className="flex min-h-dvh w-full overflow-hidden flex-col bg-[#0d1b14] font-body text-[#f1faf0]">
         <PitchHeader
           formation={formation}
           onPlayers={onPlayers}
@@ -100,10 +122,10 @@ const Pitch = ({ names, formation, onPlayers, onExport, setFormation }: Props) =
           setFormation={setFormation}
         />
 
-        <main className="mx-auto flex-1 flex w-full max-w-190 items-center justify-center gap-5 px-3 py-4 sm:px-5">
+        <main className="mx-auto flex w-full max-w-190 flex-1 min-w-0 items-center justify-center gap-5 px-3 py-4 sm:px-5">
           <div
             id="formation-export"
-            className="w-full max-w-130 md:max-w-[70%] flex flex-col md:flex-row md:gap-4 p-2"
+            className="flex w-full max-w-130 min-w-0 flex-col p-2 md:max-w-[70%] md:flex-row md:gap-4"
           >
             <div className="relative aspect-2/3 w-full overflow-hidden rounded-2xl bg-[#1e4d3a] shadow-[0_12px_40px_rgba(0,0,0,.35)]">
               <div className="pointer-events-none absolute inset-0 z-1 bg-[radial-gradient(circle_at_50%_18%,rgba(255,255,255,.07),transparent_35%)]" />
@@ -128,6 +150,7 @@ const Pitch = ({ names, formation, onPlayers, onExport, setFormation }: Props) =
                     position={slot}
                     selected={selectedSlot === `pitch-${index}`}
                     onClick={() => handlePlayerClick(`pitch-${index}`)}
+                    onEdit={() => handleEditPlayer(player)}
                   />
                 );
               })}
@@ -140,11 +163,21 @@ const Pitch = ({ names, formation, onPlayers, onExport, setFormation }: Props) =
                 getName={getName}
                 selectedSlot={selectedSlot}
                 onPlayerClick={handlePlayerClick}
+                handleEditPlayer={handleEditPlayer}
               />
             </div>
           </div>
         </main>
       </div>
+
+      {
+        editingPlayer &&
+        <EditPlayerModal
+          name={getName(editingPlayer)}
+          onSave={handleSavePlayerName}
+          onClose={() => setEditingPlayer(null)}
+        />
+      }
     </DragDropProvider >
   );
 };

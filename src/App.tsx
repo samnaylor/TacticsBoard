@@ -38,7 +38,7 @@ const App = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#0d1b14] font-body text-[#f1faf0]">
+    <div className="min-h-screen w-full overflow-x-hidden bg-[#0d1b14] font-body text-[#f1faf0]">
       {screen === "pitch" ? (
         <Pitch
           names={names}
@@ -46,6 +46,7 @@ const App = () => {
           onPlayers={() => setScreen("players")}
           onExport={exportPng}
           setFormation={setFormation}
+          setNames={setNames}
         />
       ) : (
         <PlayerEditor
