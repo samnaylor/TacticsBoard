@@ -1,13 +1,15 @@
 import type React from "react";
 import { defaultNames } from "../data";
 import logo from "../assets/addinghamfc.png";
+import { useTacticsState } from "../store/tactics";
 
 interface Props {
   setNames: React.Dispatch<React.SetStateAction<string[]>>;
-  onBack: () => void;
 }
 
-const PlayerEditorHeader = ({ setNames, onBack }: Props) => {
+const PlayerEditorHeader = ({ setNames }: Props) => {
+  const setScreen = useTacticsState(state => state.setScreen);
+
   return (
     <header className="sticky top-0 z-50 border-b border-white/10 bg-[#0d1b14]/95 px-3 py-3 backdrop-blur">
       <div className="mx-auto flex max-w-190 items-center justify-between gap-3">
@@ -24,7 +26,7 @@ const PlayerEditorHeader = ({ setNames, onBack }: Props) => {
           </button>
 
           <button
-            onClick={onBack}
+            onClick={() => setScreen("pitch")}
             className="rounded-lg bg-amber-300 px-2.5 py-2 text-xs font-bold text-[#13251b] shadow-sm transition hover:bg-amber-200"
           >
             Done

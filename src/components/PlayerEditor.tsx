@@ -4,13 +4,12 @@ import PlayerEditorHeader from "./PlayerEditorHeader";
 interface Props {
   names: string[];
   setNames: React.Dispatch<React.SetStateAction<string[]>>;
-  onBack: () => void;
 }
 
-const PlayerEditor = ({ names, setNames, onBack }: Props) => {
+const PlayerEditor = ({ names, setNames }: Props) => {
   return (
     <>
-      <PlayerEditorHeader setNames={setNames} onBack={onBack} />
+      <PlayerEditorHeader setNames={setNames} />
 
       <main className="mx-auto min-h-screen w-full max-w-190 px-4 py-5">
 

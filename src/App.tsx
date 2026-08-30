@@ -4,9 +4,11 @@ import Pitch from "./components/Pitch";
 import PlayerEditor from "./components/PlayerEditor";
 import { defaultNames, type Formation } from "./data";
 import Footer from "./components/Footer";
+import { useTacticsState } from "./store/tactics";
 
 const App = () => {
-  const [screen, setScreen] = useState<"pitch" | "players">("pitch");
+  const screen = useTacticsState(state => state.screen);
+
   const [formation, setFormation] = useState<Formation>("4-4-2");
   const [names, setNames] = useState(defaultNames);
 
@@ -45,7 +47,6 @@ const App = () => {
           <Pitch
             names={names}
             formation={formation}
-            onPlayers={() => setScreen("players")}
             onExport={exportPng}
             setFormation={setFormation}
             setNames={setNames}
@@ -54,7 +55,6 @@ const App = () => {
           <PlayerEditor
             names={names}
             setNames={setNames}
-            onBack={() => setScreen("pitch")}
           />
         )}
       </div>

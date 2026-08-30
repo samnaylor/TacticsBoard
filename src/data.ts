@@ -1,5 +1,7 @@
 export const version = "0.0.11";
 
+export type Screen = "pitch" | "players";
+
 export type FormationSlot = {
   x: number;
   y: number;
