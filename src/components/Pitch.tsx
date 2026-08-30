@@ -113,7 +113,7 @@ const Pitch = ({ names, formation, onPlayers, onExport, setNames, setFormation }
       }}
     >
 
-      <div className="flex min-h-0 w-full flex-1 flex-col overflow-hidden bg-[#0d1b14] font-body text-[#f1faf0] touch-none">
+      <div className="flex min-h-0 w-full flex-1 flex-col overflow-hidden bg-[#0d1b14] font-body text-[#f1faf0]">
         <PitchHeader
           formation={formation}
           onPlayers={onPlayers}
