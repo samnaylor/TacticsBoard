@@ -37,7 +37,7 @@ const EditPlayerModal = ({ name, onSave, onClose }: Props) => {
         className="w-full max-w-sm rounded-2xl border border-white/10 bg-[#14261c] p-5 shadow-2xl"
       >
         <h2 className="mb-4 text-lg font-bold">
-          Edit player
+          Edit player name
         </h2>
 
         <input

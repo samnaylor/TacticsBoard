@@ -1,4 +1,5 @@
-import { useDraggable, useDroppable } from "@dnd-kit/react";
+import { PointerSensor, useDraggable, useDroppable } from "@dnd-kit/react";
+import { PointerActivationConstraints } from "@dnd-kit/dom";
 import { useRef } from "react";
 
 interface Props {
@@ -13,7 +14,18 @@ interface Props {
 };
 
 const Player = ({ id, name, slotId, position, selected = false, onClick = () => { }, onEdit }: Props) => {
-  const { ref: draggableRef } = useDraggable({ id: slotId });
+  const { ref: draggableRef } = useDraggable({
+    id: slotId,
+    sensors: [
+      PointerSensor.configure({
+        activationConstraints: [
+          new PointerActivationConstraints.Distance({
+            value: 8
+          })
+        ]
+      })
+    ]
+  });
   const { ref: droppableRef } = useDroppable({ id: slotId });
 
   const longPressTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -47,7 +59,7 @@ const Player = ({ id, name, slotId, position, selected = false, onClick = () => 
       onClick={onClick}
 
       className={[
-        "group select-none flex items-center justify-center flex-col p-1",
+        "group touch-none select-none flex items-center justify-center flex-col p-1",
         position
           ? "absolute z-10 -translate-x-1/2 -translate-y-1/2"
           : "relative flex shrink-0 flex-col items-center",
