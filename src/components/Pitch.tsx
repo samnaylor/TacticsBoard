@@ -1,5 +1,4 @@
 import { DragDropProvider } from "@dnd-kit/react";
-import { useState } from "react";
 import Bench from "./Bench";
 import PitchHeader from "./PitchHeader";
 import PitchMarkings from "./PitchMarkings";
@@ -17,12 +16,13 @@ const Pitch = ({ onExport }: Props) => {
   const formation = useTacticsState(state => state.formation);
   const names = useTacticsState(state => state.names);
   const players = useTacticsState(state => state.players);
+  const selectedSlot = useTacticsState(state => state.selectedSlot);
+  const editingPlayer = useTacticsState(state => state.editingPlayer);
 
   const setNames = useTacticsState(state => state.setNames);
   const setPlayers = useTacticsState(state => state.setPlayers);
-
-  const [selectedSlot, setSelectedSlot] = useState<string | null>(null);
-  const [editingPlayer, setEditingPlayer] = useState<number | null>(null);
+  const setSelectedSlot = useTacticsState(state => state.setSelectedSlot);
+  const setEditingPlayer = useTacticsState(state => state.setEditingPlayer);
 
   const setScreen = useTacticsState(state => state.setScreen);
 
@@ -42,8 +42,6 @@ const Pitch = ({ onExport }: Props) => {
   };
 
   const handlePlayerClick = (slotId: string) => {
-    console.log(`clicked on ${slotId}`);
-
     switch (selectedSlot) {
       case null:
         setSelectedSlot(slotId);
@@ -155,7 +153,6 @@ const Pitch = ({ onExport }: Props) => {
             <div className="mt-3 w-full md:w-1/5">
               <Bench
                 getName={getName}
-                selectedSlot={selectedSlot}
                 onPlayerClick={handlePlayerClick}
                 handleEditPlayer={handleEditPlayer}
               />

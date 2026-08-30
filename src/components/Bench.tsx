@@ -4,13 +4,14 @@ import { useTacticsState } from "../store/tactics";
 interface Props {
   getName: (player: number) => string;
 
-  selectedSlot: string | null;
   onPlayerClick: (slotId: string) => void;
   handleEditPlayer: (playerNumber: number) => void;
 }
 
-const Bench = ({ getName, selectedSlot, onPlayerClick, handleEditPlayer }: Props) => {
+const Bench = ({ getName, onPlayerClick, handleEditPlayer }: Props) => {
   const players = useTacticsState(state => state.players);
+  const selectedSlot = useTacticsState(state => state.selectedSlot);
+
   const setPlayers = useTacticsState(state => state.setPlayers);
 
   return (
