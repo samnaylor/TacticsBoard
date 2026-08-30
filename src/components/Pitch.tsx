@@ -1,5 +1,5 @@
 import { DragDropProvider } from "@dnd-kit/react";
-import React, { useState } from "react";
+import { useState } from "react";
 import Bench from "./Bench";
 import PitchHeader from "./PitchHeader";
 import PitchMarkings from "./PitchMarkings";
@@ -10,14 +10,13 @@ import EditPlayerModal from "./EditPlayerModal";
 import { useTacticsState } from "../store/tactics";
 
 interface Props {
-  names: string[];
   onExport: () => void;
-
-  setNames: React.Dispatch<React.SetStateAction<string[]>>;
 }
 
-const Pitch = ({ names, onExport, setNames }: Props) => {
+const Pitch = ({ onExport }: Props) => {
   const formation = useTacticsState(state => state.formation);
+  const names = useTacticsState(state => state.names);
+  const setNames = useTacticsState(state => state.setNames);
 
   const [players, setPlayers] = useState(defaultPlayers);
   const [selectedSlot, setSelectedSlot] = useState<string | null>(null);
@@ -90,13 +89,11 @@ const Pitch = ({ names, onExport, setNames }: Props) => {
       return;
     }
 
-    setNames(current => {
-      const next = [...current];
+    const next = [...names];
 
-      next[editingPlayer - 1] = name;
+    next[editingPlayer - 1] = name;
 
-      return next;
-    })
+    setNames(next);
   }
 
   return (

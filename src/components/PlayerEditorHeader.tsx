@@ -1,14 +1,10 @@
-import type React from "react";
 import { defaultNames } from "../data";
 import logo from "../assets/addinghamfc.png";
 import { useTacticsState } from "../store/tactics";
 
-interface Props {
-  setNames: React.Dispatch<React.SetStateAction<string[]>>;
-}
-
-const PlayerEditorHeader = ({ setNames }: Props) => {
+const PlayerEditorHeader = () => {
   const setScreen = useTacticsState(state => state.setScreen);
+  const setNames = useTacticsState(state => state.setNames);
 
   return (
     <header className="sticky top-0 z-50 border-b border-white/10 bg-[#0d1b14]/95 px-3 py-3 backdrop-blur">

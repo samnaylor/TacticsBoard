@@ -1,15 +1,13 @@
-import type React from "react";
 import PlayerEditorHeader from "./PlayerEditorHeader";
+import { useTacticsState } from "../store/tactics";
 
-interface Props {
-  names: string[];
-  setNames: React.Dispatch<React.SetStateAction<string[]>>;
-}
+const PlayerEditor = () => {
+  const names = useTacticsState(state => state.names);
+  const setNames = useTacticsState(state => state.setNames);
 
-const PlayerEditor = ({ names, setNames }: Props) => {
   return (
     <>
-      <PlayerEditorHeader setNames={setNames} />
+      <PlayerEditorHeader />
 
       <main className="mx-auto min-h-screen w-full max-w-190 px-4 py-5">
 
@@ -28,11 +26,10 @@ const PlayerEditor = ({ names, setNames }: Props) => {
                 onChange={(event) => {
                   const value = event.target.value;
 
-                  setNames((current) => {
-                    const next = [...current];
-                    next[index] = value;
-                    return next;
-                  });
+                  const next = [...names];
+                  next[index] = value;
+
+                  setNames(next);
                 }}
                 className="min-w-0 flex-1 bg-transparent text-sm font-medium outline-none placeholder:text-white/25"
                 placeholder={`Player ${index + 1}`}
