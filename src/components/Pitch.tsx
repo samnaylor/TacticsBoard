@@ -74,7 +74,7 @@ const Pitch = ({ onExport }: Props) => {
       </div>
 
       {
-        editingPlayer &&
+        editingPlayer !== null &&
         <EditPlayerModal />
       }
     </DragDropProvider >
