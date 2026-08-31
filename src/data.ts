@@ -1,4 +1,4 @@
-export const version = "0.0.11";
+export const version = "0.0.12";
 
 export type Screen = "pitch" | "players";
 
@@ -11,8 +11,8 @@ export type FormationSlot = {
 export const formation_442: FormationSlot[] = [
   { x: 50, y: 80, number: 1 },  // GK
   { x: 15, y: 60, number: 3 },  // LB
-  { x: 35, y: 60, number: 4 },  // CB
-  { x: 65, y: 60, number: 5 },  // CB
+  { x: 38, y: 60, number: 4 },  // CB
+  { x: 62, y: 60, number: 5 },  // CB
   { x: 85, y: 60, number: 2 },  // RB
   { x: 15, y: 40, number: 11 }, // LM
   { x: 38, y: 40, number: 6 },  // CM
@@ -25,8 +25,8 @@ export const formation_442: FormationSlot[] = [
 export const formation_4231: FormationSlot[] = [
   { x: 50, y: 80, number: 1 },  // GK
   { x: 15, y: 70, number: 3 },  // LB
-  { x: 35, y: 70, number: 4 },  // CB
-  { x: 65, y: 70, number: 5 },  // CB
+  { x: 38, y: 70, number: 4 },  // CB
+  { x: 62, y: 70, number: 5 },  // CB
   { x: 85, y: 70, number: 2 },  // RB
   { x: 38, y: 55, number: 6 },  // DM
   { x: 62, y: 55, number: 8 },  // DM
@@ -57,11 +57,6 @@ export const formations = {
 };
 
 export type Formation = keyof typeof formations;
-
-export const defaultPlayers = [
-  1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11,
-  12, 13, 14
-];
 
 export const defaultNames = [
   "Player 1",

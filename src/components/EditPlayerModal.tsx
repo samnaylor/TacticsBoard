@@ -1,17 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
+import { useTacticsState } from "../store/tactics";
 
-interface Props {
-  name: string;
-  onSave: (name: string) => void;
-  onClose: () => void;
-};
+const EditPlayerModal = () => {
+  const names = useTacticsState(state => state.names);
+  const editingPlayer = useTacticsState(state => state.editingPlayer)!;
 
-const EditPlayerModal = ({ name, onSave, onClose }: Props) => {
-  const [value, setValue] = useState(name);
+  const changeName = useTacticsState(state => state.changeName);
+  const setEditingPlayer = useTacticsState(state => state.setEditingPlayer);
 
-  useEffect(() => {
-    setValue(name);
-  }, [name]);
+  const [value, setValue] = useState(names[editingPlayer]);
+
+  const onClose = () => setEditingPlayer(null);
 
   const handleSubmit = (event: React.SubmitEvent) => {
     event.preventDefault();
@@ -22,8 +21,8 @@ const EditPlayerModal = ({ name, onSave, onClose }: Props) => {
       return;
     }
 
-    onSave(trimmed);
-    onClose();
+    changeName(editingPlayer, value);
+    setEditingPlayer(null);
   };
 
   return (
@@ -68,6 +67,6 @@ const EditPlayerModal = ({ name, onSave, onClose }: Props) => {
       </form>
     </div>
   );
-}
+};
 
 export default EditPlayerModal;
