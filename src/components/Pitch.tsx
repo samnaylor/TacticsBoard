@@ -3,7 +3,6 @@ import Bench from "./Bench";
 import PitchHeader from "./PitchHeader";
 import PitchMarkings from "./PitchMarkings";
 import Player from "./Player";
-import { defaultPlayers, formations } from "../data";
 import logo from "../assets/addinghamfc.png";
 import EditPlayerModal from "./EditPlayerModal";
 import { useTacticsState } from "../store/tactics";
@@ -13,86 +12,9 @@ interface Props {
 }
 
 const Pitch = ({ onExport }: Props) => {
-  const formation = useTacticsState(state => state.formation);
-  const names = useTacticsState(state => state.names);
-  const players = useTacticsState(state => state.players);
-  const selectedSlot = useTacticsState(state => state.selectedSlot);
   const editingPlayer = useTacticsState(state => state.editingPlayer);
-
-  const setNames = useTacticsState(state => state.setNames);
-  const setPlayers = useTacticsState(state => state.setPlayers);
-  const setSelectedSlot = useTacticsState(state => state.setSelectedSlot);
-  const setEditingPlayer = useTacticsState(state => state.setEditingPlayer);
-
-  const setScreen = useTacticsState(state => state.setScreen);
-
-  const swapPlayers = (fromSlot: string, toSlot: string) => {
-    const from = getSlotIndex(fromSlot);
-    const to = getSlotIndex(toSlot);
-
-    if (from === -1 || to === -1) {
-      return;
-    }
-
-    const next = [...players];
-
-    [next[from], next[to]] = [next[to], next[from]];
-
-    setPlayers(next);
-  };
-
-  const handlePlayerClick = (slotId: string) => {
-    switch (selectedSlot) {
-      case null:
-        setSelectedSlot(slotId);
-        break;
-
-      case slotId:
-        setSelectedSlot(null);
-        break;
-
-      default:
-        setSelectedSlot(null);
-        swapPlayers(selectedSlot, slotId);
-    }
-  };
-
-  const getName = (playerNumber: number) => {
-    return names[playerNumber - 1] ?? "";
-  };
-
-  const getSlotIndex = (slotId: string) => {
-    if (slotId.startsWith("pitch-")) {
-      return Number(slotId.replace("pitch-", ""));
-    }
-
-    if (slotId.startsWith("bench-")) {
-      return 11 + Number(slotId.replace("bench-", ""));
-    }
-
-    return -1;
-  };
-
-  const resetFormation = () => {
-    setPlayers(defaultPlayers);
-  };
-
-  const handleEditPlayer = (playerNumber: number) => {
-    setSelectedSlot(null);
-    setEditingPlayer(playerNumber);
-  };
-
-  const handleSavePlayerName = (name: string) => {
-    if (editingPlayer === null) {
-      return;
-    }
-
-    const next = [...names];
-
-    next[editingPlayer - 1] = name;
-
-    setNames(next);
-  }
+  const layout = useTacticsState(state => state.layout);
+  const swapNames = useTacticsState(state => state.swapNames);
 
   return (
     <DragDropProvider
@@ -105,16 +27,12 @@ const Pitch = ({ onExport }: Props) => {
           return;
         }
 
-        swapPlayers(String(source!.id), String(target.id));
+        swapNames(Number(source!.id), Number(target.id));
       }}
     >
 
       <div className="flex min-h-0 w-full flex-1 flex-col overflow-hidden bg-[#0d1b14] font-body text-[#f1faf0]">
-        <PitchHeader
-          onPlayers={() => setScreen("players")}
-          onReset={resetFormation}
-          onExport={onExport}
-        />
+        <PitchHeader onExport={onExport} />
 
         <main className="mx-auto flex w-full max-w-190 flex-1 min-w-0 items-center justify-center gap-5 px-3 py-4 sm:px-5">
           <div
@@ -132,30 +50,21 @@ const Pitch = ({ onExport }: Props) => {
                 draggable={false}
               />
 
-              {formations[formation].map((slot, index) => {
-                const player = players[index];
+              {[...Array(11).keys()].map(slot => {
+                const number = layout[slot].number;
+                const position = { x: layout[slot].x, y: layout[slot].y };
 
-                return (
-                  <Player
-                    key={slot.number}
-                    id={slot.number}
-                    slotId={`pitch-${index}`}
-                    name={getName(player)}
-                    position={slot}
-                    selected={selectedSlot === `pitch-${index}`}
-                    onClick={() => handlePlayerClick(`pitch-${index}`)}
-                    onEdit={() => handleEditPlayer(player)}
-                  />
-                );
+                return <Player
+                  key={`player-${slot}`}
+                  number={number}
+                  slot={slot}
+                  position={position}
+                />;
               })}
             </div>
 
             <div className="mt-3 w-full md:w-1/5">
-              <Bench
-                getName={getName}
-                onPlayerClick={handlePlayerClick}
-                handleEditPlayer={handleEditPlayer}
-              />
+              <Bench />
             </div>
           </div>
         </main>
@@ -163,11 +72,7 @@ const Pitch = ({ onExport }: Props) => {
 
       {
         editingPlayer &&
-        <EditPlayerModal
-          name={getName(editingPlayer)}
-          onSave={handleSavePlayerName}
-          onClose={() => setEditingPlayer(null)}
-        />
+        <EditPlayerModal />
       }
     </DragDropProvider >
   );

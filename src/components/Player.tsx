@@ -1,21 +1,25 @@
 import { PointerSensor, useDraggable, useDroppable } from "@dnd-kit/react";
 import { PointerActivationConstraints } from "@dnd-kit/dom";
 import { useRef } from "react";
+import { useTacticsState } from "../store/tactics";
 
 interface Props {
-  id: number;
-  name: string;
-  slotId: string;
+  number: number;
+  slot: number;
   position?: { x: number; y: number; };
-  selected?: boolean;
-  onClick?: () => void;
-
-  onEdit: () => void;
 };
 
-const Player = ({ id, name, slotId, position, selected = false, onClick = () => { }, onEdit }: Props) => {
+const Player = ({ number, slot, position }: Props) => {
+  const name = useTacticsState(state => state.names)[slot];
+  const selectedSlot = useTacticsState(state => state.selectedSlot);
+  const setSelectedSlot = useTacticsState(state => state.setSelectedSlot);
+  const setEditingPlayer = useTacticsState(state => state.setEditingPlayer);
+  const handlePlayerClick = useTacticsState(state => state.handlePlayerClick);
+
+  const selected = selectedSlot === slot;
+
   const { ref: draggableRef } = useDraggable({
-    id: slotId,
+    id: slot,
     sensors: [
       PointerSensor.configure({
         activationConstraints: [
@@ -26,13 +30,14 @@ const Player = ({ id, name, slotId, position, selected = false, onClick = () => 
       })
     ]
   });
-  const { ref: droppableRef } = useDroppable({ id: slotId });
+  const { ref: droppableRef } = useDroppable({ id: slot });
 
   const longPressTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const handlePointerDown = () => {
     longPressTimer.current = setTimeout(() => {
-      onEdit();
+      setSelectedSlot(null);
+      setEditingPlayer(slot);
       longPressTimer.current = null;
     }, 500);
   };
@@ -42,7 +47,7 @@ const Player = ({ id, name, slotId, position, selected = false, onClick = () => 
       clearTimeout(longPressTimer.current);
       longPressTimer.current = null;
     }
-  }
+  };
 
   return (
     <div
@@ -56,7 +61,7 @@ const Player = ({ id, name, slotId, position, selected = false, onClick = () => 
       onPointerCancel={handlePointerUp}
       onPointerLeave={handlePointerUp}
 
-      onClick={onClick}
+      onClick={() => handlePlayerClick(slot)}
 
       className={[
         "group touch-none select-none flex items-center justify-center flex-col p-1",
@@ -84,7 +89,7 @@ const Player = ({ id, name, slotId, position, selected = false, onClick = () => 
           "h-10 w-10 text-sm sm:h-11 sm:w-11 sm:text-base",
         ].join(" ")}
       >
-        {id}
+        {number}
 
         <div className="absolute inset-0 rounded-full border border-white/20" />
       </div>
@@ -96,6 +101,6 @@ const Player = ({ id, name, slotId, position, selected = false, onClick = () => 
     </div>
   );
 
-}
+};
 
 export default Player;

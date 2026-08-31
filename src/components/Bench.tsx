@@ -1,18 +1,10 @@
 import Player from "./Player";
 import { useTacticsState } from "../store/tactics";
 
-interface Props {
-  getName: (player: number) => string;
-
-  onPlayerClick: (slotId: string) => void;
-  handleEditPlayer: (playerNumber: number) => void;
-}
-
-const Bench = ({ getName, onPlayerClick, handleEditPlayer }: Props) => {
-  const players = useTacticsState(state => state.players);
-  const selectedSlot = useTacticsState(state => state.selectedSlot);
-
-  const setPlayers = useTacticsState(state => state.setPlayers);
+const Bench = () => {
+  const bench = useTacticsState(state => state.bench);
+  const decreaseBench = useTacticsState(state => state.decreaseBench);
+  const increaseBench = useTacticsState(state => state.increaseBench);
 
   return (
     <section className="w-full">
@@ -25,35 +17,17 @@ const Bench = ({ getName, onPlayerClick, handleEditPlayer }: Props) => {
 
             <div data-export-ignore className="flex items-center justify-center">
               <button
-                disabled={players.length >= 16}
-                onClick={() => {
-                  if (players.length >= 16) {
-                    return players;
-                  }
-
-                  const nextNumber = [12, 13, 14, 15, 16].find(number => !players.includes(number));
-
-                  if (!nextNumber) {
-                    return players;
-                  }
-
-                  setPlayers([...players, nextNumber]);
-                }}
+                disabled={bench === 5}
+                onClick={increaseBench}
                 className="rounded-lg px-2 py-2 text-md font-extrabold text-white/50 transition hover:bg-white/10 hover:text-white disabled:cursor-not-allowed disabled:opacity-20">+</button>
 
               <span className="min-w-8 text-center text-[10px] font-bold tabular-nums text-white/40">
-                {players.length - 11}/5
+                {bench}/5
               </span>
 
               <button
-                disabled={players.length <= 0}
-                onClick={() => {
-                  if (players.length <= 11) {
-                    return players;
-                  }
-
-                  setPlayers(players.slice(0, -1));
-                }}
+                disabled={bench === 0}
+                onClick={decreaseBench}
                 className="rounded-lg px-2 py-2 text-md font-extrabold text-white/50 transition hover:bg-white/10 hover:text-white disabled:cursor-not-allowed disabled:opacity-20">-</button>
             </div>
           </div>
@@ -61,19 +35,19 @@ const Bench = ({ getName, onPlayerClick, handleEditPlayer }: Props) => {
       </div>
 
       {
-        players.length > 11 &&
+        bench > 0 &&
         <div className="flex w-full flex-row md:flex-col min-h-22 items-center justify-center gap-5 overflow-x-hidden rounded-xl border border-white/10 bg-black/10 px-4 py-3">
-          {players.slice(11).map((player, index) => (
-            <Player
-              key={index}
-              id={player}
-              slotId={`bench-${index}`}
-              name={getName(player)}
-              selected={selectedSlot === `bench-${index}`}
-              onClick={() => onPlayerClick(`bench-${index}`)}
-              onEdit={() => handleEditPlayer(player)}
-            />
-          ))}
+          {[...Array(bench).keys()].map(benchSlot => {
+            const slot = benchSlot + 11;
+
+            return (
+              <Player
+                key={`bench-${benchSlot}`}
+                number={slot + 1}
+                slot={slot}
+              />
+            );
+          })}
         </div>
       }
     </section >
