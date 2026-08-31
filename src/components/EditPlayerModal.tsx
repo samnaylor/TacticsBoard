@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { MdClose } from "react-icons/md";
 import { useTacticsState } from "../store/tactics";
 
 const EditPlayerModal = () => {
@@ -28,13 +29,22 @@ const EditPlayerModal = () => {
   return (
     <div
       className="fixed inset-0 z-100 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm sm:items-center"
-      onClick={onClose}
     >
+
       <form
         onSubmit={handleSubmit}
         onClick={(event) => event.stopPropagation()}
-        className="w-full max-w-sm rounded-2xl border border-white/10 bg-[#14261c] p-5 shadow-2xl"
+        className="relative w-full max-w-sm rounded-2xl border border-white/10 bg-[#14261c] p-5 shadow-2xl"
       >
+        <button
+          type="button"
+          onClick={onClose}
+          className="absolute right-4 top-4 rounded-md p-1 text-white/60 transition hover:bg-white/10 hover:text-white"
+          aria-label="Close"
+        >
+          <MdClose size={24} />
+        </button>
+
         <h2 className="mb-4 text-lg font-bold">
           Edit player name
         </h2>
