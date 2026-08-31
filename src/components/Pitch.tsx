@@ -6,15 +6,18 @@ import Player from "./Player";
 import logo from "../assets/addinghamfc.png";
 import EditPlayerModal from "./EditPlayerModal";
 import { useTacticsState } from "../store/tactics";
+import { formations } from "../data";
 
 interface Props {
   onExport: () => void;
 }
 
 const Pitch = ({ onExport }: Props) => {
+  const formation = useTacticsState(state => state.formation);
   const editingPlayer = useTacticsState(state => state.editingPlayer);
-  const layout = useTacticsState(state => state.layout);
   const swapNames = useTacticsState(state => state.swapNames);
+
+  const layout = formations[formation];
 
   return (
     <DragDropProvider

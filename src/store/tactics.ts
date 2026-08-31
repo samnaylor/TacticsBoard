@@ -1,5 +1,6 @@
 import { create } from "zustand";
-import { defaultNames, formations, type Formation, type Screen } from "../data";
+import { defaultNames, type Formation, type Screen } from "../data";
+import { persist } from "zustand/middleware";
 
 interface TacticsState {
   screen: Screen;
@@ -9,7 +10,6 @@ interface TacticsState {
 
   bench: number;
   names: string[];
-  layout: { x: number, y: number, number: number; }[];
 
   changeName: (slot: number, newName: string) => void;
   changeFormation: (formation: Formation) => void;
@@ -27,58 +27,88 @@ interface TacticsState {
   setEditingPlayer: (editingPlayer: number | null) => void;
 };
 
-export const useTacticsState = create<TacticsState>(set => ({
-  screen: "pitch",
-  formation: "4-4-2",
-  selectedSlot: null,
-  editingPlayer: null,
+const storageKey = "tactics-save";
 
-  bench: 3,
-  names: defaultNames,
-  layout: formations["4-4-2"],
+export const useTacticsState = create<TacticsState>()(
+  persist(
+    (set) => ({
+      screen: "pitch",
+      formation: "4-4-2",
+      selectedSlot: null,
+      editingPlayer: null,
 
-  changeName: (slot: number, newName: string) => set(state => ({
-    names: state.names.map((name, i) => i === slot ? newName : name)
-  })),
+      bench: 3,
+      names: defaultNames,
 
-  changeFormation: (formation: Formation) => set(() => {
-    return { formation: formation, layout: formations[formation] };
-  }),
+      changeName: (slot, newName) =>
+        set((state) => ({
+          names: state.names.map((name, i) =>
+            i === slot ? newName : name
+          ),
+        })),
 
-  swapNames: (slot0: number, slot1: number) => set(state => {
-    const names = [...state.names];
+      changeFormation: (formation) =>
+        set({ formation }),
 
-    [names[slot0], names[slot1]] = [names[slot1], names[slot0]];
+      swapNames: (slot0, slot1) =>
+        set((state) => {
+          const names = [...state.names];
 
-    return { names };
-  }),
+          [names[slot0], names[slot1]] = [
+            names[slot1],
+            names[slot0],
+          ];
 
-  increaseBench: () => set(state => ({
-    bench: Math.min(5, state.bench + 1)
-  })),
+          return { names };
+        }),
 
-  decreaseBench: () => set(state => ({
-    bench: Math.max(0, state.bench - 1)
-  })),
+      increaseBench: () =>
+        set((state) => ({
+          bench: Math.min(5, state.bench + 1),
+        })),
 
-  handlePlayerClick: (slot: number) => set(state => {
-    switch (state.selectedSlot) {
-      case null:
-        return { selectedSlot: slot };
+      decreaseBench: () =>
+        set((state) => ({
+          bench: Math.max(0, state.bench - 1),
+        })),
 
-      case slot:
-        break;
+      handlePlayerClick: (slot) =>
+        set((state) => {
+          if (state.selectedSlot === null) {
+            return { selectedSlot: slot };
+          }
 
-      default:
-        state.swapNames(state.selectedSlot, slot);
+          if (state.selectedSlot === slot) {
+            return { selectedSlot: null };
+          }
+
+          const names = [...state.names];
+
+          [names[state.selectedSlot], names[slot]] = [
+            names[slot],
+            names[state.selectedSlot],
+          ];
+
+          return {
+            names,
+            selectedSlot: null,
+          };
+        }),
+
+      setScreen: (screen) => set({ screen }),
+      setFormation: (formation) => set({ formation }),
+      setNames: (names) => set({ names }),
+      setSelectedSlot: (selectedSlot) => set({ selectedSlot }),
+      setEditingPlayer: (editingPlayer) => set({ editingPlayer }),
+    }),
+    {
+      name: storageKey,
+
+      partialize: (state) => ({
+        bench: state.bench,
+        formation: state.formation,
+        names: state.names,
+      }),
     }
-
-    return { selectedSlot: null };
-  }),
-
-  setScreen: (screen: Screen) => set({ screen }),
-  setFormation: (formation: Formation) => set({ formation }),
-  setNames: (names: string[]) => set({ names }),
-  setSelectedSlot: (selectedSlot: number | null) => set({ selectedSlot }),
-  setEditingPlayer: (editingPlayer: number | null) => set({ editingPlayer }),
-}));
+  )
+);
