@@ -19,10 +19,12 @@ interface TacticsState {
   increaseBench: () => void;
 
   handlePlayerClick: (slot: number) => void;
+  resetNames: () => void;
 
-  setScreen: (screen: Screen) => void;
+  gotoPitch: () => void;
+  gotoPlayers: () => void;
+
   setFormation: (formation: Formation) => void;
-  setNames: (names: { name: string, modified: boolean; }[]) => void;
   setSelectedSlot: (selectedSlot: number | null) => void;
   setEditingPlayer: (editingPlayer: number | null) => void;
 };
@@ -95,9 +97,14 @@ export const useTacticsState = create<TacticsState>()(
           };
         }),
 
-      setScreen: (screen) => set({ screen }),
+      resetNames: () => set({
+        names: defaultNames.map(name => ({ name, modified: false }))
+      }),
+
+      gotoPitch: () => set({ screen: "pitch" }),
+      gotoPlayers: () => set({ screen: "players" }),
+
       setFormation: (formation) => set({ formation }),
-      setNames: (names) => set({ names }),
       setSelectedSlot: (selectedSlot) => set({ selectedSlot }),
       setEditingPlayer: (editingPlayer) => set({ editingPlayer }),
     }),

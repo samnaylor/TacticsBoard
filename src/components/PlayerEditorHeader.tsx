@@ -1,10 +1,9 @@
-import { defaultNames } from "../data";
 import logo from "../assets/addinghamfc.png";
 import { useTacticsState } from "../store/tactics";
 
 const PlayerEditorHeader = () => {
-  const setScreen = useTacticsState(state => state.setScreen);
-  const setNames = useTacticsState(state => state.setNames);
+  const resetNames = useTacticsState(state => state.resetNames);
+  const gotoPitch = useTacticsState(state => state.gotoPitch);
 
   return (
     <header className="sticky top-0 z-50 border-b border-white/10 bg-[#0d1b14]/95 px-3 py-3 backdrop-blur">
@@ -15,14 +14,14 @@ const PlayerEditorHeader = () => {
 
         <div className="flex shrink-0 items-center gap-1.5">
           <button
-            onClick={() => setNames(defaultNames.map(name => ({ name, modified: false })))}
+            onClick={resetNames}
             className="rounded-lg px-2.5 py-2 text-xs font-semibold text-white/50 transition hover:bg-white/10 hover:text-white"
           >
             Reset
           </button>
 
           <button
-            onClick={() => setScreen("pitch")}
+            onClick={gotoPitch}
             className="rounded-lg bg-amber-300 px-2.5 py-2 text-xs font-bold text-[#13251b] shadow-sm transition hover:bg-amber-200"
           >
             Done

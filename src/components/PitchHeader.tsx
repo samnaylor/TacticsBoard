@@ -9,8 +9,8 @@ interface Props {
 const PitchHeader = ({ onExport }: Props) => {
   const formation = useTacticsState(state => state.formation);
   const changeFormation = useTacticsState(state => state.changeFormation);
+  const gotoPlayers = useTacticsState(state => state.gotoPlayers);
 
-  const setScreen = useTacticsState(state => state.setScreen);
 
   return (
     <header className="sticky top-0 z-50 border-b border-white/10 bg-[#0d1b14]/95 px-3 py-3 backdrop-blur">
@@ -50,7 +50,7 @@ const PitchHeader = ({ onExport }: Props) => {
           </button>
 
           <button
-            onClick={() => setScreen("players")}
+            onClick={gotoPlayers}
             className="rounded-lg bg-white/10 px-2.5 py-2 text-xs font-semibold transition hover:bg-white/15"
           >
             Players
