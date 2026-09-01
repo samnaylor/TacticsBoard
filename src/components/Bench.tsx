@@ -35,7 +35,6 @@ const Bench = () => {
       </div>
 
       {
-        bench > 0 &&
         <div className="flex w-full flex-row md:flex-col min-h-22 items-center justify-center gap-5 overflow-x-hidden rounded-xl border border-white/10 bg-black/10 px-4 py-3">
           {[...Array(bench).keys()].map(benchSlot => {
             const slot = benchSlot + 11;
