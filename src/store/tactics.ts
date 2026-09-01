@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { defaultNames, type Formation, type Screen } from "../data";
+import { defaultNames, formations, type Formation, type FormationSlot, type Screen } from "../data";
 import { persist } from "zustand/middleware";
 
 interface TacticsState {
@@ -10,10 +10,12 @@ interface TacticsState {
 
   bench: number;
   names: { name: string, modified: boolean; }[];
+  layout: FormationSlot[];
 
   changeName: (slot: number, newName: string) => void;
   changeFormation: (formation: Formation) => void;
   swapNames: (slot0: number, slot1: number) => void;
+  movePlayerPosition: (slot: number, percentx: number, percenty: number) => void;
 
   decreaseBench: () => void;
   increaseBench: () => void;
@@ -24,7 +26,6 @@ interface TacticsState {
   gotoPitch: () => void;
   gotoPlayers: () => void;
 
-  setFormation: (formation: Formation) => void;
   setSelectedSlot: (selectedSlot: number | null) => void;
   setEditingPlayer: (editingPlayer: number | null) => void;
 };
@@ -41,6 +42,7 @@ export const useTacticsState = create<TacticsState>()(
 
       bench: 3,
       names: defaultNames.map(name => ({ name, modified: false })),
+      layout: formations["4-4-2"],
 
       changeName: (slot, newName) =>
         set((state) => ({
@@ -50,7 +52,7 @@ export const useTacticsState = create<TacticsState>()(
         })),
 
       changeFormation: (formation) =>
-        set({ formation }),
+        set({ formation, layout: formations[formation] }),
 
       swapNames: (slot0, slot1) =>
         set((state) => {
@@ -63,6 +65,19 @@ export const useTacticsState = create<TacticsState>()(
 
           return { names };
         }),
+
+      movePlayerPosition: (slot: number, percentx: number, percenty: number) => set(state => ({
+        layout: state.layout.map((position, index) =>
+          index === slot ?
+            {
+              ...position,
+              x: Math.max(2, Math.min(98, position.x + percentx)),
+              y: Math.max(2, Math.min(98, position.y + percenty))
+            }
+            :
+            position
+        )
+      })),
 
       increaseBench: () =>
         set((state) => ({
@@ -104,7 +119,6 @@ export const useTacticsState = create<TacticsState>()(
       gotoPitch: () => set({ screen: "pitch" }),
       gotoPlayers: () => set({ screen: "players" }),
 
-      setFormation: (formation) => set({ formation }),
       setSelectedSlot: (selectedSlot) => set({ selectedSlot }),
       setEditingPlayer: (editingPlayer) => set({ editingPlayer }),
     }),
@@ -115,6 +129,7 @@ export const useTacticsState = create<TacticsState>()(
         bench: state.bench,
         formation: state.formation,
         names: state.names,
+        layout: state.layout,
       }),
     }
   )

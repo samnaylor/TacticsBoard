@@ -64,7 +64,7 @@ const Player = ({ number, slot, position }: Props) => {
       onClick={() => handlePlayerClick(slot)}
 
       className={[
-        "group touch-none select-none flex items-center justify-center flex-col p-1",
+        "group touch-none select-none flex items-center justify-center flex-col",
         position
           ? "absolute z-10 -translate-x-1/2 -translate-y-1/2"
           : "relative flex shrink-0 flex-col items-center",

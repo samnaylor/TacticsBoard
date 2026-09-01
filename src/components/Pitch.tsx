@@ -6,27 +6,45 @@ import Player from "./Player";
 import logo from "../assets/addinghamfc.png";
 import EditPlayerModal from "./EditPlayerModal";
 import { useTacticsState } from "../store/tactics";
-import { formations } from "../data";
+import { useRef } from "react";
 
 interface Props {
   onExport: () => void;
 }
 
 const Pitch = ({ onExport }: Props) => {
-  const formation = useTacticsState(state => state.formation);
+  const layout = useTacticsState(state => state.layout);
   const editingPlayer = useTacticsState(state => state.editingPlayer);
   const swapNames = useTacticsState(state => state.swapNames);
+  const movePlayerPosition = useTacticsState(state => state.movePlayerPosition);
 
-  const layout = formations[formation];
+  const pitchRef = useRef<HTMLDivElement>(null);
 
   return (
     <DragDropProvider
       onDragEnd={(event) => {
         if (event.canceled) return;
 
-        const { source, target } = event.operation;
+        const { source, target, position } = event.operation;
 
-        if (!target || source?.id === target.id) {
+        if (!source) {
+          return;
+        }
+
+        if (!target) {
+          const rect = pitchRef.current!.getBoundingClientRect();
+          const deltax = position.current.x - position.initial.x;
+          const deltay = position.current.y - position.initial.y;
+
+          const percentx = (deltax / rect.width) * 100;
+          const percenty = (deltay / rect.height) * 100;
+
+          movePlayerPosition(Number(source.id), percentx, percenty);
+
+          return;
+        }
+
+        if (source.id === target.id) {
           return;
         }
 
@@ -42,7 +60,7 @@ const Pitch = ({ onExport }: Props) => {
             id="formation-export"
             className="flex w-full max-w-130 min-w-0 flex-col p-2 md:max-w-[70%] md:flex-row md:gap-4"
           >
-            <div className="relative aspect-2/3 w-full overflow-hidden rounded-2xl bg-[#1e4d3a] shadow-[0_12px_40px_rgba(0,0,0,.35)]">
+            <div ref={pitchRef} className="relative aspect-2/3 w-full overflow-hidden rounded-2xl bg-[#1e4d3a] shadow-[0_12px_40px_rgba(0,0,0,.35)]">
               <div className="pointer-events-none absolute inset-0 z-1 bg-[radial-gradient(circle_at_50%_18%,rgba(255,255,255,.07),transparent_35%)]" />
 
               <PitchMarkings />
