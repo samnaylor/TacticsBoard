@@ -2,9 +2,9 @@ import Player from "./Player";
 import { useTacticsState } from "../store/tactics";
 
 const Bench = () => {
-  const bench = useTacticsState(state => state.bench);
-  const decreaseBench = useTacticsState(state => state.decreaseBench);
-  const increaseBench = useTacticsState(state => state.increaseBench);
+  const bench = useTacticsState((state) => state.bench);
+  const decreaseBench = useTacticsState((state) => state.decreaseBench);
+  const increaseBench = useTacticsState((state) => state.increaseBench);
 
   return (
     <section className="w-full">
@@ -15,11 +15,17 @@ const Bench = () => {
               Bench
             </h2>
 
-            <div data-export-ignore className="flex items-center justify-center">
+            <div
+              data-export-ignore
+              className="flex items-center justify-center"
+            >
               <button
                 disabled={bench === 5}
                 onClick={increaseBench}
-                className="rounded-lg px-2 py-2 text-md font-extrabold text-white/50 transition hover:bg-white/10 hover:text-white disabled:cursor-not-allowed disabled:opacity-20">+</button>
+                className="rounded-lg px-2 py-2 text-md font-extrabold text-white/50 transition hover:bg-white/10 hover:text-white disabled:cursor-not-allowed disabled:opacity-20"
+              >
+                +
+              </button>
 
               <span className="min-w-8 text-center text-[10px] font-bold tabular-nums text-white/40">
                 {bench}/5
@@ -28,7 +34,10 @@ const Bench = () => {
               <button
                 disabled={bench === 0}
                 onClick={decreaseBench}
-                className="rounded-lg px-2 py-2 text-md font-extrabold text-white/50 transition hover:bg-white/10 hover:text-white disabled:cursor-not-allowed disabled:opacity-20">-</button>
+                className="rounded-lg px-2 py-2 text-md font-extrabold text-white/50 transition hover:bg-white/10 hover:text-white disabled:cursor-not-allowed disabled:opacity-20"
+              >
+                -
+              </button>
             </div>
           </div>
         </div>
@@ -36,7 +45,7 @@ const Bench = () => {
 
       {
         <div className="flex w-full flex-row md:flex-col min-h-22 items-center justify-center gap-5 overflow-x-hidden rounded-xl border border-white/10 bg-black/10 px-4 py-3">
-          {[...Array(bench).keys()].map(benchSlot => {
+          {[...Array(bench).keys()].map((benchSlot) => {
             const slot = benchSlot + 11;
 
             return (
@@ -49,7 +58,7 @@ const Bench = () => {
           })}
         </div>
       }
-    </section >
+    </section>
   );
 };
 

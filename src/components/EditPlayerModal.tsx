@@ -3,15 +3,14 @@ import { MdClose } from "react-icons/md";
 import { useTacticsState } from "../store/tactics";
 
 const EditPlayerModal = () => {
-  const names = useTacticsState(state => state.names);
-  const editingPlayer = useTacticsState(state => state.editingPlayer)!;
+  const names = useTacticsState((state) => state.names);
+  const editingPlayer = useTacticsState((state) => state.editingPlayer)!;
 
-  const changeName = useTacticsState(state => state.changeName);
-  const setEditingPlayer = useTacticsState(state => state.setEditingPlayer);
+  const changeName = useTacticsState((state) => state.changeName);
+  const setEditingPlayer = useTacticsState((state) => state.setEditingPlayer);
 
   const { name } = names[editingPlayer];
   const [value, setValue] = useState(name);
-
   const onClose = () => setEditingPlayer(null);
 
   const handleSubmit = (event: React.SubmitEvent) => {
@@ -24,10 +23,7 @@ const EditPlayerModal = () => {
   };
 
   return (
-    <div
-      className="fixed inset-0 z-100 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm sm:items-center"
-    >
-
+    <div className="fixed inset-0 z-100 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm sm:items-center">
       <form
         onSubmit={handleSubmit}
         onClick={(event) => event.stopPropagation()}
@@ -42,13 +38,12 @@ const EditPlayerModal = () => {
           <MdClose size={24} />
         </button>
 
-        <h2 className="mb-4 text-lg font-bold">
-          Edit player name
-        </h2>
+        <h2 className="mb-4 text-lg font-bold">Edit player name</h2>
 
         <input
           autoFocus
           value={value}
+          type="text"
           onChange={(event) => setValue(event.target.value)}
           className="w-full rounded-lg border border-white/15 bg-black/20 px-3 py-2.5 text-sm text-white outline-none focus:border-amber-300"
           placeholder="Player name"

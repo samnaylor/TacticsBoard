@@ -1,23 +1,23 @@
-@import 'tailwindcss';
+@import "tailwindcss";
 
 @layer base {
-    * {
-        box-sizing: border-box;
-    }
+  * {
+    box-sizing: border-box;
+  }
 
-    html {
-        background: #0d1b14;
-    }
+  html {
+    background: #0d1b14;
+  }
 
-    body {
-        margin: 0;
-        min-width: 320px;
-        background: #0d1b14;
-    }
+  body {
+    margin: 0;
+    min-width: 320px;
+    background: #0d1b14;
+  }
 
-    button,
-    input,
-    select {
-        font: inherit;
-    }
+  button,
+  input,
+  select {
+    font: inherit;
+  }
 }

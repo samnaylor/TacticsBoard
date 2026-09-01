@@ -49,13 +49,7 @@ const PitchMarkings = () => {
         strokeWidth="0.6"
       />
 
-      <circle
-        cx="50"
-        cy="75"
-        r="0.8"
-        fill="#eef7f0"
-        fillOpacity="0.7"
-      />
+      <circle cx="50" cy="75" r="0.8" fill="#eef7f0" fillOpacity="0.7" />
 
       <rect
         x="22"

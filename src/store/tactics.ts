@@ -1,5 +1,11 @@
 import { create } from "zustand";
-import { defaultNames, formations, type Formation, type FormationSlot, type Screen } from "../data";
+import {
+  defaultNames,
+  formations,
+  type Formation,
+  type FormationSlot,
+  type Screen,
+} from "../data";
 import { persist } from "zustand/middleware";
 
 interface TacticsState {
@@ -9,13 +15,17 @@ interface TacticsState {
   editingPlayer: number | null;
 
   bench: number;
-  names: { name: string, modified: boolean; }[];
+  names: { name: string; modified: boolean }[];
   layout: FormationSlot[];
 
   changeName: (slot: number, newName: string) => void;
   changeFormation: (formation: Formation) => void;
   swapNames: (slot0: number, slot1: number) => void;
-  movePlayerPosition: (slot: number, percentx: number, percenty: number) => void;
+  movePlayerPosition: (
+    slot: number,
+    percentx: number,
+    percenty: number,
+  ) => void;
 
   decreaseBench: () => void;
   increaseBench: () => void;
@@ -28,7 +38,7 @@ interface TacticsState {
 
   setSelectedSlot: (selectedSlot: number | null) => void;
   setEditingPlayer: (editingPlayer: number | null) => void;
-};
+}
 
 const storageKey = "tactics-save";
 
@@ -41,13 +51,13 @@ export const useTacticsState = create<TacticsState>()(
       editingPlayer: null,
 
       bench: 3,
-      names: defaultNames.map(name => ({ name, modified: false })),
+      names: defaultNames.map((name) => ({ name, modified: false })),
       layout: formations["4-4-2"],
 
       changeName: (slot, newName) =>
         set((state) => ({
           names: state.names.map(({ name, modified }, i) =>
-            i === slot ? { name: newName, modified: true } : { name, modified }
+            i === slot ? { name: newName, modified: true } : { name, modified },
           ),
         })),
 
@@ -58,26 +68,23 @@ export const useTacticsState = create<TacticsState>()(
         set((state) => {
           const names = [...state.names];
 
-          [names[slot0], names[slot1]] = [
-            names[slot1],
-            names[slot0],
-          ];
+          [names[slot0], names[slot1]] = [names[slot1], names[slot0]];
 
           return { names };
         }),
 
-      movePlayerPosition: (slot: number, percentx: number, percenty: number) => set(state => ({
-        layout: state.layout.map((position, index) =>
-          index === slot ?
-            {
-              ...position,
-              x: Math.max(2, Math.min(98, position.x + percentx)),
-              y: Math.max(2, Math.min(98, position.y + percenty))
-            }
-            :
-            position
-        )
-      })),
+      movePlayerPosition: (slot: number, percentx: number, percenty: number) =>
+        set((state) => ({
+          layout: state.layout.map((position, index) =>
+            index === slot
+              ? {
+                  ...position,
+                  x: Math.max(2, Math.min(98, position.x + percentx)),
+                  y: Math.max(2, Math.min(98, position.y + percenty)),
+                }
+              : position,
+          ),
+        })),
 
       increaseBench: () =>
         set((state) => ({
@@ -112,9 +119,10 @@ export const useTacticsState = create<TacticsState>()(
           };
         }),
 
-      resetNames: () => set({
-        names: defaultNames.map(name => ({ name, modified: false }))
-      }),
+      resetNames: () =>
+        set({
+          names: defaultNames.map((name) => ({ name, modified: false })),
+        }),
 
       gotoPitch: () => set({ screen: "pitch" }),
       gotoPlayers: () => set({ screen: "players" }),
@@ -131,6 +139,6 @@ export const useTacticsState = create<TacticsState>()(
         names: state.names,
         layout: state.layout,
       }),
-    }
-  )
+    },
+  ),
 );

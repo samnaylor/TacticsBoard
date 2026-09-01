@@ -1,6 +1,5 @@
 import { DragDropProvider } from "@dnd-kit/react";
 import Bench from "./Bench";
-import PitchHeader from "./PitchHeader";
 import PitchMarkings from "./PitchMarkings";
 import Player from "./Player";
 import logo from "../assets/addinghamfc.png";
@@ -8,15 +7,13 @@ import EditPlayerModal from "./EditPlayerModal";
 import { useTacticsState } from "../store/tactics";
 import { useRef } from "react";
 
-interface Props {
-  onExport: () => void;
-}
-
-const Pitch = ({ onExport }: Props) => {
-  const layout = useTacticsState(state => state.layout);
-  const editingPlayer = useTacticsState(state => state.editingPlayer);
-  const swapNames = useTacticsState(state => state.swapNames);
-  const movePlayerPosition = useTacticsState(state => state.movePlayerPosition);
+const Pitch = () => {
+  const layout = useTacticsState((state) => state.layout);
+  const editingPlayer = useTacticsState((state) => state.editingPlayer);
+  const swapNames = useTacticsState((state) => state.swapNames);
+  const movePlayerPosition = useTacticsState(
+    (state) => state.movePlayerPosition,
+  );
 
   const pitchRef = useRef<HTMLDivElement>(null);
 
@@ -51,16 +48,16 @@ const Pitch = ({ onExport }: Props) => {
         swapNames(Number(source!.id), Number(target.id));
       }}
     >
-
       <div className="flex min-h-0 w-full flex-1 flex-col overflow-hidden bg-[#0d1b14] font-body text-[#f1faf0]">
-        <PitchHeader onExport={onExport} />
-
         <main className="mx-auto flex w-full max-w-190 flex-1 min-w-0 items-center justify-center gap-5 px-3 py-4 sm:px-5">
           <div
             id="formation-export"
             className="flex w-full max-w-130 min-w-0 flex-col p-2 md:max-w-[70%] md:flex-row md:gap-4"
           >
-            <div ref={pitchRef} className="relative aspect-2/3 w-full overflow-hidden rounded-2xl bg-[#1e4d3a] shadow-[0_12px_40px_rgba(0,0,0,.35)]">
+            <div
+              ref={pitchRef}
+              className="relative aspect-2/3 w-full overflow-hidden rounded-2xl bg-[#1e4d3a] shadow-[0_12px_40px_rgba(0,0,0,.35)]"
+            >
               <div className="pointer-events-none absolute inset-0 z-1 bg-[radial-gradient(circle_at_50%_18%,rgba(255,255,255,.07),transparent_35%)]" />
 
               <PitchMarkings />
@@ -71,16 +68,18 @@ const Pitch = ({ onExport }: Props) => {
                 draggable={false}
               />
 
-              {[...Array(11).keys()].map(slot => {
+              {[...Array(11).keys()].map((slot) => {
                 const number = layout[slot].number;
                 const position = { x: layout[slot].x, y: layout[slot].y };
 
-                return <Player
-                  key={`player-${slot}`}
-                  number={number}
-                  slot={slot}
-                  position={position}
-                />;
+                return (
+                  <Player
+                    key={`player-${slot}`}
+                    number={number}
+                    slot={slot}
+                    position={position}
+                  />
+                );
               })}
             </div>
 
@@ -91,11 +90,8 @@ const Pitch = ({ onExport }: Props) => {
         </main>
       </div>
 
-      {
-        editingPlayer !== null &&
-        <EditPlayerModal />
-      }
-    </DragDropProvider >
+      {editingPlayer !== null && <EditPlayerModal />}
+    </DragDropProvider>
   );
 };
 

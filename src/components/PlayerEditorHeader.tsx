@@ -2,8 +2,8 @@ import logo from "../assets/addinghamfc.png";
 import { useTacticsState } from "../store/tactics";
 
 const PlayerEditorHeader = () => {
-  const resetNames = useTacticsState(state => state.resetNames);
-  const gotoPitch = useTacticsState(state => state.gotoPitch);
+  const resetNames = useTacticsState((state) => state.resetNames);
+  const gotoPitch = useTacticsState((state) => state.gotoPitch);
 
   return (
     <header className="sticky top-0 z-50 border-b border-white/10 bg-[#0d1b14]/95 px-3 py-3 backdrop-blur">
@@ -28,7 +28,7 @@ const PlayerEditorHeader = () => {
           </button>
         </div>
       </div>
-    </header >
+    </header>
   );
 };
 

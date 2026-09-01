@@ -1,28 +1,28 @@
-import PlayerEditorHeader from "./PlayerEditorHeader";
 import { useTacticsState } from "../store/tactics";
 
 const PlayerEditor = () => {
-  const names = useTacticsState(state => state.names);
-  const changeName = useTacticsState(state => state.changeName);
+  const bench = useTacticsState((state) => state.bench);
+  const names = useTacticsState((state) => state.names);
+  const changeName = useTacticsState((state) => state.changeName);
 
   return (
-    <>
-      <PlayerEditorHeader />
+    <main className="mx-auto min-h-0 w-full max-w-190 px-4 py-6">
+      <div className="space-y-2">
+        {[...Array(11 + bench).keys()].map((slot) => {
+          const { name, modified } = names[slot];
 
-      <main className="mx-auto min-h-screen w-full max-w-190 px-4 py-5">
-        <div className="space-y-2">
-          {names.map(({ name, modified }, index) => (
+          return (
             <input
-              key={`player-editor-input-${index}`}
+              key={`player-editor-input-${slot}`}
               value={modified ? name : ""}
-              onChange={(event) => changeName(index, event.target.value)}
+              onChange={(event) => changeName(slot, event.target.value)}
               className="w-full flex text-sm font-medium placeholder:text-white/25 p-2.5 bg-white/[0.035] rounded-xl border border-white/20 focus:border-[#c59154] outline-none"
-              placeholder={`Player ${index + 1}`}
+              placeholder={`Player ${slot + 1}`}
             />
-          ))}
-        </div>
-      </main>
-    </>
+          );
+        })}
+      </div>
+    </main>
   );
 };
 

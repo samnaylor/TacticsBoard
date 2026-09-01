@@ -2,7 +2,7 @@ import { version } from "../data";
 
 const Footer = () => {
   return (
-    <footer className="border-t border-white/10 px-4 py-3 text-center text-[10px] text-white/35">
+    <footer className="sticky bottom-0 z-50 border-t border-white/10 px-4 py-4 text-center text-[10px] text-white/35">
       <div className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1">
         <span>© Sam Naylor</span>
 

@@ -6,15 +6,15 @@ import { useTacticsState } from "../store/tactics";
 interface Props {
   number: number;
   slot: number;
-  position?: { x: number; y: number; };
-};
+  position?: { x: number; y: number };
+}
 
 const Player = ({ number, slot, position }: Props) => {
-  const { name, modified } = useTacticsState(state => state.names)[slot];
-  const selectedSlot = useTacticsState(state => state.selectedSlot);
-  const setSelectedSlot = useTacticsState(state => state.setSelectedSlot);
-  const setEditingPlayer = useTacticsState(state => state.setEditingPlayer);
-  const handlePlayerClick = useTacticsState(state => state.handlePlayerClick);
+  const { name, modified } = useTacticsState((state) => state.names)[slot];
+  const selectedSlot = useTacticsState((state) => state.selectedSlot);
+  const setSelectedSlot = useTacticsState((state) => state.setSelectedSlot);
+  const setEditingPlayer = useTacticsState((state) => state.setEditingPlayer);
+  const handlePlayerClick = useTacticsState((state) => state.handlePlayerClick);
 
   const selected = selectedSlot === slot;
 
@@ -24,11 +24,11 @@ const Player = ({ number, slot, position }: Props) => {
       PointerSensor.configure({
         activationConstraints: [
           new PointerActivationConstraints.Distance({
-            value: 8
-          })
-        ]
-      })
-    ]
+            value: 8,
+          }),
+        ],
+      }),
+    ],
   });
   const { ref: droppableRef } = useDroppable({ id: slot });
 
@@ -51,7 +51,7 @@ const Player = ({ number, slot, position }: Props) => {
 
   return (
     <div
-      ref={node => {
+      ref={(node) => {
         draggableRef(node);
         droppableRef(node);
       }}
@@ -68,16 +68,16 @@ const Player = ({ number, slot, position }: Props) => {
         position
           ? "absolute z-10 -translate-x-1/2 -translate-y-1/2"
           : "relative flex shrink-0 flex-col items-center",
-        selected
-          ? "ring-4 ring-[#c59154]/60 rounded-md"
-          : ""
+        selected ? "ring-4 ring-[#c59154]/60 rounded-md" : "",
       ].join(" ")}
 
       style={
-        position ? {
-          left: `${position.x}%`,
-          top: `${position.y}%`
-        } : undefined
+        position
+          ? {
+              left: `${position.x}%`,
+              top: `${position.y}%`,
+            }
+          : undefined
       }
     >
       <div
@@ -97,10 +97,8 @@ const Player = ({ number, slot, position }: Props) => {
       <div className="mt-1 max-w-24 truncate rounded-md bg-[#092016]/90 px-1.5 py-0.5 text-[8px] font-semibold leading-tight text-[#f1faf0] shadow-sm sm:max-w-28 sm:text-[10px]">
         {modified ? name : `Player ${slot + 1}`}
       </div>
-
     </div>
   );
-
 };
 
 export default Player;
