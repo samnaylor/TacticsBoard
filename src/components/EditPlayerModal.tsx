@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { MdClose } from "react-icons/md";
 import { useTacticsState } from "../store/tactics";
 
@@ -13,6 +13,15 @@ const EditPlayerModal = () => {
   const [value, setValue] = useState(name);
   const onClose = () => setEditingPlayer(null);
 
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    requestAnimationFrame(() => {
+      inputRef.current?.focus();
+      inputRef.current?.select();
+    });
+  }, []);
+
   const handleSubmit = (event: React.SubmitEvent) => {
     event.preventDefault();
 
@@ -23,7 +32,11 @@ const EditPlayerModal = () => {
   };
 
   return (
-    <div className="fixed inset-0 z-100 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm sm:items-center">
+    <div
+      className="fixed inset-0 z-100 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm sm:items-center"
+      onPointerDown={(event) => event.stopPropagation()}
+      onPointerUp={(event) => event.stopPropagation()}
+    >
       <form
         onSubmit={handleSubmit}
         onClick={(event) => event.stopPropagation()}
@@ -42,6 +55,7 @@ const EditPlayerModal = () => {
 
         <input
           autoFocus
+          ref={inputRef}
           value={value}
           type="text"
           onChange={(event) => setValue(event.target.value)}

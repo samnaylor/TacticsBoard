@@ -33,11 +33,13 @@ const Player = ({ number, slot, position }: Props) => {
   const { ref: droppableRef } = useDroppable({ id: slot });
 
   const longPressTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const isLongPress = useRef(false);
 
   const handlePointerDown = () => {
+    isLongPress.current = false;
+
     longPressTimer.current = setTimeout(() => {
-      setSelectedSlot(null);
-      setEditingPlayer(slot);
+      isLongPress.current = true;
       longPressTimer.current = null;
     }, 500);
   };
@@ -47,6 +49,23 @@ const Player = ({ number, slot, position }: Props) => {
       clearTimeout(longPressTimer.current);
       longPressTimer.current = null;
     }
+
+    if (isLongPress.current) {
+      // Open only after the pointer interaction has completed.
+      setTimeout(() => {
+        setSelectedSlot(null);
+        setEditingPlayer(slot);
+      }, 0);
+    }
+  };
+
+  const handleClick = () => {
+    if (isLongPress.current) {
+      isLongPress.current = false;
+      return;
+    }
+
+    handlePlayerClick(slot);
   };
 
   return (
@@ -59,9 +78,7 @@ const Player = ({ number, slot, position }: Props) => {
       onPointerDown={handlePointerDown}
       onPointerUp={handlePointerUp}
       onPointerCancel={handlePointerUp}
-      onPointerLeave={handlePointerUp}
-
-      onClick={() => handlePlayerClick(slot)}
+      onClick={handleClick}
 
       className={[
         "group touch-none select-none flex items-center justify-center flex-col",
