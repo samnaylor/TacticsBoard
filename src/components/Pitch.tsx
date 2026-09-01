@@ -52,7 +52,7 @@ const Pitch = () => {
         <main className="mx-auto flex w-full max-w-190 flex-1 min-w-0 items-center justify-center gap-5 px-3 py-4 sm:px-5">
           <div
             id="formation-export"
-            className="flex w-full max-w-130 min-w-0 flex-col p-2 md:max-w-[70%] md:flex-row md:gap-4"
+            className="flex w-full max-w-130 min-w-0 flex-col p-2 md:max-w-[70%]"
           >
             <div
               ref={pitchRef}
@@ -83,7 +83,7 @@ const Pitch = () => {
               })}
             </div>
 
-            <div className="mt-3 w-full md:w-1/5">
+            <div className="mt-3 w-full">
               <Bench />
             </div>
           </div>
