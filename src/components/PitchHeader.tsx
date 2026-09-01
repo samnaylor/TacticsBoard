@@ -29,9 +29,17 @@ const exportPng = async () => {
 };
 
 const PitchHeader = () => {
+  const layout = useTacticsState((state) => state.layout);
   const formation = useTacticsState((state) => state.formation);
   const changeFormation = useTacticsState((state) => state.changeFormation);
   const gotoPlayers = useTacticsState((state) => state.gotoPlayers);
+
+  const custom =
+    layout.filter(
+      (position, index) =>
+        position.x === formations[formation][index].x &&
+        position.y === formations[formation][index].y,
+    ).length < 11;
 
   return (
     <header className="sticky top-0 z-50 border-b border-white/10 bg-[#0d1b14]/95 px-3 py-3 backdrop-blur">
@@ -49,6 +57,7 @@ const PitchHeader = () => {
             {Object.keys(formations).map((name) => (
               <option key={name} value={name}>
                 {name}
+                {name === formation && custom ? " *" : ""}
               </option>
             ))}
           </select>

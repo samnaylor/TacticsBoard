@@ -24,7 +24,7 @@ const Player = ({ number, slot, position }: Props) => {
       PointerSensor.configure({
         activationConstraints: [
           new PointerActivationConstraints.Distance({
-            value: 8,
+            value: 4,
           }),
         ],
       }),
