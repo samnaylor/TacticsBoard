@@ -9,7 +9,7 @@ interface TacticsState {
   editingPlayer: number | null;
 
   bench: number;
-  names: string[];
+  names: { name: string, modified: boolean; }[];
 
   changeName: (slot: number, newName: string) => void;
   changeFormation: (formation: Formation) => void;
@@ -22,7 +22,7 @@ interface TacticsState {
 
   setScreen: (screen: Screen) => void;
   setFormation: (formation: Formation) => void;
-  setNames: (names: string[]) => void;
+  setNames: (names: { name: string, modified: boolean; }[]) => void;
   setSelectedSlot: (selectedSlot: number | null) => void;
   setEditingPlayer: (editingPlayer: number | null) => void;
 };
@@ -38,12 +38,12 @@ export const useTacticsState = create<TacticsState>()(
       editingPlayer: null,
 
       bench: 3,
-      names: defaultNames,
+      names: defaultNames.map(name => ({ name, modified: false })),
 
       changeName: (slot, newName) =>
         set((state) => ({
-          names: state.names.map((name, i) =>
-            i === slot ? newName : name
+          names: state.names.map(({ name, modified }, i) =>
+            i === slot ? { name: newName, modified: true } : { name, modified }
           ),
         })),
 

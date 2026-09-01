@@ -11,10 +11,10 @@ const PlayerEditor = () => {
 
       <main className="mx-auto min-h-screen w-full max-w-190 px-4 py-5">
         <div className="space-y-2">
-          {names.map((name, index) => (
+          {names.map(({ name, modified }, index) => (
             <input
               key={`player-editor-input-${index}`}
-              value={name === `Player ${index + 1}` ? "" : name}
+              value={modified ? name : ""}
               onChange={(event) => changeName(index, event.target.value)}
               className="w-full flex text-sm font-medium placeholder:text-white/25 p-2.5 bg-white/[0.035] rounded-xl border border-white/20 focus:border-[#c59154] outline-none"
               placeholder={`Player ${index + 1}`}

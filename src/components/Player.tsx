@@ -10,7 +10,7 @@ interface Props {
 };
 
 const Player = ({ number, slot, position }: Props) => {
-  const name = useTacticsState(state => state.names)[slot];
+  const { name, modified } = useTacticsState(state => state.names)[slot];
   const selectedSlot = useTacticsState(state => state.selectedSlot);
   const setSelectedSlot = useTacticsState(state => state.setSelectedSlot);
   const setEditingPlayer = useTacticsState(state => state.setEditingPlayer);
@@ -95,7 +95,7 @@ const Player = ({ number, slot, position }: Props) => {
       </div>
 
       <div className="mt-1 max-w-24 truncate rounded-md bg-[#092016]/90 px-1.5 py-0.5 text-[8px] font-semibold leading-tight text-[#f1faf0] shadow-sm sm:max-w-28 sm:text-[10px]">
-        {name}
+        {modified ? name : `Player ${slot + 1}`}
       </div>
 
     </div>

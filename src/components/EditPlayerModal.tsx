@@ -9,7 +9,8 @@ const EditPlayerModal = () => {
   const changeName = useTacticsState(state => state.changeName);
   const setEditingPlayer = useTacticsState(state => state.setEditingPlayer);
 
-  const [value, setValue] = useState(names[editingPlayer]);
+  const { name } = names[editingPlayer];
+  const [value, setValue] = useState(name);
 
   const onClose = () => setEditingPlayer(null);
 
@@ -18,11 +19,7 @@ const EditPlayerModal = () => {
 
     const trimmed = value.trim();
 
-    if (!trimmed) {
-      return;
-    }
-
-    changeName(editingPlayer, value);
+    changeName(editingPlayer, trimmed);
     setEditingPlayer(null);
   };
 

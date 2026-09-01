@@ -15,7 +15,7 @@ const PlayerEditorHeader = () => {
 
         <div className="flex shrink-0 items-center gap-1.5">
           <button
-            onClick={() => setNames(defaultNames)}
+            onClick={() => setNames(defaultNames.map(name => ({ name, modified: false })))}
             className="rounded-lg px-2.5 py-2 text-xs font-semibold text-white/50 transition hover:bg-white/10 hover:text-white"
           >
             Reset
