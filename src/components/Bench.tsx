@@ -1,7 +1,11 @@
 import Player from "./Player";
 import { useTacticsState } from "../store/tactics";
 
-const Bench = () => {
+interface BenchProps {
+  restrictionRef: React.RefObject<HTMLDivElement | null>;
+}
+
+const Bench = ({ restrictionRef }: BenchProps) => {
   const bench = useTacticsState((state) => state.bench);
   const decreaseBench = useTacticsState((state) => state.decreaseBench);
   const increaseBench = useTacticsState((state) => state.increaseBench);
@@ -53,6 +57,7 @@ const Bench = () => {
                 key={`bench-${benchSlot}`}
                 number={slot + 1}
                 slot={slot}
+                restrictionRef={restrictionRef}
               />
             );
           })}

@@ -35,6 +35,7 @@ const Pitch = () => {
   const setSelectedSlot = useTacticsState((state) => state.setSelectedSlot);
 
   const pitchRef = useRef<HTMLDivElement>(null);
+  const restrictionRef = useRef<HTMLDivElement>(null);
 
   const custom =
     layout.filter(
@@ -104,6 +105,7 @@ const Pitch = () => {
 
           <div
             id="formation-export"
+            ref={restrictionRef}
             className="flex w-full max-w-130 min-w-0 flex-col p-2 md:max-w-[70%]"
           >
             <div
@@ -131,13 +133,14 @@ const Pitch = () => {
                     number={number}
                     slot={slot}
                     position={position}
+                    restrictionRef={restrictionRef}
                   />
                 );
               })}
             </div>
 
             <div className="mt-3 w-full">
-              <Bench />
+              <Bench restrictionRef={restrictionRef} />
             </div>
           </div>
         </main>

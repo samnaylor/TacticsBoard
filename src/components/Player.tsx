@@ -1,5 +1,6 @@
 import { PointerSensor, useDraggable, useDroppable } from "@dnd-kit/react";
 import { PointerActivationConstraints } from "@dnd-kit/dom";
+import { RestrictToElement } from "@dnd-kit/dom/modifiers";
 import { useRef } from "react";
 import { useTacticsState } from "../store/tactics";
 import { kitColours } from "../data";
@@ -8,9 +9,10 @@ interface Props {
   number: number;
   slot: number;
   position?: { x: number; y: number };
+  restrictionRef: React.RefObject<HTMLDivElement | null>;
 }
 
-const Player = ({ number, slot, position }: Props) => {
+const Player = ({ number, slot, position, restrictionRef }: Props) => {
   const dndEnabled = useTacticsState((state) => state.dndEnabled);
   const { name, modified } = useTacticsState((state) => state.names)[slot];
   const selectedSlot = useTacticsState((state) => state.selectedSlot);
@@ -24,6 +26,11 @@ const Player = ({ number, slot, position }: Props) => {
   const { ref: draggableRef } = useDraggable({
     id: slot,
     disabled: !dndEnabled,
+    modifiers: [
+      RestrictToElement.configure({
+        element: restrictionRef.current,
+      }),
+    ],
     sensors: [
       PointerSensor.configure({
         activationConstraints: [
