@@ -85,7 +85,7 @@ const Pitch = () => {
 
       <div className="flex min-h-0 w-full flex-1 flex-col overflow-hidden bg-[#0d1b14] font-body text-[#f1faf0]">
         <main className="mx-auto flex-col flex w-full max-w-190 flex-1 min-w-0 items-center justify-center gap-5 px-3 py-3 sm:px-5">
-          <div className="flex flex-col w-full items-left justify-start px-4 gap-0.5 float-start">
+          <div className="flex flex-col w-full max-w-130 items-left justify-start px-4 gap-0.5 float-start">
             <label className="text-[10px] text-white/35">Formation</label>
             <select
               value={formation}

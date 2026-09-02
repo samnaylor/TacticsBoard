@@ -21,12 +21,12 @@ const Bench = ({ restrictionRef }: BenchProps) => {
 
             <div
               data-export-ignore
-              className="flex items-center justify-center"
+              className="flex items-center justify-center bg-zinc-900 border border-white/50 rounded px-2"
             >
               <button
                 disabled={bench === 5}
                 onClick={increaseBench}
-                className="rounded-lg px-2 py-2 text-md font-extrabold text-white/50 transition hover:bg-white/10 hover:text-white disabled:cursor-not-allowed disabled:opacity-20"
+                className="rounded-lg px-2 py-1 text-md font-extrabold text-white/50 transition hover:bg-white/10 hover:text-white disabled:cursor-not-allowed disabled:opacity-20"
               >
                 +
               </button>
@@ -38,7 +38,7 @@ const Bench = ({ restrictionRef }: BenchProps) => {
               <button
                 disabled={bench === 0}
                 onClick={decreaseBench}
-                className="rounded-lg px-2 py-2 text-md font-extrabold text-white/50 transition hover:bg-white/10 hover:text-white disabled:cursor-not-allowed disabled:opacity-20"
+                className="rounded-lg px-2 py-1 text-md font-extrabold text-white/50 transition hover:bg-white/10 hover:text-white disabled:cursor-not-allowed disabled:opacity-20"
               >
                 -
               </button>
