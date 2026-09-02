@@ -1,5 +1,5 @@
 import type React from "react";
-import { MdClose, MdFormatListNumbered } from "react-icons/md";
+import { MdClose, MdColorLens, MdFormatListNumbered } from "react-icons/md";
 import { TbFileExport } from "react-icons/tb";
 import { defaultNames, formations, version } from "../data";
 import { useTacticsState } from "../store/tactics";
@@ -38,6 +38,7 @@ interface Props {
 }
 
 const DrawerMenu = ({ open, setOpen }: Props) => {
+  const screen = useTacticsState((state) => state.screen);
   const formation = useTacticsState((state) => state.formation);
   const resetNames = useTacticsState((state) => state.resetNames);
   const gotoPitch = useTacticsState((state) => state.gotoPitch);
@@ -76,8 +77,6 @@ const DrawerMenu = ({ open, setOpen }: Props) => {
         </div>
 
         <nav className="flex-1 overflow-y-auto p-3">
-          {/* TODO: indicate active */}
-
           <MenuItem
             icon={<GiSoccerField />}
             label="Pitch"
@@ -85,6 +84,7 @@ const DrawerMenu = ({ open, setOpen }: Props) => {
               gotoPitch();
               onClose();
             }}
+            active={screen === "pitch"}
           />
 
           <MenuItem
@@ -94,23 +94,16 @@ const DrawerMenu = ({ open, setOpen }: Props) => {
               gotoPlayers();
               onClose();
             }}
+            active={screen === "players"}
           />
 
-          <div className="my-3 border-t border-white/10" />
+          <Divider label="Actions" />
 
           <MenuItem
             icon={<TbFileExport />}
             label="Export PNG"
             onClick={exportPng}
           />
-
-          {/* <MenuItem
-            icon={<MdColorLens />}
-            label="Toggle Colour Scheme"
-            onClick={onClose}
-          /> */}
-
-          <div className="my-3 border-t border-white/10" />
 
           <MenuItem
             icon={<RiResetLeftFill />}
@@ -128,6 +121,15 @@ const DrawerMenu = ({ open, setOpen }: Props) => {
               resetNames();
               onClose();
             }}
+          />
+
+          <Divider label="Settings" />
+
+          <MenuItem
+            icon={<MdColorLens />}
+            label="Toggle Colour Scheme"
+            onClick={onClose}
+            disabled
           />
         </nav>
 
@@ -162,16 +164,65 @@ interface MenuItemsProps {
   icon: React.ReactNode;
   label: string | React.ReactNode;
   onClick: () => void;
+  active?: boolean;
+  disabled?: boolean;
 }
 
-function MenuItem({ icon, label, onClick }: MenuItemsProps) {
+const MenuItem = ({
+  icon,
+  label,
+  onClick,
+  active = false,
+  disabled = false,
+}: MenuItemsProps) => {
   return (
     <button
       onClick={onClick}
-      className="flex w-full items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium text-white/60 transition hover:bg-white/10 hover:text-white"
+      disabled={disabled}
+      className={`
+        group relative flex w-full items-center gap-3 rounded-xl p-3
+        text-sm font-medium outline-none transition-all duration-200
+        ${
+          disabled
+            ? "cursor-not-allowed text-white/20"
+            : active
+              ? "bg-emerald-400/12 text-white"
+              : "text-white/55 hover:bg-white/[0.07] hover:text-white"
+        }
+      `}
     >
-      <span className="text-xl text-white/50">{icon}</span>
+      <span
+        className={`
+          text-xl transition-colors
+          ${
+            disabled
+              ? "text-white/15"
+              : active
+                ? "text-emerald-300"
+                : "text-white/35 group-hover:text-white/70"
+          }
+        `}
+      >
+        {icon}
+      </span>
+
       <span className="w-full text-left">{label}</span>
     </button>
   );
+};
+
+interface DividerProps {
+  label: string;
 }
+
+const Divider = ({ label }: DividerProps) => {
+  return (
+    <div className="my-2 flex items-center gap-2">
+      <div className="w-6 h-px bg-white/10" />
+      <span className="text-[10px] font-medium uppercase tracking-wider text-white/30">
+        {label}
+      </span>
+      <div className="h-px flex-1 bg-white/10" />
+    </div>
+  );
+};
