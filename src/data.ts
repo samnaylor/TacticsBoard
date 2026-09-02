@@ -1,4 +1,4 @@
-export const version = "0.0.19";
+export const version = "0.1.0";
 
 export type Screen = "pitch" | "players";
 
