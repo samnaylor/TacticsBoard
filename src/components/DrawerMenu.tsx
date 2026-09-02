@@ -1,12 +1,11 @@
 import type React from "react";
-import { MdClose } from "react-icons/md";
+import { MdClose, MdFormatListNumbered } from "react-icons/md";
 import { TbFileExport } from "react-icons/tb";
 import { defaultNames, formations, version } from "../data";
 import { useTacticsState } from "../store/tactics";
 import { toPng } from "html-to-image";
 import { RiResetLeftFill } from "react-icons/ri";
 import { GiSoccerField } from "react-icons/gi";
-import { FaClipboardUser } from "react-icons/fa6";
 
 const exportPng = async () => {
   const node = document.getElementById("formation-export");
@@ -89,7 +88,7 @@ const DrawerMenu = ({ open, setOpen }: Props) => {
           />
 
           <MenuItem
-            icon={<FaClipboardUser />}
+            icon={<MdFormatListNumbered />}
             label="Players"
             onClick={() => {
               gotoPlayers();

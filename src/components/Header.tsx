@@ -1,9 +1,10 @@
-import { MdMenu, MdOutlineArrowBack } from "react-icons/md";
+import { MdFormatListNumbered, MdMenu } from "react-icons/md";
 import { useTacticsState } from "../store/tactics";
 import logo from "../assets/addinghamfc.png";
 import DrawerMenu from "./DrawerMenu";
 import { useState } from "react";
 import { RiResetLeftFill } from "react-icons/ri";
+import { GiSoccerField } from "react-icons/gi";
 
 const Header = () => {
   const screen = useTacticsState((state) => state.screen);
@@ -11,6 +12,7 @@ const Header = () => {
   const resetNames = useTacticsState((state) => state.resetNames);
   const changeFormation = useTacticsState((state) => state.changeFormation);
   const gotoPitch = useTacticsState((state) => state.gotoPitch);
+  const gotoPlayers = useTacticsState((state) => state.gotoPlayers);
 
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -30,7 +32,16 @@ const Header = () => {
               onClick={gotoPitch}
               className="rounded-lg px-2.5 py-2 text-xs font-semibold text-white/50 transition hover:bg-white/10 hover:text-white"
             >
-              <MdOutlineArrowBack className="h-6 w-6" />
+              <GiSoccerField className="h-6 w-6" />
+            </button>
+          )}
+
+          {screen === "pitch" && (
+            <button
+              onClick={gotoPlayers}
+              className="rounded-lg px-2.5 py-2 text-xs font-semibold text-white/50 transition hover:bg-white/10 hover:text-white"
+            >
+              <MdFormatListNumbered className="h-6 w-6" />
             </button>
           )}
         </div>
