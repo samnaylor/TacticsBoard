@@ -1,4 +1,4 @@
-import { MdAdd } from "react-icons/md";
+import { MdAdd, MdClose } from "react-icons/md";
 import { useTacticsState } from "../store/tactics";
 import Divider from "./Divider";
 
@@ -7,6 +7,7 @@ const PlayerEditor = () => {
   const names = useTacticsState((state) => state.names);
   const changeName = useTacticsState((state) => state.changeName);
   const increaseBench = useTacticsState((state) => state.increaseBench);
+  const decreaseBench = useTacticsState((state) => state.decreaseBench);
 
   return (
     <main className="mx-auto min-h-0 w-full max-w-190 px-4 py-3">
@@ -34,13 +35,21 @@ const PlayerEditor = () => {
             const { name, modified } = names[slot + 11];
 
             return (
-              <input
-                key={`player-editor-input-${slot}`}
-                value={modified ? name : ""}
-                onChange={(event) => changeName(slot, event.target.value)}
-                className="w-full flex text-sm font-medium placeholder:text-white/25 p-2.5 bg-white/[0.035] rounded-xl border border-white/20 focus:border-[#c59154] outline-none"
-                placeholder={`Player ${slot + 1}`}
-              />
+              <div className="flex flex-row w-full gap-2">
+                <input
+                  key={`player-editor-input-${slot}`}
+                  value={modified ? name : ""}
+                  onChange={(event) => changeName(slot, event.target.value)}
+                  className="w-full flex text-sm font-medium placeholder:text-white/25 p-2.5 bg-white/[0.035] rounded-xl border border-white/20 focus:border-[#c59154] outline-none"
+                  placeholder={`Player ${slot + 12}`}
+                />
+                <button
+                  onClick={decreaseBench}
+                  className="group text-sm font-medium placeholder:text-white/25 p-2.5 bg-white/[0.035] rounded-xl border border-white/20 outline-none hover:bg-white/10"
+                >
+                  <MdClose className="w-4 h-4 text-white/50 transition hover:text-white" />
+                </button>
+              </div>
             );
           })}
 
