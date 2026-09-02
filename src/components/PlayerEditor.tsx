@@ -28,9 +28,10 @@ const PlayerEditor = () => {
             <button
               key={`add-bench-${slot}`}
               onClick={increaseBench}
-              className="group w-full flex text-sm items-center justify-center font-medium p-2.5 bg-white/[0.035] rounded-xl border border-white/20 outline-none transition hover:bg-white/10"
+              className="group w-full flex text-sm items-center gap-2 justify-center font-medium p-2.5 bg-white/[0.035] rounded-xl border border-white/20 text-white/25 hover:text-white outline-none transition hover:bg-white/10"
             >
-              <MdAdd className="fill-white/25 transition group-hover:fill-white" />
+              <span>Add Sub</span>
+              <MdAdd className="w-4 h-4 text-white/50 transition group-hover:text-white" />
             </button>
           );
         })}
