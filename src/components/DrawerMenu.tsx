@@ -42,6 +42,7 @@ interface Props {
 
 const DrawerMenu = ({ open, setOpen }: Props) => {
   const dndEnabled = useTacticsState((state) => state.dndEnabled);
+  const colourScheme = useTacticsState((state) => state.colourScheme);
   const screen = useTacticsState((state) => state.screen);
   const formation = useTacticsState((state) => state.formation);
   const resetNames = useTacticsState((state) => state.resetNames);
@@ -146,13 +147,13 @@ const DrawerMenu = ({ open, setOpen }: Props) => {
 
               <MenuItem
                 icon={<MdColorLens />}
-                label="Toggle Colour Scheme"
+                label={`Toggle Colour Scheme: ${colourScheme.at(0)?.toUpperCase() + colourScheme.slice(1)}`}
                 onClick={toggleColourScheme}
               />
 
               <MenuItem
                 icon={<TfiHandDrag />}
-                label={`Drag-and-Drop: ${dndEnabled ? "On" : "Off"}`}
+                label={`Drag and Drop: ${dndEnabled ? "On" : "Off"}`}
                 onClick={toggleDnd}
               />
             </nav>

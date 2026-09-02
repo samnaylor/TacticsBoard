@@ -154,6 +154,7 @@ export const useTacticsState = create<TacticsState>()(
         names: state.names,
         layout: state.layout,
         colourScheme: state.colourScheme,
+        dndEnabled: state.dndEnabled,
       }),
     },
   ),
