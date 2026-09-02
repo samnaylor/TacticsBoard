@@ -22,7 +22,7 @@ const Header = () => {
         <img
           src={logo}
           draggable={false}
-          className="absolute left-1/2 top-1/2 h-8 w-8 -translate-x-1/2 -translate-y-1/2"
+          className="absolute left-1/2 top-1/2 h-12 w-12 -translate-x-1/2 -translate-y-1/2"
         />
 
         {/* Left side */}
@@ -30,7 +30,7 @@ const Header = () => {
           {screen === "players" && (
             <button
               onClick={gotoPitch}
-              className="rounded-lg px-2.5 py-2 text-xs font-semibold text-white/50 transition hover:bg-white/10 hover:text-white"
+              className="rounded-lg px-2.5 py-2 text-white/50 transition hover:bg-white/10 hover:text-white"
             >
               <GiSoccerField className="h-6 w-6" />
             </button>
@@ -39,7 +39,7 @@ const Header = () => {
           {screen === "pitch" && (
             <button
               onClick={gotoPlayers}
-              className="rounded-lg px-2.5 py-2 text-xs font-semibold text-white/50 transition hover:bg-white/10 hover:text-white"
+              className="rounded-lg px-2.5 py-2 text-white/50 transition hover:bg-white/10 hover:text-white"
             >
               <MdFormatListNumbered className="h-6 w-6" />
             </button>
@@ -57,14 +57,14 @@ const Header = () => {
 
               resetNames();
             }}
-            className="rounded-lg px-2.5 py-2 text-xs font-semibold text-white/50 transition hover:bg-white/10 hover:text-white"
+            className="rounded-lg px-2.5 py-2 text-white/50 transition hover:bg-white/10 hover:text-white"
           >
             <RiResetLeftFill className="w-6 h-6" />
           </button>
 
           <button
             onClick={() => setMenuOpen(true)}
-            className="rounded-lg px-2.5 py-2 text-xs font-semibold text-white/50 transition hover:bg-white/10 hover:text-white"
+            className="rounded-lg px-2.5 py-2 text-white/50 transition hover:bg-white/10 hover:text-white"
           >
             <MdMenu className="h-6 w-6" />
           </button>
