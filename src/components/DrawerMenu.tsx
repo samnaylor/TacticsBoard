@@ -6,6 +6,7 @@ import { useTacticsState } from "../store/tactics";
 import { toPng } from "html-to-image";
 import { RiResetLeftFill } from "react-icons/ri";
 import { GiSoccerField } from "react-icons/gi";
+import Divider from "./Divider";
 
 const exportPng = async () => {
   const node = document.getElementById("formation-export");
@@ -43,6 +44,9 @@ const DrawerMenu = ({ open, setOpen }: Props) => {
   const resetNames = useTacticsState((state) => state.resetNames);
   const gotoPitch = useTacticsState((state) => state.gotoPitch);
   const gotoPlayers = useTacticsState((state) => state.gotoPlayers);
+  const toggleColourScheme = useTacticsState(
+    (state) => state.toggleColourScheme,
+  );
 
   const onClose = () => setOpen(false);
 
@@ -62,7 +66,7 @@ const DrawerMenu = ({ open, setOpen }: Props) => {
           open ? "translate-x-0" : "translate-x-full"
         }`}
       >
-        <div className="flex items-center justify-between border-b border-white/10 px-5 py-4">
+        <div className="flex items-center justify-between border-b border-white/40 px-5 py-4">
           <div>
             <p className="text-sm font-semibold text-white">Menu</p>
           </div>
@@ -77,6 +81,8 @@ const DrawerMenu = ({ open, setOpen }: Props) => {
         </div>
 
         <nav className="flex-1 overflow-y-auto p-3">
+          <Divider label="Screens" />
+
           <MenuItem
             icon={<GiSoccerField />}
             label="Pitch"
@@ -128,8 +134,10 @@ const DrawerMenu = ({ open, setOpen }: Props) => {
           <MenuItem
             icon={<MdColorLens />}
             label="Toggle Colour Scheme"
-            onClick={onClose}
-            disabled
+            onClick={() => {
+              toggleColourScheme();
+              onClose();
+            }}
           />
         </nav>
 
@@ -208,21 +216,5 @@ const MenuItem = ({
 
       <span className="w-full text-left">{label}</span>
     </button>
-  );
-};
-
-interface DividerProps {
-  label: string;
-}
-
-const Divider = ({ label }: DividerProps) => {
-  return (
-    <div className="my-2 flex items-center gap-2">
-      <div className="w-6 h-px bg-white/10" />
-      <span className="text-[10px] font-medium uppercase tracking-wider text-white/30">
-        {label}
-      </span>
-      <div className="h-px flex-1 bg-white/10" />
-    </div>
   );
 };

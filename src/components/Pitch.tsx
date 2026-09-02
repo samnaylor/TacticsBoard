@@ -17,6 +17,7 @@ const Pitch = () => {
   const movePlayerPosition = useTacticsState(
     (state) => state.movePlayerPosition,
   );
+  const setSelectedSlot = useTacticsState((state) => state.setSelectedSlot);
 
   const pitchRef = useRef<HTMLDivElement>(null);
 
@@ -84,6 +85,7 @@ const Pitch = () => {
           >
             <div
               ref={pitchRef}
+              onClick={() => setSelectedSlot(null)}
               className="relative aspect-2/3 w-full overflow-hidden rounded-2xl bg-[#1e4d3a] shadow-[0_12px_40px_rgba(0,0,0,.35)]"
             >
               <div className="pointer-events-none absolute inset-0 z-1 bg-[radial-gradient(circle_at_50%_18%,rgba(255,255,255,.07),transparent_35%)]" />

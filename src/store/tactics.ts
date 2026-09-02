@@ -2,6 +2,7 @@ import { create } from "zustand";
 import {
   defaultNames,
   formations,
+  type ColourScheme,
   type Formation,
   type FormationSlot,
   type Screen,
@@ -13,6 +14,7 @@ interface TacticsState {
   formation: Formation;
   selectedSlot: number | null;
   editingPlayer: number | null;
+  colourScheme: ColourScheme;
 
   bench: number;
   names: { name: string; modified: boolean }[];
@@ -38,6 +40,8 @@ interface TacticsState {
 
   setSelectedSlot: (selectedSlot: number | null) => void;
   setEditingPlayer: (editingPlayer: number | null) => void;
+
+  toggleColourScheme: () => void;
 }
 
 const storageKey = "tactics-save";
@@ -49,6 +53,7 @@ export const useTacticsState = create<TacticsState>()(
       formation: "4-4-2",
       selectedSlot: null,
       editingPlayer: null,
+      colourScheme: "home",
 
       bench: 3,
       names: defaultNames.map((name) => ({ name, modified: false })),
@@ -129,6 +134,11 @@ export const useTacticsState = create<TacticsState>()(
 
       setSelectedSlot: (selectedSlot) => set({ selectedSlot }),
       setEditingPlayer: (editingPlayer) => set({ editingPlayer }),
+
+      toggleColourScheme: () =>
+        set((state) => ({
+          colourScheme: state.colourScheme === "home" ? "away" : "home",
+        })),
     }),
     {
       name: storageKey,
@@ -138,6 +148,7 @@ export const useTacticsState = create<TacticsState>()(
         formation: state.formation,
         names: state.names,
         layout: state.layout,
+        colourScheme: state.colourScheme,
       }),
     },
   ),
