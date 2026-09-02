@@ -71,7 +71,9 @@ const Header = () => {
         </div>
       </div>
 
-      <DrawerMenu open={menuOpen} setOpen={setMenuOpen} />
+      <div className="overflow-x-hidden">
+        <DrawerMenu open={menuOpen} setOpen={setMenuOpen} />
+      </div>
     </header>
   );
 };

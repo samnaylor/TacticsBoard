@@ -7,6 +7,8 @@ import { toPng } from "html-to-image";
 import { RiResetLeftFill } from "react-icons/ri";
 import { GiSoccerField } from "react-icons/gi";
 import Divider from "./Divider";
+import { TfiHandDrag } from "react-icons/tfi";
+import { AnimatePresence, motion } from "motion/react";
 
 const exportPng = async () => {
   const node = document.getElementById("formation-export");
@@ -39,6 +41,7 @@ interface Props {
 }
 
 const DrawerMenu = ({ open, setOpen }: Props) => {
+  const dndEnabled = useTacticsState((state) => state.dndEnabled);
   const screen = useTacticsState((state) => state.screen);
   const formation = useTacticsState((state) => state.formation);
   const resetNames = useTacticsState((state) => state.resetNames);
@@ -47,122 +50,137 @@ const DrawerMenu = ({ open, setOpen }: Props) => {
   const toggleColourScheme = useTacticsState(
     (state) => state.toggleColourScheme,
   );
+  const toggleDnd = useTacticsState((state) => state.toggleDnd);
 
   const onClose = () => setOpen(false);
 
   return (
-    <>
-      <div
-        onClick={onClose}
-        className={`fixed h-screen inset-0 z-100 bg-black/50 backdrop-blur-[2px] transition-opacity duration-300 ${
-          open
-            ? "pointer-events-auto opacity-100"
-            : "pointer-events-none opacity-0"
-        }`}
-      />
-
-      <aside
-        className={`fixed right-0 top-0 z-200 flex h-dvh w-[min(85vw,360px)] flex-col border-l border-white/10 bg-[#0d1b14] shadow-2xl transition-transform duration-300 ease-out ${
-          open ? "translate-x-0" : "translate-x-full"
-        }`}
-      >
-        <div className="flex items-center justify-between border-b border-white/40 px-5 py-4">
-          <div>
-            <p className="text-sm font-semibold text-white">Menu</p>
-          </div>
-
-          <button
+    <AnimatePresence>
+      {open && (
+        <>
+          <motion.div
+            key="backdrop"
             onClick={onClose}
-            aria-label="Close menu"
-            className="rounded-lg p-2 text-white/50 transition hover:bg-white/10 hover:text-white"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.15 }}
+            className="fixed h-screen inset-0 z-100 bg-black/50 backdrop-blur-[2px]"
+          />
+
+          <motion.aside
+            key="drawer"
+            initial={{ x: "100%" }}
+            animate={{ x: 0 }}
+            exit={{ x: "100%" }}
+            transition={{ duration: 0.15, ease: "easeInOut" }}
+            className="fixed right-0 top-0 z-200 flex h-dvh w-[min(85vw,360px)] flex-col border-l border-white/10 bg-[#0d1b14] shadow-2xl"
           >
-            <MdClose className="h-6 w-6" />
-          </button>
-        </div>
+            <div className="flex items-center justify-between border-b border-white/40 px-5 py-4">
+              <div>
+                <p className="text-sm font-semibold text-white">Menu</p>
+              </div>
 
-        <nav className="flex-1 overflow-y-auto p-3">
-          <Divider label="Screens" />
+              <button
+                onClick={onClose}
+                aria-label="Close menu"
+                className="rounded-lg p-2 text-white/50 transition hover:bg-white/10 hover:text-white"
+              >
+                <MdClose className="h-6 w-6" />
+              </button>
+            </div>
 
-          <MenuItem
-            icon={<GiSoccerField />}
-            label="Pitch"
-            onClick={() => {
-              gotoPitch();
-              onClose();
-            }}
-            active={screen === "pitch"}
-          />
+            <nav className="flex-1 overflow-y-auto p-3">
+              <Divider label="Screens" />
 
-          <MenuItem
-            icon={<MdFormatListNumbered />}
-            label="Players"
-            onClick={() => {
-              gotoPlayers();
-              onClose();
-            }}
-            active={screen === "players"}
-          />
+              <MenuItem
+                icon={<GiSoccerField />}
+                label="Pitch"
+                onClick={() => {
+                  gotoPitch();
+                  onClose();
+                }}
+                active={screen === "pitch"}
+              />
 
-          <Divider label="Actions" />
+              <MenuItem
+                icon={<MdFormatListNumbered />}
+                label="Players"
+                onClick={() => {
+                  gotoPlayers();
+                  onClose();
+                }}
+                active={screen === "players"}
+              />
 
-          <MenuItem
-            icon={<TbFileExport />}
-            label="Export PNG"
-            onClick={exportPng}
-          />
+              <Divider label="Actions" />
 
-          <MenuItem
-            icon={<RiResetLeftFill />}
-            label="Reset All"
-            onClick={() => {
-              useTacticsState.persist.clearStorage();
+              <MenuItem
+                icon={<TbFileExport />}
+                label="Export PNG"
+                onClick={exportPng}
+              />
 
-              useTacticsState.setState({
-                bench: 3,
-                formation: formation,
-                names: defaultNames.map((name) => ({ name, modified: false })),
-                layout: formations[formation],
-              });
+              <MenuItem
+                icon={<RiResetLeftFill />}
+                label="Reset All"
+                onClick={() => {
+                  useTacticsState.persist.clearStorage();
 
-              resetNames();
-              onClose();
-            }}
-          />
+                  useTacticsState.setState({
+                    bench: 3,
+                    formation: formation,
+                    names: defaultNames.map((name) => ({
+                      name,
+                      modified: false,
+                    })),
+                    layout: formations[formation],
+                  });
 
-          <Divider label="Settings" />
+                  resetNames();
+                  onClose();
+                }}
+              />
 
-          <MenuItem
-            icon={<MdColorLens />}
-            label="Toggle Colour Scheme"
-            onClick={() => {
-              toggleColourScheme();
-              onClose();
-            }}
-          />
-        </nav>
+              <Divider label="Settings" />
 
-        <div className="border-t border-white/10 p-4 text-center text-[10px] text-white/35">
-          <div className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1">
-            <span>© Sam Naylor</span>
+              <MenuItem
+                icon={<MdColorLens />}
+                label="Toggle Colour Scheme"
+                onClick={toggleColourScheme}
+              />
 
-            <span className="text-white/15">•</span>
+              <MenuItem
+                icon={<TfiHandDrag />}
+                label={`Drag-and-Drop: ${dndEnabled ? "On" : "Off"}`}
+                onClick={toggleDnd}
+              />
+            </nav>
 
-            <a
-              href="https://github.com/samnaylor/TacticsBoard"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="transition hover:text-white/70"
-            >
-              GitHub
-            </a>
+            <div className="border-t border-white/10 p-4 text-center text-[10px] text-white/35">
+              <div className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1">
+                <span>© Sam Naylor</span>
 
-            <span className="text-white/15">•</span>
+                <span className="text-white/15">•</span>
 
-            <span>v{version}</span>
-          </div>
-        </div>
-      </aside>
-    </>
+                <a
+                  href="https://github.com/samnaylor/TacticsBoard"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="transition hover:text-white/70"
+                >
+                  GitHub
+                </a>
+
+                <span className="text-white/15">•</span>
+
+                <span>v{version}</span>
+              </div>
+            </div>
+          </motion.aside>
+        </>
+      )}
+    </AnimatePresence>
   );
 };
 

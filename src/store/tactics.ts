@@ -10,6 +10,7 @@ import {
 import { persist } from "zustand/middleware";
 
 interface TacticsState {
+  dndEnabled: boolean;
   screen: Screen;
   formation: Formation;
   selectedSlot: number | null;
@@ -20,6 +21,7 @@ interface TacticsState {
   names: { name: string; modified: boolean }[];
   layout: FormationSlot[];
 
+  toggleDnd: () => void;
   changeName: (slot: number, newName: string) => void;
   changeFormation: (formation: Formation) => void;
   swapNames: (slot0: number, slot1: number) => void;
@@ -49,6 +51,7 @@ const storageKey = "tactics-save";
 export const useTacticsState = create<TacticsState>()(
   persist(
     (set) => ({
+      dndEnabled: true,
       screen: "pitch",
       formation: "4-4-2",
       selectedSlot: null,
@@ -58,6 +61,8 @@ export const useTacticsState = create<TacticsState>()(
       bench: 3,
       names: defaultNames.map((name) => ({ name, modified: false })),
       layout: formations["4-4-2"],
+
+      toggleDnd: () => set((state) => ({ dndEnabled: !state.dndEnabled })),
 
       changeName: (slot, newName) =>
         set((state) => ({

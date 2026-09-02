@@ -11,6 +11,7 @@ interface Props {
 }
 
 const Player = ({ number, slot, position }: Props) => {
+  const dndEnabled = useTacticsState((state) => state.dndEnabled);
   const { name, modified } = useTacticsState((state) => state.names)[slot];
   const selectedSlot = useTacticsState((state) => state.selectedSlot);
   const setSelectedSlot = useTacticsState((state) => state.setSelectedSlot);
@@ -22,6 +23,7 @@ const Player = ({ number, slot, position }: Props) => {
 
   const { ref: draggableRef } = useDraggable({
     id: slot,
+    disabled: !dndEnabled,
     sensors: [
       PointerSensor.configure({
         activationConstraints: [
@@ -32,7 +34,10 @@ const Player = ({ number, slot, position }: Props) => {
       }),
     ],
   });
-  const { ref: droppableRef } = useDroppable({ id: slot });
+  const { ref: droppableRef } = useDroppable({
+    id: slot,
+    disabled: !dndEnabled,
+  });
 
   const longPressTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const isLongPress = useRef(false);
