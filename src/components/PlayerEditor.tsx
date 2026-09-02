@@ -1,9 +1,11 @@
+import { MdAdd } from "react-icons/md";
 import { useTacticsState } from "../store/tactics";
 
 const PlayerEditor = () => {
   const bench = useTacticsState((state) => state.bench);
   const names = useTacticsState((state) => state.names);
   const changeName = useTacticsState((state) => state.changeName);
+  const increaseBench = useTacticsState((state) => state.increaseBench);
 
   return (
     <main className="mx-auto min-h-0 w-full max-w-190 px-4 py-6">
@@ -19,6 +21,17 @@ const PlayerEditor = () => {
               className="w-full flex text-sm font-medium placeholder:text-white/25 p-2.5 bg-white/[0.035] rounded-xl border border-white/20 focus:border-[#c59154] outline-none"
               placeholder={`Player ${slot + 1}`}
             />
+          );
+        })}
+        {[...Array(5 - bench).keys()].map((slot) => {
+          return (
+            <button
+              key={`add-bench-${slot}`}
+              onClick={increaseBench}
+              className="group w-full flex text-sm items-center justify-center font-medium p-2.5 bg-white/[0.035] rounded-xl border border-white/20 outline-none transition hover:bg-white/10"
+            >
+              <MdAdd className="fill-white/25 transition group-hover:fill-white" />
+            </button>
           );
         })}
       </div>
