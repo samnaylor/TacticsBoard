@@ -2,6 +2,7 @@ import { PointerSensor, useDraggable, useDroppable } from "@dnd-kit/react";
 import { PointerActivationConstraints } from "@dnd-kit/dom";
 import { useRef } from "react";
 import { useTacticsState } from "../store/tactics";
+import { kitColours } from "../data";
 
 interface Props {
   number: number;
@@ -10,16 +11,19 @@ interface Props {
 }
 
 const Player = ({ number, slot, position }: Props) => {
+  const dndEnabled = useTacticsState((state) => state.dndEnabled);
   const { name, modified } = useTacticsState((state) => state.names)[slot];
   const selectedSlot = useTacticsState((state) => state.selectedSlot);
   const setSelectedSlot = useTacticsState((state) => state.setSelectedSlot);
   const setEditingPlayer = useTacticsState((state) => state.setEditingPlayer);
   const handlePlayerClick = useTacticsState((state) => state.handlePlayerClick);
+  const colourScheme = useTacticsState((state) => state.colourScheme);
 
   const selected = selectedSlot === slot;
 
   const { ref: draggableRef } = useDraggable({
     id: slot,
+    disabled: !dndEnabled,
     sensors: [
       PointerSensor.configure({
         activationConstraints: [
@@ -30,7 +34,10 @@ const Player = ({ number, slot, position }: Props) => {
       }),
     ],
   });
-  const { ref: droppableRef } = useDroppable({ id: slot });
+  const { ref: droppableRef } = useDroppable({
+    id: slot,
+    disabled: !dndEnabled,
+  });
 
   const longPressTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const isLongPress = useRef(false);
@@ -59,7 +66,9 @@ const Player = ({ number, slot, position }: Props) => {
     }
   };
 
-  const handleClick = () => {
+  const handleClick = (event: React.MouseEvent) => {
+    event.stopPropagation();
+
     if (isLongPress.current) {
       isLongPress.current = false;
       return;
@@ -85,7 +94,7 @@ const Player = ({ number, slot, position }: Props) => {
         position
           ? "absolute z-10 -translate-x-1/2 -translate-y-1/2"
           : "relative flex shrink-0 flex-col items-center",
-        selected ? "ring-4 ring-[#c59154]/60 rounded-md" : "",
+        selected ? `ring-4 ring-white/30 rounded-md` : "",
       ].join(" ")}
 
       style={
@@ -100,11 +109,16 @@ const Player = ({ number, slot, position }: Props) => {
       <div
         className={[
           "relative flex cursor-grab items-center justify-center",
-          "rounded-full border-2 border-[#c59154] bg-[#020165]",
+          "rounded-full border-2",
           "font-bold text-white shadow-[0_3px_10px_rgba(0,0,0,.35)]",
           "transition-transform active:scale-95",
           "h-10 w-10 text-sm sm:h-11 sm:w-11 sm:text-base",
         ].join(" ")}
+
+        style={{
+          backgroundColor: kitColours[colourScheme].main,
+          borderColor: kitColours[colourScheme].border,
+        }}
       >
         {number}
 

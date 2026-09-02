@@ -2,6 +2,7 @@ import { create } from "zustand";
 import {
   defaultNames,
   formations,
+  type ColourScheme,
   type Formation,
   type FormationSlot,
   type Screen,
@@ -9,15 +10,18 @@ import {
 import { persist } from "zustand/middleware";
 
 interface TacticsState {
+  dndEnabled: boolean;
   screen: Screen;
   formation: Formation;
   selectedSlot: number | null;
   editingPlayer: number | null;
+  colourScheme: ColourScheme;
 
   bench: number;
   names: { name: string; modified: boolean }[];
   layout: FormationSlot[];
 
+  toggleDnd: () => void;
   changeName: (slot: number, newName: string) => void;
   changeFormation: (formation: Formation) => void;
   swapNames: (slot0: number, slot1: number) => void;
@@ -38,6 +42,8 @@ interface TacticsState {
 
   setSelectedSlot: (selectedSlot: number | null) => void;
   setEditingPlayer: (editingPlayer: number | null) => void;
+
+  toggleColourScheme: () => void;
 }
 
 const storageKey = "tactics-save";
@@ -45,14 +51,18 @@ const storageKey = "tactics-save";
 export const useTacticsState = create<TacticsState>()(
   persist(
     (set) => ({
+      dndEnabled: true,
       screen: "pitch",
       formation: "4-4-2",
       selectedSlot: null,
       editingPlayer: null,
+      colourScheme: "home",
 
       bench: 3,
       names: defaultNames.map((name) => ({ name, modified: false })),
       layout: formations["4-4-2"],
+
+      toggleDnd: () => set((state) => ({ dndEnabled: !state.dndEnabled })),
 
       changeName: (slot, newName) =>
         set((state) => ({
@@ -129,6 +139,11 @@ export const useTacticsState = create<TacticsState>()(
 
       setSelectedSlot: (selectedSlot) => set({ selectedSlot }),
       setEditingPlayer: (editingPlayer) => set({ editingPlayer }),
+
+      toggleColourScheme: () =>
+        set((state) => ({
+          colourScheme: state.colourScheme === "home" ? "away" : "home",
+        })),
     }),
     {
       name: storageKey,
@@ -138,6 +153,8 @@ export const useTacticsState = create<TacticsState>()(
         formation: state.formation,
         names: state.names,
         layout: state.layout,
+        colourScheme: state.colourScheme,
+        dndEnabled: state.dndEnabled,
       }),
     },
   ),

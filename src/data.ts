@@ -1,6 +1,20 @@
-export const version = "0.0.19";
+export const version = "0.1.5";
 
 export type Screen = "pitch" | "players";
+
+export type ColourScheme = "home" | "away";
+
+export const kitColours: Record<ColourScheme, any> = {
+  home: {
+    main: "#020165",
+    border: "#c59154",
+  },
+
+  away: {
+    main: "#c59154",
+    border: "#020165",
+  },
+};
 
 export type FormationSlot = {
   x: number;
