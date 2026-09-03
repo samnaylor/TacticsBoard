@@ -4,6 +4,7 @@ import { RestrictToElement } from "@dnd-kit/dom/modifiers";
 import { useMemo, useRef } from "react";
 import { useTacticsState } from "../store/state";
 import PlayerToken from "./PlayerToken";
+import { playerLabel } from "../utils";
 
 const sensors = [
   PointerSensor.configure({
@@ -24,14 +25,17 @@ interface Props {
 
 const Player = ({ number, slot, position, restrictionRef }: Props) => {
   const dragDropEnabled = useTacticsState((state) => state.dragDropEnabled);
-  const { name, modified } = useTacticsState((state) => state.names)[slot];
-  const selectedSlot = useTacticsState((state) => state.selectedSlot);
-  const setSelectedSlot = useTacticsState((state) => state.setSelectedSlot);
-  const setEditingPlayer = useTacticsState((state) => state.setEditingPlayer);
-  const handlePlayerClick = useTacticsState((state) => state.handlePlayerClick);
+  const customName = useTacticsState((state) => state.customNames[slot]);
+  const selected = useTacticsState(
+    (state) =>
+      state.playerInteraction.type === "selected" &&
+      state.playerInteraction.slot === slot,
+  );
+  const openPlayerEditor = useTacticsState((state) => state.openPlayerEditor);
+  const selectOrSwapPlayer = useTacticsState(
+    (state) => state.selectOrSwapPlayer,
+  );
   const colourScheme = useTacticsState((state) => state.colourScheme);
-
-  const selected = selectedSlot === slot;
 
   const modifiers = useMemo(
     () => [
@@ -73,8 +77,7 @@ const Player = ({ number, slot, position, restrictionRef }: Props) => {
 
     if (isLongPress.current) {
       setTimeout(() => {
-        setSelectedSlot(null);
-        setEditingPlayer(slot);
+        openPlayerEditor(slot);
       }, 0);
     }
   };
@@ -87,7 +90,7 @@ const Player = ({ number, slot, position, restrictionRef }: Props) => {
       return;
     }
 
-    handlePlayerClick(slot);
+    selectOrSwapPlayer(slot);
   };
 
   return (
@@ -97,7 +100,7 @@ const Player = ({ number, slot, position, restrictionRef }: Props) => {
         droppableRef(node);
       }}
       number={number}
-      label={modified ? name : `Player ${slot + 1}`}
+      label={customName ?? playerLabel(slot)}
       colourScheme={colourScheme}
       selected={selected}
       position={position}

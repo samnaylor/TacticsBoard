@@ -6,30 +6,30 @@ import logo from "../assets/addinghamfc.webp";
 import EditPlayerModal from "./EditPlayerModal";
 import { useTacticsState } from "../store/state";
 import { useRef } from "react";
-import { formations } from "../data";
+import { formations, PITCH_COUNT } from "../data";
 import type { Formation } from "../types";
 
 const Pitch = () => {
   const dragDropEnabled = useTacticsState((state) => state.dragDropEnabled);
   const formation = useTacticsState((state) => state.formation);
-  const layout = useTacticsState((state) => state.layout);
-  const editingPlayer = useTacticsState((state) => state.editingPlayer);
+  const customPositions = useTacticsState((state) => state.customPositions);
+  const editingPlayer = useTacticsState(
+    (state) => state.playerInteraction.type === "editing",
+  );
   const swapNames = useTacticsState((state) => state.swapNames);
   const changeFormation = useTacticsState((state) => state.changeFormation);
   const movePlayerPosition = useTacticsState(
     (state) => state.movePlayerPosition,
   );
-  const setSelectedSlot = useTacticsState((state) => state.setSelectedSlot);
+  const clearPlayerInteraction = useTacticsState(
+    (state) => state.clearPlayerInteraction,
+  );
 
   const pitchRef = useRef<HTMLDivElement>(null);
   const restrictionRef = useRef<HTMLDivElement>(null);
 
-  const custom =
-    layout.filter(
-      (position, index) =>
-        position.x === formations[formation][index].x &&
-        position.y === formations[formation][index].y,
-    ).length < 11;
+  const positions = customPositions ?? formations[formation];
+  const custom = customPositions !== null;
 
   return (
     <DragDropProvider
@@ -68,9 +68,9 @@ const Pitch = () => {
         swapNames(Number(source!.id), Number(target.id));
       }}
     >
-      <div className="flex min-h-0 w-full flex-1 flex-col overflow-hidden bg-[#0d1b14] font-body text-[#f1faf0]">
-        <main className="mx-auto flex-col flex w-full max-w-190 flex-1 min-w-0 items-center justify-center gap-5 px-3 py-3 sm:px-5">
-          <div className="flex flex-col w-full max-w-130 items-left justify-start px-4 gap-0.5 float-start">
+      <div className="flex min-h-0 w-full flex-1 flex-col overflow-hidden">
+        <main className="mx-auto flex w-full min-w-0 max-w-190 flex-1 flex-col items-center justify-center gap-5 px-3 py-3 sm:px-5">
+          <div className="flex w-full max-w-130 flex-col items-start gap-0.5 px-4">
             <label className="text-[10px] text-white/35">Formation</label>
             <select
               value={formation}
@@ -95,7 +95,7 @@ const Pitch = () => {
           >
             <div
               ref={pitchRef}
-              onClick={() => setSelectedSlot(null)}
+              onClick={clearPlayerInteraction}
               className="relative aspect-2/3 w-full overflow-hidden rounded-2xl bg-[#1e4d3a] shadow-[0_12px_40px_rgba(0,0,0,.35)]"
             >
               <div className="pointer-events-none absolute inset-0 z-1 bg-[radial-gradient(circle_at_50%_18%,rgba(255,255,255,.07),transparent_35%)]" />
@@ -104,13 +104,16 @@ const Pitch = () => {
 
               <img
                 src={logo}
+                width={768}
+                height={768}
+                decoding="async"
                 className="pointer-events-none absolute left-1/2 top-1/2 z-0 w-full -translate-x-1/2 -translate-y-1/2 opacity-10"
                 draggable={false}
               />
 
-              {[...Array(11).keys()].map((slot) => {
-                const number = layout[slot].number;
-                const position = { x: layout[slot].x, y: layout[slot].y };
+              {Array.from({ length: PITCH_COUNT }, (_, slot) => {
+                const number = formations[formation][slot].number;
+                const position = positions[slot];
 
                 return (
                   <Player
@@ -131,7 +134,7 @@ const Pitch = () => {
         </main>
       </div>
 
-      {editingPlayer !== null && <EditPlayerModal />}
+      {editingPlayer && <EditPlayerModal />}
     </DragDropProvider>
   );
 };

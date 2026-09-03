@@ -16,8 +16,8 @@ const Bench = ({ restrictionRef }: BenchProps) => {
     <section className="w-full">
       <div className="mb-2 flex items-end justify-between px-1">
         <div className="w-full">
-          <div className="flex flex-row w-full items-center justify-between">
-            <h2 className="text-md font-bold uppercase tracking-wider">
+          <div className="flex w-full items-center justify-between">
+            <h2 className="text-base font-bold uppercase tracking-wider">
               Bench
             </h2>
 
@@ -27,9 +27,10 @@ const Bench = ({ restrictionRef }: BenchProps) => {
             >
               <IconButton
                 label="Add substitute"
+                variant="segmented"
                 disabled={benchCount === MAX_BENCH_COUNT}
                 onClick={addSubstitute}
-                className="px-2 py-1 text-md font-extrabold rounded-none"
+                className="px-2 py-1 text-base font-extrabold"
               >
                 +
               </IconButton>
@@ -40,9 +41,10 @@ const Bench = ({ restrictionRef }: BenchProps) => {
 
               <IconButton
                 label="Remove substitute"
+                variant="segmented"
                 disabled={benchCount === 0}
                 onClick={() => removeSubstitute(PITCH_COUNT + benchCount - 1)}
-                className="px-2 py-1 text-md font-extrabold rounded-none"
+                className="px-2 py-1 text-base font-extrabold"
               >
                 -
               </IconButton>
@@ -51,22 +53,20 @@ const Bench = ({ restrictionRef }: BenchProps) => {
         </div>
       </div>
 
-      {
-        <div className="flex w-full flex-row min-h-22 items-center justify-center gap-5 overflow-x-hidden rounded-xl border border-white/10 bg-black/10 px-4 py-3">
-          {[...Array(benchCount).keys()].map((benchSlot) => {
-            const slot = benchSlot + 11;
+      <div className="flex min-h-22 w-full items-center justify-center gap-5 overflow-x-hidden rounded-xl border border-white/10 bg-black/10 px-4 py-3">
+        {[...Array(benchCount).keys()].map((benchSlot) => {
+          const slot = benchSlot + PITCH_COUNT;
 
-            return (
-              <Player
-                key={`bench-${benchSlot}`}
-                number={slot + 1}
-                slot={slot}
-                restrictionRef={restrictionRef}
-              />
-            );
-          })}
-        </div>
-      }
+          return (
+            <Player
+              key={`bench-${benchSlot}`}
+              number={slot + 1}
+              slot={slot}
+              restrictionRef={restrictionRef}
+            />
+          );
+        })}
+      </div>
     </section>
   );
 };

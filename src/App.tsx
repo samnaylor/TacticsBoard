@@ -8,7 +8,7 @@ const App = () => {
   const screen = useTacticsState((state) => state.screen);
 
   return (
-    <div className="flex flex-1 flex-col justify-between min-h-screen w-full overflow-x-hidden bg-[#0d1b14] font-body text-[#f1faf0]">
+    <div className="flex min-h-screen w-full flex-col overflow-x-hidden bg-[#0d1b14] text-[#f1faf0]">
       <Header />
 
       <div className="flex min-h-0 flex-1 flex-col">

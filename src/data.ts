@@ -96,22 +96,3 @@ export const formations = {
   "4-3-3 (DM)": formation_433_DM,
   "4-3-3 (AM)": formation_433_AM,
 };
-
-export const defaultNames = [
-  "Player 1",
-  "Player 2",
-  "Player 3",
-  "Player 4",
-  "Player 5",
-  "Player 6",
-  "Player 7",
-  "Player 8",
-  "Player 9",
-  "Player 10",
-  "Player 11",
-  "Player 12",
-  "Player 13",
-  "Player 14",
-  "Player 15",
-  "Player 16",
-];

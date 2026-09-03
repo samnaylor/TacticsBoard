@@ -1,19 +1,31 @@
 import { useTacticsState } from "../store/state";
+import { playerLabel } from "../utils";
 
 interface PlayerNameInputProps {
   slot: number;
 }
 
 const PlayerNameInput = ({ slot }: PlayerNameInputProps) => {
-  const { name, modified } = useTacticsState((state) => state.names)[slot]!;
-  const changeName = useTacticsState((state) => state.renamePlayer);
+  const customName = useTacticsState((state) => state.customNames[slot]);
+  const renamePlayer = useTacticsState((state) => state.renamePlayer);
+  const storedValue = customName ?? "";
 
   return (
     <input
-      value={modified ? name : ""}
-      onChange={(event) => changeName(slot, event.target.value)}
-      className="w-full flex text-sm font-medium placeholder:text-white/25 p-2.5 bg-white/[0.035] rounded-xl border border-white/20 focus:border-[#c59154] outline-none"
-      placeholder={`Player ${slot + 1}`}
+      key={storedValue}
+      defaultValue={storedValue}
+      onBlur={(event) => {
+        if (event.currentTarget.value !== storedValue) {
+          renamePlayer(slot, event.currentTarget.value);
+        }
+      }}
+      onKeyDown={(event) => {
+        if (event.key === "Enter" && !event.nativeEvent.isComposing) {
+          event.currentTarget.blur();
+        }
+      }}
+      className="flex w-full rounded-xl border border-white/20 bg-white/[0.035] p-2.5 text-sm font-medium outline-none placeholder:text-white/25 focus:border-[#c59154]"
+      placeholder={playerLabel(slot)}
     />
   );
 };

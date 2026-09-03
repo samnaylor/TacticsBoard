@@ -9,9 +9,8 @@ import IconButton from "./IconButton";
 
 const Header = () => {
   const screen = useTacticsState((state) => state.screen);
-  const formation = useTacticsState((state) => state.formation);
   const resetNames = useTacticsState((state) => state.resetNames);
-  const changeFormation = useTacticsState((state) => state.changeFormation);
+  const resetLayout = useTacticsState((state) => state.resetLayout);
   const setScreen = useTacticsState((state) => state.setScreen);
 
   const [menuOpen, setMenuOpen] = useState(false);
@@ -24,11 +23,13 @@ const Header = () => {
       <div className="relative mx-auto flex w-full items-center justify-between px-2 md:max-w-190">
         <img
           src={logo}
+          width={768}
+          height={768}
+          decoding="async"
           draggable={false}
           className="absolute left-1/2 top-1/2 h-12 w-12 -translate-x-1/2 -translate-y-1/2"
         />
 
-        {/* Left side */}
         <div className="mr-auto flex items-center justify-center">
           {screen === "players" && (
             <IconButton
@@ -51,13 +52,12 @@ const Header = () => {
           )}
         </div>
 
-        {/* Right side */}
         <div className="ml-auto flex items-center justify-center">
           <IconButton
             label={resetLabel}
             onClick={() => {
               if (screen === "pitch") {
-                changeFormation(formation);
+                resetLayout();
                 return;
               }
 

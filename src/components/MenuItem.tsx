@@ -19,7 +19,7 @@ const MenuItem = ({
       disabled={disabled}
       className={`
         group relative flex w-full items-center gap-3 rounded-xl p-3
-        text-sm font-medium outline-none transition-all duration-200
+        text-sm font-medium outline-none transition-colors duration-200
         ${
           disabled
             ? "cursor-not-allowed text-white/20"

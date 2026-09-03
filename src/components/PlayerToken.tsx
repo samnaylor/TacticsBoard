@@ -28,10 +28,10 @@ const PlayerToken = forwardRef<HTMLDivElement, PlayerTokenProps>(
       ref={ref}
       {...divProps}
       className={[
-        "group touch-none select-none flex items-center justify-center flex-col",
+        "group flex touch-none select-none flex-col items-center justify-center",
         position
           ? "absolute z-10 -translate-x-1/2 -translate-y-1/2"
-          : "relative flex shrink-0 flex-col items-center",
+          : "relative shrink-0",
         selected ? "ring-4 ring-white/30 rounded-md" : "",
         className,
       ].join(" ")}

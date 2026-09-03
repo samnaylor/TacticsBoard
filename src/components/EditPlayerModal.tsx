@@ -2,16 +2,20 @@ import React, { useEffect, useRef, useState } from "react";
 import { MdClose } from "react-icons/md";
 import { useTacticsState } from "../store/state";
 import IconButton from "./IconButton";
+import { playerLabel } from "../utils";
 
 const EditPlayerModal = () => {
-  const names = useTacticsState((state) => state.names);
-  const editingPlayer = useTacticsState((state) => state.editingPlayer)!;
+  const playerInteraction = useTacticsState((state) => state.playerInteraction);
+  const editingPlayer =
+    playerInteraction.type === "editing" ? playerInteraction.slot : 0;
+  const customName = useTacticsState(
+    (state) => state.customNames[editingPlayer],
+  );
 
   const changeName = useTacticsState((state) => state.renamePlayer);
-  const setEditingPlayer = useTacticsState((state) => state.setEditingPlayer);
+  const closePlayerEditor = useTacticsState((state) => state.closePlayerEditor);
 
-  const { name } = names[editingPlayer];
-  const [value, setValue] = useState(name);
+  const [value, setValue] = useState(customName ?? playerLabel(editingPlayer));
 
   const inputRef = useRef<HTMLInputElement>(null);
   const dialogRef = useRef<HTMLDialogElement>(null);
@@ -38,7 +42,7 @@ const EditPlayerModal = () => {
   }, []);
 
   const closeDialog = () => {
-    setEditingPlayer(null);
+    closePlayerEditor();
     dialogRef.current?.close();
   };
 
@@ -73,7 +77,7 @@ const EditPlayerModal = () => {
         <IconButton
           label="Close"
           onClick={closeDialog}
-          className="absolute right-4 top-4 rounded-md p-1 text-white/60 transition hover:bg-white/10 hover:text-white"
+          className="absolute right-4 top-4 p-1"
           aria-label="Close"
         >
           <MdClose size={24} />

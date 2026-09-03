@@ -1,22 +1,17 @@
 import { create } from "zustand";
-import {
-  defaultNames,
-  formations,
-  MAX_BENCH_COUNT,
-  PITCH_COUNT,
-} from "../data";
-import { persist } from "zustand/middleware";
-import type { Formation, Screen } from "../types";
+import { formations, MAX_BENCH_COUNT, PITCH_COUNT, SQUAD_SIZE } from "../data";
+import { createJSONStorage, persist } from "zustand/middleware";
+import type { Formation, PlayerInteraction, Screen } from "../types";
 import {
   createDefaultPersistedState,
   PERSISTENCE_VERSION,
   type PersistedState,
 } from "./persistedState";
+import { deduplicatingStorage } from "./storage";
 
 interface State extends PersistedState {
   screen: Screen;
-  selectedSlot: number | null;
-  editingPlayer: number | null;
+  playerInteraction: PlayerInteraction;
 
   renamePlayer: (slot: number, newName: string) => void;
   changeFormation: (formation: Formation) => void;
@@ -32,15 +27,16 @@ interface State extends PersistedState {
   toggleDragDrop: () => void;
   toggleColourScheme: () => void;
 
-  handlePlayerClick: (slot: number) => void;
+  selectOrSwapPlayer: (slot: number) => void;
+  clearPlayerInteraction: () => void;
+  openPlayerEditor: (slot: number) => void;
+  closePlayerEditor: () => void;
 
   resetNames: () => void;
   resetLayout: () => void;
   resetAll: () => void;
 
   setScreen: (screen: Screen) => void;
-  setSelectedSlot: (selectedSlot: number | null) => void;
-  setEditingPlayer: (editingPlayer: number | null) => void;
 }
 
 const storageKey = "tactics-save";
@@ -48,8 +44,7 @@ const storageKey = "tactics-save";
 export const createInitialState = () => ({
   ...createDefaultPersistedState(),
   screen: "pitch" as const,
-  selectedSlot: null,
-  editingPlayer: null,
+  playerInteraction: { type: "idle" } as const,
 });
 
 export const useTacticsState = create<State>()(
@@ -58,36 +53,58 @@ export const useTacticsState = create<State>()(
       ...createInitialState(),
 
       renamePlayer: (slot, newName) =>
-        set((state) => ({
-          names: state.names.map(({ name, modified }, i) =>
-            i === slot ? { name: newName, modified: true } : { name, modified },
-          ),
-        })),
+        set((state) => {
+          if (
+            slot < 0 ||
+            slot >= SQUAD_SIZE ||
+            state.customNames[slot] === newName
+          ) {
+            return state;
+          }
+
+          const customNames = [...state.customNames];
+          customNames[slot] = newName;
+
+          return { customNames };
+        }),
 
       changeFormation: (formation) =>
-        set({ formation, layout: formations[formation] }),
+        set({
+          formation,
+          customPositions: null,
+          playerInteraction: { type: "idle" },
+        }),
 
       swapNames: (slot0, slot1) =>
         set((state) => {
-          const names = [...state.names];
+          const customNames = [...state.customNames];
 
-          [names[slot0], names[slot1]] = [names[slot1], names[slot0]];
+          [customNames[slot0], customNames[slot1]] = [
+            customNames[slot1],
+            customNames[slot0],
+          ];
 
-          return { names };
+          return { customNames };
         }),
 
-      movePlayerPosition: (slot: number, percentx: number, percenty: number) =>
-        set((state) => ({
-          layout: state.layout.map((position, index) =>
-            index === slot
-              ? {
-                  ...position,
-                  x: Math.max(2, Math.min(98, position.x + percentx)),
-                  y: Math.max(2, Math.min(98, position.y + percenty)),
-                }
-              : position,
-          ),
-        })),
+      movePlayerPosition: (slot, percentx, percenty) =>
+        set((state) => {
+          if (slot < 0 || slot >= PITCH_COUNT) {
+            return state;
+          }
+
+          const customPositions = (
+            state.customPositions ?? formations[state.formation]
+          ).map(({ x, y }) => ({ x, y }));
+          const current = customPositions[slot];
+
+          customPositions[slot] = {
+            x: Math.max(2, Math.min(98, current.x + percentx)),
+            y: Math.max(2, Math.min(98, current.y + percenty)),
+          };
+
+          return { customPositions };
+        }),
 
       addSubstitute: () =>
         set((state) => ({
@@ -103,12 +120,16 @@ export const useTacticsState = create<State>()(
             return state;
           }
 
-          const names = [...state.names];
-          const [removed] = names.splice(slot, 1);
+          const customNames = [...state.customNames];
+          const [removed] = customNames.splice(slot, 1);
 
-          names.splice(visibleEnd - 1, 0, removed!);
+          customNames.splice(visibleEnd - 1, 0, removed ?? null);
 
-          return { names, benchCount: state.benchCount - 1 };
+          return {
+            customNames,
+            benchCount: state.benchCount - 1,
+            playerInteraction: { type: "idle" },
+          };
         }),
 
       toggleDragDrop: () =>
@@ -119,54 +140,72 @@ export const useTacticsState = create<State>()(
           colourScheme: state.colourScheme === "home" ? "away" : "home",
         })),
 
-      handlePlayerClick: (slot) =>
+      selectOrSwapPlayer: (slot) =>
         set((state) => {
-          if (state.selectedSlot === null) {
-            return { selectedSlot: slot };
+          if (slot < 0 || slot >= SQUAD_SIZE) {
+            return state;
           }
 
-          if (state.selectedSlot === slot) {
-            return { selectedSlot: null };
+          if (state.playerInteraction.type !== "selected") {
+            return { playerInteraction: { type: "selected", slot } };
           }
 
-          const names = [...state.names];
+          if (state.playerInteraction.slot === slot) {
+            return { playerInteraction: { type: "idle" } };
+          }
 
-          [names[state.selectedSlot], names[slot]] = [
-            names[slot],
-            names[state.selectedSlot],
+          const customNames = [...state.customNames];
+          const selectedSlot = state.playerInteraction.slot;
+
+          [customNames[selectedSlot], customNames[slot]] = [
+            customNames[slot],
+            customNames[selectedSlot],
           ];
 
           return {
-            names,
-            selectedSlot: null,
+            customNames,
+            playerInteraction: { type: "idle" },
           };
         }),
 
-      resetNames: () =>
-        set({ names: defaultNames.map((name) => ({ name, modified: false })) }),
+      clearPlayerInteraction: () =>
+        set({ playerInteraction: { type: "idle" } }),
 
-      resetLayout: () =>
-        set((state) => ({ layout: formations[state.formation] })),
+      openPlayerEditor: (slot) =>
+        set(
+          slot >= 0 && slot < SQUAD_SIZE
+            ? { playerInteraction: { type: "editing", slot } }
+            : { playerInteraction: { type: "idle" } },
+        ),
+
+      closePlayerEditor: () => set({ playerInteraction: { type: "idle" } }),
+
+      resetNames: () =>
+        set({
+          customNames: Array<string | null>(SQUAD_SIZE).fill(null),
+          playerInteraction: { type: "idle" },
+        }),
+
+      resetLayout: () => set({ customPositions: null }),
 
       resetAll: () => set(createInitialState()),
 
-      setScreen: (screen) => set({ screen }),
-
-      setSelectedSlot: (selectedSlot) => set({ selectedSlot }),
-
-      setEditingPlayer: (editingPlayer) => set({ editingPlayer }),
+      setScreen: (screen) =>
+        set({ screen, playerInteraction: { type: "idle" } }),
     }),
     {
       name: storageKey,
       version: PERSISTENCE_VERSION,
+      storage: createJSONStorage(() => deduplicatingStorage),
       partialize: (state) => ({
         formation: state.formation,
-        names: state.names,
-        layout: state.layout,
+        customNames: state.customNames,
+        customPositions: state.customPositions,
         benchCount: state.benchCount,
         colourScheme: state.colourScheme,
         dragDropEnabled: state.dragDropEnabled,
       }),
+      migrate: createDefaultPersistedState,
     },
   ),
 );

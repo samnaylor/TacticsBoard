@@ -1,7 +1,6 @@
 import type React from "react";
 import { MdClose, MdColorLens, MdFormatListNumbered } from "react-icons/md";
 import { TbFileExport } from "react-icons/tb";
-import { version } from "../data";
 import { useTacticsState } from "../store/state";
 import { RiResetLeftFill } from "react-icons/ri";
 import { GiSoccerField } from "react-icons/gi";
@@ -9,6 +8,8 @@ import Divider from "./Divider";
 import { TfiHandDrag } from "react-icons/tfi";
 import { AnimatePresence, motion } from "motion/react";
 import MenuItem from "./MenuItem";
+import IconButton from "./IconButton";
+import AppCredits from "./AppCredits";
 
 const exportPng = async () => {
   const node = document.getElementById("formation-export");
@@ -82,13 +83,9 @@ const DrawerMenu = ({ open, setOpen }: Props) => {
                 <p className="text-sm font-semibold text-white">Menu</p>
               </div>
 
-              <button
-                onClick={onClose}
-                aria-label="Close menu"
-                className="rounded-lg p-2 text-white/50 transition hover:bg-white/10 hover:text-white"
-              >
+              <IconButton label="Close menu" onClick={onClose} className="p-2">
                 <MdClose className="h-6 w-6" />
-              </button>
+              </IconButton>
             </div>
 
             <nav className="flex-1 overflow-y-auto p-3">
@@ -147,24 +144,7 @@ const DrawerMenu = ({ open, setOpen }: Props) => {
             </nav>
 
             <div className="border-t border-white/10 p-4 text-center text-[10px] text-white/35">
-              <div className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1">
-                <span>© Sam Naylor</span>
-
-                <span className="text-white/15">•</span>
-
-                <a
-                  href="https://github.com/samnaylor/TacticsBoard"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="transition hover:text-white/70"
-                >
-                  GitHub
-                </a>
-
-                <span className="text-white/15">•</span>
-
-                <span>v{version}</span>
-              </div>
+              <AppCredits />
             </div>
           </motion.aside>
         </>
