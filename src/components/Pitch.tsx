@@ -1,26 +1,12 @@
-import { DragDropProvider, useDragDropMonitor } from "@dnd-kit/react";
+import { DragDropProvider } from "@dnd-kit/react";
 import Bench from "./Bench";
 import PitchMarkings from "./PitchMarkings";
 import Player from "./Player";
-import logo from "../assets/addinghamfc.png";
+import logo from "../assets/addinghamfc.webp";
 import EditPlayerModal from "./EditPlayerModal";
 import { useTacticsState } from "../store/tactics";
 import { useRef } from "react";
 import { formations, type Formation } from "../data";
-
-const DragScrollLock = () => {
-  useDragDropMonitor({
-    onDragStart() {
-      document.documentElement.style.overflowX = "hidden";
-    },
-
-    onDragEnd() {
-      document.documentElement.style.overflowX = "";
-    },
-  });
-
-  return null;
-};
 
 const Pitch = () => {
   const dndEnabled = useTacticsState((state) => state.dndEnabled);
@@ -81,8 +67,6 @@ const Pitch = () => {
         swapNames(Number(source!.id), Number(target.id));
       }}
     >
-      <DragScrollLock />
-
       <div className="flex min-h-0 w-full flex-1 flex-col overflow-hidden bg-[#0d1b14] font-body text-[#f1faf0]">
         <main className="mx-auto flex-col flex w-full max-w-190 flex-1 min-w-0 items-center justify-center gap-5 px-3 py-3 sm:px-5">
           <div className="flex flex-col w-full max-w-130 items-left justify-start px-4 gap-0.5 float-start">

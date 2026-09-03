@@ -1,6 +1,6 @@
 import { MdFormatListNumbered, MdMenu } from "react-icons/md";
 import { useTacticsState } from "../store/tactics";
-import logo from "../assets/addinghamfc.png";
+import logo from "../assets/addinghamfc.webp";
 import DrawerMenu from "./DrawerMenu";
 import { useState } from "react";
 import { RiResetLeftFill } from "react-icons/ri";
