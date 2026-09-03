@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { MdClose } from "react-icons/md";
-import { useTacticsState } from "../store/tactics";
+import { useTacticsState } from "../store/state";
 import IconButton from "./IconButton";
 
 const EditPlayerModal = () => {

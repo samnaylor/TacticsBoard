@@ -1,5 +1,5 @@
 import Player from "./Player";
-import { useTacticsState } from "../store/tactics";
+import { useTacticsState } from "../store/state";
 import IconButton from "./IconButton";
 
 interface BenchProps {

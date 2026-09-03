@@ -1,4 +1,4 @@
-import { useTacticsState } from "../store/tactics";
+import { useTacticsState } from "../store/state";
 
 interface PlayerNameInputProps {
   slot: number;

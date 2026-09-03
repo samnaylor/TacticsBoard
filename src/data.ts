@@ -1,15 +1,13 @@
+import type { ColourScheme, FormationSlot, KitColours } from "./types";
+
 export const version = "0.1.8";
 
-export type Screen = "pitch" | "players";
+export const PITCH_COUNT = 11;
+export const MAX_BENCH_COUNT = 5;
+export const DEFAULT_BENCH_COUNT = 3;
+export const SQUAD_SIZE = PITCH_COUNT + MAX_BENCH_COUNT;
 
-export type ColourScheme = "home" | "away";
-
-export interface Position {
-  x: number;
-  y: number;
-}
-
-export const kitColours: Record<ColourScheme, any> = {
+export const kitColours = {
   home: {
     main: "#020165",
     border: "#c59154",
@@ -19,13 +17,7 @@ export const kitColours: Record<ColourScheme, any> = {
     main: "#c59154",
     border: "#020165",
   },
-};
-
-export type FormationSlot = {
-  x: number;
-  y: number;
-  number: number;
-};
+} satisfies Record<ColourScheme, KitColours>;
 
 export const formation_442: FormationSlot[] = [
   { x: 50, y: 80, number: 1 }, // GK
@@ -104,8 +96,6 @@ export const formations = {
   "4-3-3 (DM)": formation_433_DM,
   "4-3-3 (AM)": formation_433_AM,
 };
-
-export type Formation = keyof typeof formations;
 
 export const defaultNames = [
   "Player 1",

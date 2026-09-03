@@ -2,7 +2,7 @@ import Pitch from "./components/Pitch";
 import PlayerEditor from "./components/PlayerEditor";
 import Footer from "./components/Footer";
 import Header from "./components/Header";
-import { useTacticsState } from "./store/tactics";
+import { useTacticsState } from "./store/state";
 
 const App = () => {
   const screen = useTacticsState((state) => state.screen);

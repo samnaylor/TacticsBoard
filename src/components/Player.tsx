@@ -2,7 +2,7 @@ import { PointerSensor, useDraggable, useDroppable } from "@dnd-kit/react";
 import { PointerActivationConstraints } from "@dnd-kit/dom";
 import { RestrictToElement } from "@dnd-kit/dom/modifiers";
 import { useMemo, useRef } from "react";
-import { useTacticsState } from "../store/tactics";
+import { useTacticsState } from "../store/state";
 import PlayerToken from "./PlayerToken";
 
 const sensors = [

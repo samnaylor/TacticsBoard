@@ -1,5 +1,5 @@
 import { MdAdd, MdClose } from "react-icons/md";
-import { useTacticsState } from "../store/tactics";
+import { useTacticsState } from "../store/state";
 import Divider from "./Divider";
 import PlayerNameInput from "./PlayerNameInput";
 import IconButton from "./IconButton";

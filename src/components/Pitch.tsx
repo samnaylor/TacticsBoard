@@ -4,9 +4,10 @@ import PitchMarkings from "./PitchMarkings";
 import Player from "./Player";
 import logo from "../assets/addinghamfc.webp";
 import EditPlayerModal from "./EditPlayerModal";
-import { useTacticsState } from "../store/tactics";
+import { useTacticsState } from "../store/state";
 import { useRef } from "react";
-import { formations, type Formation } from "../data";
+import { formations } from "../data";
+import type { Formation } from "../types";
 
 const Pitch = () => {
   const dndEnabled = useTacticsState((state) => state.dndEnabled);

@@ -2,7 +2,7 @@ import type React from "react";
 import { MdClose, MdColorLens, MdFormatListNumbered } from "react-icons/md";
 import { TbFileExport } from "react-icons/tb";
 import { defaultNames, formations, version } from "../data";
-import { useTacticsState } from "../store/tactics";
+import { useTacticsState } from "../store/state";
 import { toPng } from "html-to-image";
 import { RiResetLeftFill } from "react-icons/ri";
 import { GiSoccerField } from "react-icons/gi";

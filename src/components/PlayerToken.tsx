@@ -1,5 +1,6 @@
 import { forwardRef, type HTMLAttributes } from "react";
-import { kitColours, type ColourScheme, type Position } from "../data";
+import { kitColours } from "../data";
+import type { ColourScheme, Position } from "../types";
 
 interface PlayerTokenProps extends HTMLAttributes<HTMLDivElement> {
   number: number;

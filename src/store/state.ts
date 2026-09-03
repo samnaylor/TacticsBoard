@@ -1,13 +1,7 @@
 import { create } from "zustand";
-import {
-  defaultNames,
-  formations,
-  type ColourScheme,
-  type Formation,
-  type FormationSlot,
-  type Screen,
-} from "../data";
+import { defaultNames, formations } from "../data";
 import { persist } from "zustand/middleware";
+import type { Formation, ColourScheme, FormationSlot, Screen } from "../types";
 
 interface TacticsState {
   dndEnabled: boolean;
