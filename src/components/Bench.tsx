@@ -1,5 +1,6 @@
 import Player from "./Player";
 import { useTacticsState } from "../store/tactics";
+import IconButton from "./IconButton";
 
 interface BenchProps {
   restrictionRef: React.RefObject<HTMLDivElement | null>;
@@ -21,27 +22,29 @@ const Bench = ({ restrictionRef }: BenchProps) => {
 
             <div
               data-export-ignore
-              className="flex items-center justify-center bg-zinc-900 border border-white/50 rounded px-2"
+              className="flex items-center justify-center bg-black/10 border border-white/50 rounded"
             >
-              <button
+              <IconButton
+                label="Add substitute"
                 disabled={bench === 5}
                 onClick={increaseBench}
-                className="rounded-lg px-2 py-1 text-md font-extrabold text-white/50 transition hover:bg-white/10 hover:text-white disabled:cursor-not-allowed disabled:opacity-20"
+                className="px-2 py-1 text-md font-extrabold rounded-none"
               >
                 +
-              </button>
+              </IconButton>
 
               <span className="min-w-8 text-center text-[10px] font-bold tabular-nums text-white/40">
                 {bench}/5
               </span>
 
-              <button
+              <IconButton
+                label="Remove substitute"
                 disabled={bench === 0}
                 onClick={decreaseBench}
-                className="rounded-lg px-2 py-1 text-md font-extrabold text-white/50 transition hover:bg-white/10 hover:text-white disabled:cursor-not-allowed disabled:opacity-20"
+                className="px-2 py-1 text-md font-extrabold rounded-none"
               >
                 -
-              </button>
+              </IconButton>
             </div>
           </div>
         </div>
