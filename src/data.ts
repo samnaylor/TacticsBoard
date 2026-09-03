@@ -1,6 +1,6 @@
 import type { ColourScheme, FormationSlot, KitColours } from "./types";
 
-export const version = "0.1.8";
+export const version = "0.2.0";
 
 export const PITCH_COUNT = 11;
 export const MAX_BENCH_COUNT = 5;
