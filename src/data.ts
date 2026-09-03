@@ -4,6 +4,11 @@ export type Screen = "pitch" | "players";
 
 export type ColourScheme = "home" | "away";
 
+export interface Position {
+  x: number;
+  y: number;
+}
+
 export const kitColours: Record<ColourScheme, any> = {
   home: {
     main: "#020165",
