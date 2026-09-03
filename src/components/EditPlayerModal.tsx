@@ -7,7 +7,7 @@ const EditPlayerModal = () => {
   const names = useTacticsState((state) => state.names);
   const editingPlayer = useTacticsState((state) => state.editingPlayer)!;
 
-  const changeName = useTacticsState((state) => state.changeName);
+  const changeName = useTacticsState((state) => state.renamePlayer);
   const setEditingPlayer = useTacticsState((state) => state.setEditingPlayer);
 
   const { name } = names[editingPlayer];

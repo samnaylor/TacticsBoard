@@ -10,7 +10,7 @@ import { formations } from "../data";
 import type { Formation } from "../types";
 
 const Pitch = () => {
-  const dndEnabled = useTacticsState((state) => state.dndEnabled);
+  const dragDropEnabled = useTacticsState((state) => state.dragDropEnabled);
   const formation = useTacticsState((state) => state.formation);
   const layout = useTacticsState((state) => state.layout);
   const editingPlayer = useTacticsState((state) => state.editingPlayer);
@@ -34,7 +34,7 @@ const Pitch = () => {
   return (
     <DragDropProvider
       onDragEnd={(event) => {
-        if (!dndEnabled) {
+        if (!dragDropEnabled) {
           return;
         }
 

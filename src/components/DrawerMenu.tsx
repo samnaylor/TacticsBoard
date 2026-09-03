@@ -1,19 +1,21 @@
 import type React from "react";
 import { MdClose, MdColorLens, MdFormatListNumbered } from "react-icons/md";
 import { TbFileExport } from "react-icons/tb";
-import { defaultNames, formations, version } from "../data";
+import { version } from "../data";
 import { useTacticsState } from "../store/state";
-import { toPng } from "html-to-image";
 import { RiResetLeftFill } from "react-icons/ri";
 import { GiSoccerField } from "react-icons/gi";
 import Divider from "./Divider";
 import { TfiHandDrag } from "react-icons/tfi";
 import { AnimatePresence, motion } from "motion/react";
+import MenuItem from "./MenuItem";
 
 const exportPng = async () => {
   const node = document.getElementById("formation-export");
 
   if (!node) return;
+
+  const { toPng } = await import("html-to-image");
 
   const dataUrl = await toPng(node, {
     pixelRatio: 3,
@@ -41,17 +43,15 @@ interface Props {
 }
 
 const DrawerMenu = ({ open, setOpen }: Props) => {
-  const dndEnabled = useTacticsState((state) => state.dndEnabled);
+  const dragDropEnabled = useTacticsState((state) => state.dragDropEnabled);
   const colourScheme = useTacticsState((state) => state.colourScheme);
   const screen = useTacticsState((state) => state.screen);
-  const formation = useTacticsState((state) => state.formation);
-  const resetNames = useTacticsState((state) => state.resetNames);
-  const gotoPitch = useTacticsState((state) => state.gotoPitch);
-  const gotoPlayers = useTacticsState((state) => state.gotoPlayers);
+  const resetAll = useTacticsState((state) => state.resetAll);
+  const setScreen = useTacticsState((state) => state.setScreen);
   const toggleColourScheme = useTacticsState(
     (state) => state.toggleColourScheme,
   );
-  const toggleDnd = useTacticsState((state) => state.toggleDnd);
+  const toggleDragDrop = useTacticsState((state) => state.toggleDragDrop);
 
   const onClose = () => setOpen(false);
 
@@ -98,7 +98,7 @@ const DrawerMenu = ({ open, setOpen }: Props) => {
                 icon={<GiSoccerField />}
                 label="Pitch"
                 onClick={() => {
-                  gotoPitch();
+                  setScreen("pitch");
                   onClose();
                 }}
                 active={screen === "pitch"}
@@ -108,7 +108,7 @@ const DrawerMenu = ({ open, setOpen }: Props) => {
                 icon={<MdFormatListNumbered />}
                 label="Players"
                 onClick={() => {
-                  gotoPlayers();
+                  setScreen("players");
                   onClose();
                 }}
                 active={screen === "players"}
@@ -126,19 +126,7 @@ const DrawerMenu = ({ open, setOpen }: Props) => {
                 icon={<RiResetLeftFill />}
                 label="Reset All"
                 onClick={() => {
-                  useTacticsState.persist.clearStorage();
-
-                  useTacticsState.setState({
-                    benchCount: 3,
-                    formation: formation,
-                    names: defaultNames.map((name) => ({
-                      name,
-                      modified: false,
-                    })),
-                    layout: formations[formation],
-                  });
-
-                  resetNames();
+                  resetAll();
                   onClose();
                 }}
               />
@@ -153,8 +141,8 @@ const DrawerMenu = ({ open, setOpen }: Props) => {
 
               <MenuItem
                 icon={<TfiHandDrag />}
-                label={`Drag and Drop: ${dndEnabled ? "On" : "Off"}`}
-                onClick={toggleDnd}
+                label={`Drag and Drop: ${dragDropEnabled ? "On" : "Off"}`}
+                onClick={toggleDragDrop}
               />
             </nav>
 
@@ -186,54 +174,3 @@ const DrawerMenu = ({ open, setOpen }: Props) => {
 };
 
 export default DrawerMenu;
-
-interface MenuItemsProps {
-  icon: React.ReactNode;
-  label: string | React.ReactNode;
-  onClick: () => void;
-  active?: boolean;
-  disabled?: boolean;
-}
-
-const MenuItem = ({
-  icon,
-  label,
-  onClick,
-  active = false,
-  disabled = false,
-}: MenuItemsProps) => {
-  return (
-    <button
-      onClick={onClick}
-      disabled={disabled}
-      className={`
-        group relative flex w-full items-center gap-3 rounded-xl p-3
-        text-sm font-medium outline-none transition-all duration-200
-        ${
-          disabled
-            ? "cursor-not-allowed text-white/20"
-            : active
-              ? "bg-emerald-400/12 text-white"
-              : "text-white/55 hover:bg-white/[0.07] hover:text-white"
-        }
-      `}
-    >
-      <span
-        className={`
-          text-xl transition-colors
-          ${
-            disabled
-              ? "text-white/15"
-              : active
-                ? "text-emerald-300"
-                : "text-white/35 group-hover:text-white/70"
-          }
-        `}
-      >
-        {icon}
-      </span>
-
-      <span className="w-full text-left">{label}</span>
-    </button>
-  );
-};

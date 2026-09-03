@@ -1,22 +1,24 @@
 import { create } from "zustand";
-import { defaultNames, formations } from "../data";
+import {
+  defaultNames,
+  formations,
+  MAX_BENCH_COUNT,
+  PITCH_COUNT,
+} from "../data";
 import { persist } from "zustand/middleware";
-import type { Formation, ColourScheme, FormationSlot, Screen } from "../types";
+import type { Formation, Screen } from "../types";
+import {
+  createDefaultPersistedState,
+  PERSISTENCE_VERSION,
+  type PersistedState,
+} from "./persistedState";
 
-interface TacticsState {
-  dndEnabled: boolean;
+interface State extends PersistedState {
   screen: Screen;
-  formation: Formation;
   selectedSlot: number | null;
   editingPlayer: number | null;
-  colourScheme: ColourScheme;
 
-  benchCount: number;
-  names: { name: string; modified: boolean }[];
-  layout: FormationSlot[];
-
-  toggleDnd: () => void;
-  changeName: (slot: number, newName: string) => void;
+  renamePlayer: (slot: number, newName: string) => void;
   changeFormation: (formation: Formation) => void;
   swapNames: (slot0: number, slot1: number) => void;
   movePlayerPosition: (
@@ -24,41 +26,38 @@ interface TacticsState {
     percentx: number,
     percenty: number,
   ) => void;
+  addSubstitute: () => void;
+  removeSubstitute: (slot: number) => void;
 
-  decreaseBench: () => void;
-  increaseBench: () => void;
+  toggleDragDrop: () => void;
+  toggleColourScheme: () => void;
 
   handlePlayerClick: (slot: number) => void;
+
   resetNames: () => void;
+  resetLayout: () => void;
+  resetAll: () => void;
 
-  gotoPitch: () => void;
-  gotoPlayers: () => void;
-
+  setScreen: (screen: Screen) => void;
   setSelectedSlot: (selectedSlot: number | null) => void;
   setEditingPlayer: (editingPlayer: number | null) => void;
-
-  toggleColourScheme: () => void;
 }
 
 const storageKey = "tactics-save";
 
-export const useTacticsState = create<TacticsState>()(
+export const createInitialState = () => ({
+  ...createDefaultPersistedState(),
+  screen: "pitch" as const,
+  selectedSlot: null,
+  editingPlayer: null,
+});
+
+export const useTacticsState = create<State>()(
   persist(
     (set) => ({
-      dndEnabled: true,
-      screen: "pitch",
-      formation: "4-4-2",
-      selectedSlot: null,
-      editingPlayer: null,
-      colourScheme: "home",
+      ...createInitialState(),
 
-      benchCount: 3,
-      names: defaultNames.map((name) => ({ name, modified: false })),
-      layout: formations["4-4-2"],
-
-      toggleDnd: () => set((state) => ({ dndEnabled: !state.dndEnabled })),
-
-      changeName: (slot, newName) =>
+      renamePlayer: (slot, newName) =>
         set((state) => ({
           names: state.names.map(({ name, modified }, i) =>
             i === slot ? { name: newName, modified: true } : { name, modified },
@@ -90,14 +89,34 @@ export const useTacticsState = create<TacticsState>()(
           ),
         })),
 
-      increaseBench: () =>
+      addSubstitute: () =>
         set((state) => ({
-          benchCount: Math.min(5, state.benchCount + 1),
+          benchCount: Math.min(MAX_BENCH_COUNT, state.benchCount + 1),
         })),
 
-      decreaseBench: () =>
+      removeSubstitute: (slot) =>
+        set((state) => {
+          const firstSub = PITCH_COUNT;
+          const visibleEnd = PITCH_COUNT + state.benchCount;
+
+          if (slot < firstSub || slot >= visibleEnd) {
+            return state;
+          }
+
+          const names = [...state.names];
+          const [removed] = names.splice(slot, 1);
+
+          names.splice(visibleEnd - 1, 0, removed!);
+
+          return { names, benchCount: state.benchCount - 1 };
+        }),
+
+      toggleDragDrop: () =>
+        set((state) => ({ dragDropEnabled: !state.dragDropEnabled })),
+
+      toggleColourScheme: () =>
         set((state) => ({
-          benchCount: Math.max(0, state.benchCount - 1),
+          colourScheme: state.colourScheme === "home" ? "away" : "home",
         })),
 
       handlePlayerClick: (slot) =>
@@ -124,31 +143,29 @@ export const useTacticsState = create<TacticsState>()(
         }),
 
       resetNames: () =>
-        set({
-          names: defaultNames.map((name) => ({ name, modified: false })),
-        }),
+        set({ names: defaultNames.map((name) => ({ name, modified: false })) }),
 
-      gotoPitch: () => set({ screen: "pitch" }),
-      gotoPlayers: () => set({ screen: "players" }),
+      resetLayout: () =>
+        set((state) => ({ layout: formations[state.formation] })),
+
+      resetAll: () => set(createInitialState()),
+
+      setScreen: (screen) => set({ screen }),
 
       setSelectedSlot: (selectedSlot) => set({ selectedSlot }),
-      setEditingPlayer: (editingPlayer) => set({ editingPlayer }),
 
-      toggleColourScheme: () =>
-        set((state) => ({
-          colourScheme: state.colourScheme === "home" ? "away" : "home",
-        })),
+      setEditingPlayer: (editingPlayer) => set({ editingPlayer }),
     }),
     {
       name: storageKey,
-
+      version: PERSISTENCE_VERSION,
       partialize: (state) => ({
-        bench: state.benchCount,
         formation: state.formation,
         names: state.names,
         layout: state.layout,
+        benchCount: state.benchCount,
         colourScheme: state.colourScheme,
-        dndEnabled: state.dndEnabled,
+        dragDropEnabled: state.dragDropEnabled,
       }),
     },
   ),

@@ -12,8 +12,7 @@ const Header = () => {
   const formation = useTacticsState((state) => state.formation);
   const resetNames = useTacticsState((state) => state.resetNames);
   const changeFormation = useTacticsState((state) => state.changeFormation);
-  const gotoPitch = useTacticsState((state) => state.gotoPitch);
-  const gotoPlayers = useTacticsState((state) => state.gotoPlayers);
+  const setScreen = useTacticsState((state) => state.setScreen);
 
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -34,7 +33,7 @@ const Header = () => {
           {screen === "players" && (
             <IconButton
               label="Show pitch"
-              onClick={gotoPitch}
+              onClick={() => setScreen("pitch")}
               className="px-2.5 py-2"
             >
               <GiSoccerField className="h-6 w-6" />
@@ -44,7 +43,7 @@ const Header = () => {
           {screen === "pitch" && (
             <IconButton
               label="Edit player names"
-              onClick={gotoPlayers}
+              onClick={() => setScreen("players")}
               className="px-2.5 py-2"
             >
               <MdFormatListNumbered className="h-6 w-6" />

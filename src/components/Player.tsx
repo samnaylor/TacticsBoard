@@ -23,7 +23,7 @@ interface Props {
 }
 
 const Player = ({ number, slot, position, restrictionRef }: Props) => {
-  const dndEnabled = useTacticsState((state) => state.dndEnabled);
+  const dragDropEnabled = useTacticsState((state) => state.dragDropEnabled);
   const { name, modified } = useTacticsState((state) => state.names)[slot];
   const selectedSlot = useTacticsState((state) => state.selectedSlot);
   const setSelectedSlot = useTacticsState((state) => state.setSelectedSlot);
@@ -44,13 +44,13 @@ const Player = ({ number, slot, position, restrictionRef }: Props) => {
 
   const { ref: draggableRef } = useDraggable({
     id: slot,
-    disabled: !dndEnabled,
+    disabled: !dragDropEnabled,
     modifiers,
     sensors,
   });
   const { ref: droppableRef } = useDroppable({
     id: slot,
-    disabled: !dndEnabled,
+    disabled: !dragDropEnabled,
   });
 
   const longPressTimer = useRef<ReturnType<typeof setTimeout> | null>(null);

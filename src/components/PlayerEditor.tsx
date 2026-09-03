@@ -6,8 +6,8 @@ import IconButton from "./IconButton";
 
 const PlayerEditor = () => {
   const bench = useTacticsState((state) => state.benchCount);
-  const increaseBench = useTacticsState((state) => state.increaseBench);
-  const decreaseBench = useTacticsState((state) => state.decreaseBench);
+  const addSubstitute = useTacticsState((state) => state.addSubstitute);
+  const removeSubstitute = useTacticsState((state) => state.removeSubstitute);
 
   return (
     <main className="mx-auto min-h-0 w-full max-w-190 px-4 py-3">
@@ -28,7 +28,7 @@ const PlayerEditor = () => {
               <PlayerNameInput slot={slot} />
               <IconButton
                 label="Remove sub"
-                onClick={decreaseBench}
+                onClick={() => removeSubstitute(slot)}
                 className="group rounded-xl border border-white/20 bg-white/[0.035] p-2.5 outline-none hover:bg-white/10"
               >
                 <MdClose className="h-4 w-4 text-white/50 transition group-hover:text-white" />
@@ -40,7 +40,7 @@ const PlayerEditor = () => {
         {bench < 5 && (
           <IconButton
             label="Add sub"
-            onClick={increaseBench}
+            onClick={addSubstitute}
             className="group w-full flex text-sm items-center gap-2 justify-center font-medium p-2.5 bg-white/[0.035] rounded-xl border border-white/20 text-white/25 hover:text-white outline-none transition hover:bg-white/10"
           >
             <span>Add Sub</span>

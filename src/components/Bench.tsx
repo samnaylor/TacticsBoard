@@ -1,15 +1,16 @@
 import Player from "./Player";
 import { useTacticsState } from "../store/state";
 import IconButton from "./IconButton";
+import { MAX_BENCH_COUNT, PITCH_COUNT } from "../data";
 
 interface BenchProps {
   restrictionRef: React.RefObject<HTMLDivElement | null>;
 }
 
 const Bench = ({ restrictionRef }: BenchProps) => {
-  const bench = useTacticsState((state) => state.benchCount);
-  const decreaseBench = useTacticsState((state) => state.decreaseBench);
-  const increaseBench = useTacticsState((state) => state.increaseBench);
+  const benchCount = useTacticsState((state) => state.benchCount);
+  const addSubstitute = useTacticsState((state) => state.addSubstitute);
+  const removeSubstitute = useTacticsState((state) => state.removeSubstitute);
 
   return (
     <section className="w-full">
@@ -26,21 +27,21 @@ const Bench = ({ restrictionRef }: BenchProps) => {
             >
               <IconButton
                 label="Add substitute"
-                disabled={bench === 5}
-                onClick={increaseBench}
+                disabled={benchCount === MAX_BENCH_COUNT}
+                onClick={addSubstitute}
                 className="px-2 py-1 text-md font-extrabold rounded-none"
               >
                 +
               </IconButton>
 
               <span className="min-w-8 text-center text-[10px] font-bold tabular-nums text-white/40">
-                {bench}/5
+                {benchCount}/5
               </span>
 
               <IconButton
                 label="Remove substitute"
-                disabled={bench === 0}
-                onClick={decreaseBench}
+                disabled={benchCount === 0}
+                onClick={() => removeSubstitute(PITCH_COUNT + benchCount - 1)}
                 className="px-2 py-1 text-md font-extrabold rounded-none"
               >
                 -
@@ -52,7 +53,7 @@ const Bench = ({ restrictionRef }: BenchProps) => {
 
       {
         <div className="flex w-full flex-row min-h-22 items-center justify-center gap-5 overflow-x-hidden rounded-xl border border-white/10 bg-black/10 px-4 py-3">
-          {[...Array(bench).keys()].map((benchSlot) => {
+          {[...Array(benchCount).keys()].map((benchSlot) => {
             const slot = benchSlot + 11;
 
             return (

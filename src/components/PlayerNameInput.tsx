@@ -6,7 +6,7 @@ interface PlayerNameInputProps {
 
 const PlayerNameInput = ({ slot }: PlayerNameInputProps) => {
   const { name, modified } = useTacticsState((state) => state.names)[slot]!;
-  const changeName = useTacticsState((state) => state.changeName);
+  const changeName = useTacticsState((state) => state.renamePlayer);
 
   return (
     <input
