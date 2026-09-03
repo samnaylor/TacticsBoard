@@ -11,7 +11,7 @@ interface TacticsState {
   editingPlayer: number | null;
   colourScheme: ColourScheme;
 
-  bench: number;
+  benchCount: number;
   names: { name: string; modified: boolean }[];
   layout: FormationSlot[];
 
@@ -52,7 +52,7 @@ export const useTacticsState = create<TacticsState>()(
       editingPlayer: null,
       colourScheme: "home",
 
-      bench: 3,
+      benchCount: 3,
       names: defaultNames.map((name) => ({ name, modified: false })),
       layout: formations["4-4-2"],
 
@@ -92,12 +92,12 @@ export const useTacticsState = create<TacticsState>()(
 
       increaseBench: () =>
         set((state) => ({
-          bench: Math.min(5, state.bench + 1),
+          benchCount: Math.min(5, state.benchCount + 1),
         })),
 
       decreaseBench: () =>
         set((state) => ({
-          bench: Math.max(0, state.bench - 1),
+          benchCount: Math.max(0, state.benchCount - 1),
         })),
 
       handlePlayerClick: (slot) =>
@@ -143,7 +143,7 @@ export const useTacticsState = create<TacticsState>()(
       name: storageKey,
 
       partialize: (state) => ({
-        bench: state.bench,
+        bench: state.benchCount,
         formation: state.formation,
         names: state.names,
         layout: state.layout,

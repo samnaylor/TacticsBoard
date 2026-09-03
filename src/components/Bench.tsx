@@ -7,7 +7,7 @@ interface BenchProps {
 }
 
 const Bench = ({ restrictionRef }: BenchProps) => {
-  const bench = useTacticsState((state) => state.bench);
+  const bench = useTacticsState((state) => state.benchCount);
   const decreaseBench = useTacticsState((state) => state.decreaseBench);
   const increaseBench = useTacticsState((state) => state.increaseBench);
 

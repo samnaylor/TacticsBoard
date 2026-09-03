@@ -5,7 +5,7 @@ import PlayerNameInput from "./PlayerNameInput";
 import IconButton from "./IconButton";
 
 const PlayerEditor = () => {
-  const bench = useTacticsState((state) => state.bench);
+  const bench = useTacticsState((state) => state.benchCount);
   const increaseBench = useTacticsState((state) => state.increaseBench);
   const decreaseBench = useTacticsState((state) => state.decreaseBench);
 

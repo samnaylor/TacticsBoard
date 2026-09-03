@@ -129,7 +129,7 @@ const DrawerMenu = ({ open, setOpen }: Props) => {
                   useTacticsState.persist.clearStorage();
 
                   useTacticsState.setState({
-                    bench: 3,
+                    benchCount: 3,
                     formation: formation,
                     names: defaultNames.map((name) => ({
                       name,
