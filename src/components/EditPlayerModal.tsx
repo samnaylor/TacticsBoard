@@ -1,26 +1,50 @@
 import React, { useEffect, useRef, useState } from "react";
 import { MdClose } from "react-icons/md";
-import { useTacticsState } from "../store/tactics";
+import { useTacticsState } from "../store/state";
+import IconButton from "./IconButton";
+import { playerLabel } from "../utils";
 
 const EditPlayerModal = () => {
-  const names = useTacticsState((state) => state.names);
-  const editingPlayer = useTacticsState((state) => state.editingPlayer)!;
+  const playerInteraction = useTacticsState((state) => state.playerInteraction);
+  const editingPlayer =
+    playerInteraction.type === "editing" ? playerInteraction.slot : 0;
+  const customName = useTacticsState(
+    (state) => state.customNames[editingPlayer],
+  );
 
-  const changeName = useTacticsState((state) => state.changeName);
-  const setEditingPlayer = useTacticsState((state) => state.setEditingPlayer);
+  const changeName = useTacticsState((state) => state.renamePlayer);
+  const closePlayerEditor = useTacticsState((state) => state.closePlayerEditor);
 
-  const { name } = names[editingPlayer];
-  const [value, setValue] = useState(name);
-  const onClose = () => setEditingPlayer(null);
+  const [value, setValue] = useState(customName ?? playerLabel(editingPlayer));
 
   const inputRef = useRef<HTMLInputElement>(null);
+  const dialogRef = useRef<HTMLDialogElement>(null);
 
   useEffect(() => {
+    const dialog = dialogRef.current;
+
+    if (!dialog || dialog.open) {
+      return;
+    }
+
+    dialog.showModal();
+
     requestAnimationFrame(() => {
       inputRef.current?.focus();
       inputRef.current?.select();
     });
+
+    return () => {
+      if (dialog.open) {
+        dialog.close();
+      }
+    };
   }, []);
+
+  const closeDialog = () => {
+    closePlayerEditor();
+    dialogRef.current?.close();
+  };
 
   const handleSubmit = (event: React.SubmitEvent) => {
     event.preventDefault();
@@ -28,28 +52,36 @@ const EditPlayerModal = () => {
     const trimmed = value.trim();
 
     changeName(editingPlayer, trimmed);
-    setEditingPlayer(null);
+    closeDialog();
+  };
+
+  const handleCancel = (event: React.SyntheticEvent<HTMLDialogElement>) => {
+    event.preventDefault();
+    closeDialog();
+  };
+
+  const handleBackdropClick = (event: React.MouseEvent<HTMLDialogElement>) => {
+    if (event.target === event.currentTarget) {
+      closeDialog();
+    }
   };
 
   return (
-    <div
-      className="fixed inset-0 z-100 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm sm:items-center"
-      onPointerDown={(event) => event.stopPropagation()}
-      onPointerUp={(event) => event.stopPropagation()}
+    <dialog
+      ref={dialogRef}
+      onCancel={handleCancel}
+      onClick={handleBackdropClick}
+      className="m-auto w-[calc(100%-2rem)] max-w-sm rounded-2xl border border-white/10 bg-[#14261c] p-0 text-white shadow-2xl backdrop:bg-black/50 backdrop:backdrop-blur-[2px]"
     >
-      <form
-        onSubmit={handleSubmit}
-        onClick={(event) => event.stopPropagation()}
-        className="relative w-full max-w-sm rounded-2xl border border-white/10 bg-[#14261c] p-5 shadow-2xl"
-      >
-        <button
-          type="button"
-          onClick={onClose}
-          className="absolute right-4 top-4 rounded-md p-1 text-white/60 transition hover:bg-white/10 hover:text-white"
+      <form onSubmit={handleSubmit} className="relative p-5">
+        <IconButton
+          label="Close"
+          onClick={closeDialog}
+          className="absolute right-4 top-4 p-1"
           aria-label="Close"
         >
           <MdClose size={24} />
-        </button>
+        </IconButton>
 
         <h2 className="mb-4 text-lg font-bold">Edit player name</h2>
 
@@ -66,7 +98,7 @@ const EditPlayerModal = () => {
         <div className="mt-4 flex justify-end gap-2">
           <button
             type="button"
-            onClick={onClose}
+            onClick={closeDialog}
             className="rounded-lg px-4 py-2 text-sm font-semibold text-white/60 transition hover:bg-white/10 hover:text-white"
           >
             Cancel
@@ -81,7 +113,7 @@ const EditPlayerModal = () => {
           </button>
         </div>
       </form>
-    </div>
+    </dialog>
   );
 };
 

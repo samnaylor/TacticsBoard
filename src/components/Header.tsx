@@ -1,73 +1,80 @@
 import { MdFormatListNumbered, MdMenu } from "react-icons/md";
-import { useTacticsState } from "../store/tactics";
-import logo from "../assets/addinghamfc.png";
+import { useTacticsState } from "../store/state";
+import logo from "../assets/addinghamfc.webp";
 import DrawerMenu from "./DrawerMenu";
 import { useState } from "react";
 import { RiResetLeftFill } from "react-icons/ri";
 import { GiSoccerField } from "react-icons/gi";
+import IconButton from "./IconButton";
 
 const Header = () => {
   const screen = useTacticsState((state) => state.screen);
-  const formation = useTacticsState((state) => state.formation);
   const resetNames = useTacticsState((state) => state.resetNames);
-  const changeFormation = useTacticsState((state) => state.changeFormation);
-  const gotoPitch = useTacticsState((state) => state.gotoPitch);
-  const gotoPlayers = useTacticsState((state) => state.gotoPlayers);
+  const resetLayout = useTacticsState((state) => state.resetLayout);
+  const setScreen = useTacticsState((state) => state.setScreen);
 
   const [menuOpen, setMenuOpen] = useState(false);
+
+  const resetLabel =
+    screen === "pitch" ? "Reset formation" : "Reset player names";
 
   return (
     <header className="sticky top-0 z-50 border-b border-white/10 bg-[#0d1b14]/95 px-3 py-3 backdrop-blur">
       <div className="relative mx-auto flex w-full items-center justify-between px-2 md:max-w-190">
         <img
           src={logo}
+          width={768}
+          height={768}
+          decoding="async"
           draggable={false}
           className="absolute left-1/2 top-1/2 h-12 w-12 -translate-x-1/2 -translate-y-1/2"
         />
 
-        {/* Left side */}
         <div className="mr-auto flex items-center justify-center">
           {screen === "players" && (
-            <button
-              onClick={gotoPitch}
-              className="rounded-lg px-2.5 py-2 text-white/50 transition hover:bg-white/10 hover:text-white"
+            <IconButton
+              label="Show pitch"
+              onClick={() => setScreen("pitch")}
+              className="px-2.5 py-2"
             >
               <GiSoccerField className="h-6 w-6" />
-            </button>
+            </IconButton>
           )}
 
           {screen === "pitch" && (
-            <button
-              onClick={gotoPlayers}
-              className="rounded-lg px-2.5 py-2 text-white/50 transition hover:bg-white/10 hover:text-white"
+            <IconButton
+              label="Edit player names"
+              onClick={() => setScreen("players")}
+              className="px-2.5 py-2"
             >
               <MdFormatListNumbered className="h-6 w-6" />
-            </button>
+            </IconButton>
           )}
         </div>
 
-        {/* Right side */}
         <div className="ml-auto flex items-center justify-center">
-          <button
+          <IconButton
+            label={resetLabel}
             onClick={() => {
               if (screen === "pitch") {
-                changeFormation(formation);
+                resetLayout();
                 return;
               }
 
               resetNames();
             }}
-            className="rounded-lg px-2.5 py-2 text-white/50 transition hover:bg-white/10 hover:text-white"
+            className="px-2.5 py-2"
           >
             <RiResetLeftFill className="w-6 h-6" />
-          </button>
+          </IconButton>
 
-          <button
+          <IconButton
+            label="Open menu"
             onClick={() => setMenuOpen(true)}
-            className="rounded-lg px-2.5 py-2 text-white/50 transition hover:bg-white/10 hover:text-white"
+            className="px-2.5 py-2"
           >
             <MdMenu className="h-6 w-6" />
-          </button>
+          </IconButton>
         </div>
       </div>
 
