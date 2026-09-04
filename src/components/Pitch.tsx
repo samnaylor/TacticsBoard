@@ -69,15 +69,15 @@ const Pitch = () => {
       }}
     >
       <div className="flex min-h-0 w-full flex-1 flex-col overflow-hidden">
-        <main className="mx-auto flex w-full min-w-0 max-w-190 flex-1 flex-col items-center justify-center gap-5 px-3 py-3 sm:px-5">
-          <div className="flex w-full max-w-130 flex-col items-start gap-0.5 px-4">
+        <main className="mx-auto flex w-full min-w-0 max-w-190 flex-1 flex-col items-center justify-center gap-1 px-3 py-3 sm:px-5">
+          <div className="flex w-full max-w-130 flex-col items-end gap-0.5 px-4">
             <label className="text-[10px] text-white/35">Formation</label>
             <select
               value={formation}
               onChange={(event) =>
                 changeFormation(event.target.value as Formation)
               }
-              className="rounded-md text-center border border-white/25 bg-[#14261c] px-1.5 py-0.5 text-[13px] text-[#f1faf0] outline-none focus:border-[#e9c46a]"
+              className="rounded-md text-center border border-white/25 bg-black/10 px-1.5 py-0.5 text-[13px] text-[#f1faf0] outline-none focus:border-[#e9c46a]"
             >
               {Object.keys(formations).map((name) => (
                 <option key={name} value={name}>
