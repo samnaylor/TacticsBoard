@@ -1,7 +1,9 @@
+@import url("https://fonts.googleapis.com/css2?family=Funnel+Display:wght@300..800&family=Lekton:ital,wght@0,400;0,700;1,400&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap");
 @import "tailwindcss";
 
 @layer base {
   html {
+    font-family: "Lekton";
     background: #0d1b14;
   }
 
