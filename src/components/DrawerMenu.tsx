@@ -10,33 +10,7 @@ import { AnimatePresence, motion } from "motion/react";
 import MenuItem from "./MenuItem";
 import IconButton from "./IconButton";
 import AppCredits from "./AppCredits";
-
-const exportPng = async () => {
-  const node = document.getElementById("formation-export");
-
-  if (!node) return;
-
-  const { toPng } = await import("html-to-image");
-
-  const dataUrl = await toPng(node, {
-    pixelRatio: 3,
-    backgroundColor: "#1e4d3a",
-    filter: (element) => {
-      if (!(element instanceof Element)) {
-        return true;
-      }
-
-      return !element.hasAttribute("data-export-ignore");
-    },
-  });
-
-  const link = document.createElement("a");
-
-  link.download = `football-squad.png`;
-  link.href = dataUrl;
-
-  link.click();
-};
+import { exportPng } from "../utils";
 
 interface Props {
   open: boolean;
