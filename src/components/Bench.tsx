@@ -17,9 +17,7 @@ const Bench = ({ restrictionRef }: BenchProps) => {
       <div className="mb-2 flex items-end justify-between px-1">
         <div className="w-full">
           <div className="flex w-full items-center justify-between">
-            <h2 className="text-base font-bold uppercase tracking-wider">
-              Bench
-            </h2>
+            <h2 className="text-base font-bold tracking-tight">Bench</h2>
 
             <div
               data-export-ignore

@@ -60,7 +60,7 @@ const PlayerToken = forwardRef<HTMLDivElement, PlayerTokenProps>(
         {number}
       </div>
 
-      <div className="mt-1 max-w-24 truncate rounded-md bg-black/10 px-1.5 py-0.5 text-[10px] font-semibold leading-tight text-white shadow-sm sm:max-w-28 sm:text-[12px]">
+      <div className="mt-1 max-w-24 truncate rounded-md bg-black/60 px-2 py-1 text-[10px] font-semibold leading-wider text-white shadow-sm sm:max-w-28 sm:text-[12px] text-center">
         {label}
       </div>
     </div>
