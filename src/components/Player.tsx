@@ -1,7 +1,7 @@
 import { PointerSensor, useDraggable, useDroppable } from "@dnd-kit/react";
 import { PointerActivationConstraints } from "@dnd-kit/dom";
 import { RestrictToElement } from "@dnd-kit/dom/modifiers";
-import { useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { useTacticsState } from "../store/state";
 import PlayerToken from "./PlayerToken";
 import { playerLabel } from "../utils";
@@ -46,7 +46,7 @@ const Player = ({ number, slot, position, restrictionRef }: Props) => {
     [restrictionRef],
   );
 
-  const { ref: draggableRef } = useDraggable({
+  const { ref: draggableRef, isDragging } = useDraggable({
     id: slot,
     disabled: !dragDropEnabled,
     modifiers,
@@ -60,12 +60,21 @@ const Player = ({ number, slot, position, restrictionRef }: Props) => {
   const longPressTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const isLongPress = useRef(false);
 
+  useEffect(() => {
+    if (isDragging && longPressTimer.current) {
+      clearTimeout(longPressTimer.current);
+      longPressTimer.current = null;
+    }
+  }, [isDragging]);
+
   const handlePointerDown = () => {
     isLongPress.current = false;
 
     longPressTimer.current = setTimeout(() => {
       isLongPress.current = true;
       longPressTimer.current = null;
+
+      openPlayerEditor(slot);
     }, 500);
   };
 
@@ -74,18 +83,12 @@ const Player = ({ number, slot, position, restrictionRef }: Props) => {
       clearTimeout(longPressTimer.current);
       longPressTimer.current = null;
     }
-
-    if (isLongPress.current) {
-      setTimeout(() => {
-        openPlayerEditor(slot);
-      }, 0);
-    }
   };
 
   const handleClick = (event: React.MouseEvent) => {
     event.stopPropagation();
 
-    if (isLongPress.current) {
+    if (isLongPress.current || isDragging) {
       isLongPress.current = false;
       return;
     }
