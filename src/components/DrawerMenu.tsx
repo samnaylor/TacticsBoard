@@ -99,12 +99,14 @@ const DrawerMenu = ({ open, setOpen }: Props) => {
                 icon={<MdSave />}
                 label="Save Current Squad"
                 onClick={() => {}}
+                disabled
               />
 
               <MenuItem
                 icon={<MdFolderOpen />}
                 label="Load Saved Squad"
                 onClick={() => {}}
+                disabled
               />
 
               <Divider label="Actions" />
