@@ -26,3 +26,12 @@ export type FormationSlot = {
 };
 
 export type Formation = keyof typeof formations;
+
+export interface SavedSquad {
+  id: string;
+  title: string;
+  formation: Formation;
+  customNames: (string | null)[];
+  customPositions: Position[] | null;
+  benchCount: number;
+}

@@ -51,7 +51,7 @@ const Bench = ({ restrictionRef }: BenchProps) => {
         </div>
       </div>
 
-      <div className="flex min-h-22 w-full items-center justify-center gap-5 overflow-x-hidden rounded-xl border border-white/10 bg-black/10 px-4 py-3">
+      <div className="flex min-h-22 w-full items-center justify-center gap-5 overflow-hidden rounded-xl border border-white/10 bg-black/10 px-4 py-3">
         {[...Array(benchCount).keys()].map((benchSlot) => {
           const slot = benchSlot + PITCH_COUNT;
 

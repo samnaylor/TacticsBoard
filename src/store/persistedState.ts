@@ -1,5 +1,5 @@
 import { SQUAD_SIZE, version } from "../data";
-import type { ColourScheme, Formation, Position } from "../types";
+import type { ColourScheme, Formation, Position, SavedSquad } from "../types";
 
 export const PERSISTENCE_VERSION = version
   .split(".")
@@ -12,6 +12,8 @@ export interface PersistedState {
   benchCount: number;
   colourScheme: ColourScheme;
   dragDropEnabled: boolean;
+
+  savedSquads: SavedSquad[];
 }
 
 export const createDefaultPersistedState = (): PersistedState => ({
@@ -21,4 +23,5 @@ export const createDefaultPersistedState = (): PersistedState => ({
   benchCount: 3,
   colourScheme: "home",
   dragDropEnabled: true,
+  savedSquads: [],
 });

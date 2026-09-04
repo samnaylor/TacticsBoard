@@ -1,7 +1,12 @@
 import { create } from "zustand";
 import { formations, MAX_BENCH_COUNT, PITCH_COUNT, SQUAD_SIZE } from "../data";
 import { createJSONStorage, persist } from "zustand/middleware";
-import type { Formation, PlayerInteraction, Screen } from "../types";
+import type {
+  Formation,
+  PlayerInteraction,
+  SavedSquad,
+  Screen,
+} from "../types";
 import {
   createDefaultPersistedState,
   PERSISTENCE_VERSION,
@@ -45,6 +50,11 @@ export interface State extends PersistedState {
 
   addToast: (message: string, duration: number) => void;
   removeToast: (id: string) => void;
+
+  saveSquad: (title: string) => void;
+  updateSavedSquad: (id: string) => void;
+  loadSavedSquad: (id: string) => void;
+  deleteSavedSquad: (id: string) => void;
 }
 
 const storageKey = "tactics-save";
@@ -223,6 +233,73 @@ export const useTacticsState = create<State>()(
         set((state) => ({
           toasts: state.toasts.filter((toast) => toast.id !== id),
         })),
+
+      saveSquad: (title) =>
+        set((state) => {
+          const savedSquad: SavedSquad = {
+            id: crypto.randomUUID(),
+            title,
+            formation: state.formation,
+            customNames: [...state.customNames],
+            customPositions: state.customPositions
+              ? state.customPositions.map(({ x, y }) => ({ x, y }))
+              : null,
+            benchCount: state.benchCount,
+          };
+
+          return {
+            savedSquads: [...state.savedSquads, savedSquad],
+          };
+        }),
+
+      updateSavedSquad: (id) =>
+        set((state) => {
+          const existing = state.savedSquads.find((squad) => squad.id === id);
+
+          if (!existing) {
+            return state;
+          }
+
+          return {
+            savedSquads: state.savedSquads.map((squad) =>
+              squad.id === id
+                ? {
+                    ...squad,
+                    formation: state.formation,
+                    customNames: [...state.customNames],
+                    customPositions: state.customPositions
+                      ? state.customPositions.map(({ x, y }) => ({ x, y }))
+                      : null,
+                    benchCount: state.benchCount,
+                  }
+                : squad,
+            ),
+          };
+        }),
+
+      loadSavedSquad: (id) =>
+        set((state) => {
+          const squad = state.savedSquads.find((squad) => squad.id === id);
+
+          if (!squad) {
+            return state;
+          }
+
+          return {
+            formation: squad.formation,
+            customNames: [...squad.customNames],
+            customPositions: squad.customPositions
+              ? squad.customPositions.map(({ x, y }) => ({ x, y }))
+              : null,
+            benchCount: squad.benchCount,
+            playerInteraction: { type: "idle" },
+          };
+        }),
+
+      deleteSavedSquad: (id) =>
+        set((state) => ({
+          savedSquads: state.savedSquads.filter((squad) => squad.id !== id),
+        })),
     }),
     {
       name: storageKey,
@@ -235,6 +312,7 @@ export const useTacticsState = create<State>()(
         benchCount: state.benchCount,
         colourScheme: state.colourScheme,
         dragDropEnabled: state.dragDropEnabled,
+        savedSquads: state.savedSquads,
       }),
       migrate: createDefaultPersistedState,
     },

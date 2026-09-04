@@ -1,5 +1,11 @@
 import type React from "react";
-import { MdClose, MdColorLens, MdFormatListNumbered } from "react-icons/md";
+import {
+  MdClose,
+  MdColorLens,
+  MdFolderOpen,
+  MdFormatListNumbered,
+  MdSave,
+} from "react-icons/md";
 import { TbFileExport } from "react-icons/tb";
 import { useTacticsState } from "../store/state";
 import { RiResetLeftFill } from "react-icons/ri";
@@ -28,6 +34,7 @@ const DrawerMenu = ({ open, setOpen }: Props) => {
     (state) => state.toggleColourScheme,
   );
   const toggleDragDrop = useTacticsState((state) => state.toggleDragDrop);
+  // const savedSquads = useTacticsState(state => state.savedSquads);
 
   const onClose = () => setOpen(false);
 
@@ -84,6 +91,20 @@ const DrawerMenu = ({ open, setOpen }: Props) => {
                   onClose();
                 }}
                 active={screen === "players"}
+              />
+
+              <Divider label="Squads" />
+
+              <MenuItem
+                icon={<MdSave />}
+                label="Save Current Squad"
+                onClick={() => {}}
+              />
+
+              <MenuItem
+                icon={<MdFolderOpen />}
+                label="Load Saved Squad"
+                onClick={() => {}}
               />
 
               <Divider label="Actions" />

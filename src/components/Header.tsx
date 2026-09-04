@@ -1,4 +1,9 @@
-import { MdFormatListNumbered, MdMenu } from "react-icons/md";
+import {
+  MdFolderOpen,
+  MdFormatListNumbered,
+  MdMenu,
+  MdSave,
+} from "react-icons/md";
 import { useTacticsState } from "../store/state";
 import logo from "../assets/addinghamfc.webp";
 import DrawerMenu from "./DrawerMenu";
@@ -6,6 +11,8 @@ import { useState } from "react";
 import { RiResetLeftFill } from "react-icons/ri";
 import { GiSoccerField } from "react-icons/gi";
 import IconButton from "./IconButton";
+import { CiExport, CiShare1 } from "react-icons/ci";
+import { exportPng, shareFormation } from "../utils";
 
 const Header = () => {
   const screen = useTacticsState((state) => state.screen);
@@ -35,7 +42,7 @@ const Header = () => {
             <IconButton
               label="Show pitch"
               onClick={() => setScreen("pitch")}
-              className="px-2.5 py-2"
+              className="p-1.5"
             >
               <GiSoccerField className="h-6 w-6" />
             </IconButton>
@@ -45,7 +52,7 @@ const Header = () => {
             <IconButton
               label="Edit player names"
               onClick={() => setScreen("players")}
-              className="px-2.5 py-2"
+              className="p-1.5"
             >
               <MdFormatListNumbered className="h-6 w-6" />
             </IconButton>
@@ -53,6 +60,32 @@ const Header = () => {
         </div>
 
         <div className="ml-auto flex items-center justify-center">
+          <IconButton
+            label="Save"
+            className="p-1.5"
+            onClick={() => {}}
+            disabled
+          >
+            <MdSave className="w-6 h-6" />
+          </IconButton>
+
+          <IconButton
+            label="Load"
+            className="p-1.5"
+            onClick={() => {}}
+            disabled
+          >
+            <MdFolderOpen className="w-6 h-6" />
+          </IconButton>
+
+          <IconButton label="Share" className="p-1.5" onClick={shareFormation}>
+            <CiShare1 className="w-6 h-6" />
+          </IconButton>
+
+          <IconButton label="Export" className="p-1.5" onClick={exportPng}>
+            <CiExport className="w-6 h-6" />
+          </IconButton>
+
           <IconButton
             label={resetLabel}
             onClick={() => {
@@ -63,7 +96,7 @@ const Header = () => {
 
               resetNames();
             }}
-            className="px-2.5 py-2"
+            className="p-1.5"
           >
             <RiResetLeftFill className="w-6 h-6" />
           </IconButton>
@@ -71,7 +104,7 @@ const Header = () => {
           <IconButton
             label="Open menu"
             onClick={() => setMenuOpen(true)}
-            className="px-2.5 py-2"
+            className="p-1.5"
           >
             <MdMenu className="h-6 w-6" />
           </IconButton>

@@ -8,9 +8,6 @@ import { useTacticsState } from "../store/state";
 import { useRef } from "react";
 import { formations, PITCH_COUNT } from "../data";
 import type { Formation } from "../types";
-import IconButton from "./IconButton";
-import { CiExport, CiShare1 } from "react-icons/ci";
-import { exportPng, shareFormation } from "../utils";
 
 const Pitch = () => {
   const dragDropEnabled = useTacticsState((state) => state.dragDropEnabled);
@@ -73,49 +70,29 @@ const Pitch = () => {
     >
       <div className="flex min-h-0 w-full flex-1 flex-col overflow-hidden">
         <main className="mx-auto flex w-full min-w-0 max-w-190 flex-1 flex-col items-center justify-center gap-1 px-3 py-3 sm:px-5">
-          <div className="flex flex-row w-full max-w-130 min-w-0 items-center px-4">
-            <div className="flex flex-row w-full items-center justify-center">
-              <IconButton
-                label="Share"
-                className="px-2 py-2"
-                onClick={shareFormation}
-              >
-                <CiShare1 className="w-6 h-6" />
-              </IconButton>
+          <div className="flex flex-row w-full max-w-130 min-w-0 items-center px-4 gap-8">
+            <input
+              id="squad-title"
+              type="text"
+              placeholder="Squad title"
+              maxLength={30}
+              className="border-b border-white/25 w-full min-w-0 p-1.5 outline-none text-md text-[#f1faf0] focus:border-[#c59154]"
+            />
 
-              <IconButton
-                label="Export"
-                className="px-2 py-2"
-                onClick={exportPng}
-              >
-                <CiExport className="w-6 h-6" />
-              </IconButton>
-
-              <input
-                id="squad-title"
-                type="text"
-                placeholder="Squad title"
-                maxLength={30}
-                className="border-b border-white/25 w-full min-w-0 px-2 py-2 outline-none text-md text-[#f1faf0] focus:border-[#c59154]"
-              />
-            </div>
-
-            <div className="flex w-full max-w-130 flex-col items-end gap-0.5">
-              <select
-                value={formation}
-                onChange={(event) =>
-                  changeFormation(event.target.value as Formation)
-                }
-                className="rounded-md text-center border border-white/25 bg-black/10 px-1.5 py-0.5 text-[13px] text-[#f1faf0] outline-none focus:border-[#e9c46a]"
-              >
-                {Object.keys(formations).map((name) => (
-                  <option key={name} value={name}>
-                    {name}
-                    {name === formation && custom ? "*" : ""}
-                  </option>
-                ))}
-              </select>
-            </div>
+            <select
+              value={formation}
+              onChange={(event) =>
+                changeFormation(event.target.value as Formation)
+              }
+              className="rounded-md text-center border border-white/25 bg-black/10 p-1.5 text-[13px] text-[#f1faf0] outline-none focus:border-[#e9c46a]"
+            >
+              {Object.keys(formations).map((name) => (
+                <option key={name} value={name}>
+                  {name}
+                  {name === formation && custom ? "*" : ""}
+                </option>
+              ))}
+            </select>
           </div>
 
           <div
