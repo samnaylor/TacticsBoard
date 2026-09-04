@@ -9,8 +9,8 @@ import { useRef } from "react";
 import { formations, PITCH_COUNT } from "../data";
 import type { Formation } from "../types";
 import IconButton from "./IconButton";
-import { CiExport } from "react-icons/ci";
-import { exportPng } from "../utils";
+import { CiExport, CiShare1 } from "react-icons/ci";
+import { exportPng, shareFormation } from "../utils";
 
 const Pitch = () => {
   const dragDropEnabled = useTacticsState((state) => state.dragDropEnabled);
@@ -74,10 +74,18 @@ const Pitch = () => {
       <div className="flex min-h-0 w-full flex-1 flex-col overflow-hidden">
         <main className="mx-auto flex w-full min-w-0 max-w-190 flex-1 flex-col items-center justify-center gap-1 px-3 py-3 sm:px-5">
           <div className="flex flex-row w-full max-w-130 min-w-0 items-center px-4">
-            <div className="flex flex-row w-full gap-0.5 items-center justify-center">
+            <div className="flex flex-row w-full items-center justify-center">
+              <IconButton
+                label="Share"
+                className="px-2 py-2"
+                onClick={shareFormation}
+              >
+                <CiShare1 className="w-6 h-6" />
+              </IconButton>
+
               <IconButton
                 label="Export"
-                className="px-2.5 py-2"
+                className="px-2 py-2"
                 onClick={exportPng}
               >
                 <CiExport className="w-6 h-6" />
@@ -88,7 +96,7 @@ const Pitch = () => {
                 type="text"
                 placeholder="Squad title"
                 maxLength={30}
-                className="border-b border-white/25 w-full min-w-0 px-1.5 py-0.5 outline-none text-md text-[#f1faf0] focus:border-[#c59154]"
+                className="border-b border-white/25 w-full min-w-0 px-2 py-2 outline-none text-md text-[#f1faf0] focus:border-[#c59154]"
               />
             </div>
 

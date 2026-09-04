@@ -10,7 +10,8 @@ import { AnimatePresence, motion } from "motion/react";
 import MenuItem from "./MenuItem";
 import IconButton from "./IconButton";
 import AppCredits from "./AppCredits";
-import { exportPng } from "../utils";
+import { exportPng, shareFormation } from "../utils";
+import { CiShare1 } from "react-icons/ci";
 
 interface Props {
   open: boolean;
@@ -91,6 +92,12 @@ const DrawerMenu = ({ open, setOpen }: Props) => {
                 icon={<TbFileExport />}
                 label="Export PNG"
                 onClick={exportPng}
+              />
+
+              <MenuItem
+                icon={<CiShare1 />}
+                label="Share Formation"
+                onClick={shareFormation}
               />
 
               <MenuItem

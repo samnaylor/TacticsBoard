@@ -8,9 +8,12 @@ import {
   type PersistedState,
 } from "./persistedState";
 import { deduplicatingStorage } from "./storage";
+import type { SharedState } from "./sharedState";
+import type { ToastItem } from "../components/Toast";
 
-interface State extends PersistedState {
+export interface State extends PersistedState {
   screen: Screen;
+  toasts: ToastItem[];
   playerInteraction: PlayerInteraction;
 
   renamePlayer: (slot: number, newName: string) => void;
@@ -37,6 +40,11 @@ interface State extends PersistedState {
   resetAll: () => void;
 
   setScreen: (screen: Screen) => void;
+
+  loadSharedState: (sharedState: SharedState) => void;
+
+  addToast: (message: string, duration: number) => void;
+  removeToast: (id: string) => void;
 }
 
 const storageKey = "tactics-save";
@@ -44,6 +52,7 @@ const storageKey = "tactics-save";
 export const createInitialState = () => ({
   ...createDefaultPersistedState(),
   screen: "pitch" as const,
+  toasts: [],
   playerInteraction: { type: "idle" } as const,
 });
 
@@ -192,6 +201,28 @@ export const useTacticsState = create<State>()(
 
       setScreen: (screen) =>
         set({ screen, playerInteraction: { type: "idle" } }),
+
+      loadSharedState: (sharedState) =>
+        set({
+          formation: sharedState.formation,
+          customNames: sharedState.customNames,
+          customPositions: sharedState.customPositions,
+          benchCount: sharedState.benchCount,
+          playerInteraction: { type: "idle" },
+        }),
+
+      addToast: (message, duration) =>
+        set((state) => {
+          const id = crypto.randomUUID();
+          const toasts = [...state.toasts, { id, message, duration }];
+
+          return { toasts };
+        }),
+
+      removeToast: (id) =>
+        set((state) => ({
+          toasts: state.toasts.filter((toast) => toast.id !== id),
+        })),
     }),
     {
       name: storageKey,
