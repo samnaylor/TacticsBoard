@@ -1,7 +1,9 @@
 import {
+  MdDownload,
   MdFolderOpen,
   MdFormatListNumbered,
   MdMenu,
+  MdOutlineIosShare,
   MdSave,
 } from "react-icons/md";
 import { useTacticsState } from "../store/state";
@@ -11,7 +13,6 @@ import { useState } from "react";
 import { RiResetLeftFill } from "react-icons/ri";
 import { GiSoccerField } from "react-icons/gi";
 import IconButton from "./IconButton";
-import { CiExport, CiShare1 } from "react-icons/ci";
 import { exportPng, shareFormation } from "../utils";
 
 const Header = () => {
@@ -79,11 +80,11 @@ const Header = () => {
           </IconButton>
 
           <IconButton label="Share" className="p-1.5" onClick={shareFormation}>
-            <CiShare1 className="w-6 h-6" />
+            <MdOutlineIosShare className="w-6 h-6" />
           </IconButton>
 
-          <IconButton label="Export" className="p-1.5" onClick={exportPng}>
-            <CiExport className="w-6 h-6" />
+          <IconButton label="Download" className="p-1.5" onClick={exportPng}>
+            <MdDownload className="w-6 h-6" />
           </IconButton>
 
           <IconButton

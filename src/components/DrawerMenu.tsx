@@ -2,11 +2,12 @@ import type React from "react";
 import {
   MdClose,
   MdColorLens,
+  MdDownload,
   MdFolderOpen,
   MdFormatListNumbered,
+  MdOutlineIosShare,
   MdSave,
 } from "react-icons/md";
-import { TbFileExport } from "react-icons/tb";
 import { useTacticsState } from "../store/state";
 import { RiResetLeftFill } from "react-icons/ri";
 import { GiSoccerField } from "react-icons/gi";
@@ -17,7 +18,6 @@ import MenuItem from "./MenuItem";
 import IconButton from "./IconButton";
 import AppCredits from "./AppCredits";
 import { exportPng, shareFormation } from "../utils";
-import { CiShare1 } from "react-icons/ci";
 
 interface Props {
   open: boolean;
@@ -112,13 +112,13 @@ const DrawerMenu = ({ open, setOpen }: Props) => {
               <Divider label="Actions" />
 
               <MenuItem
-                icon={<TbFileExport />}
-                label="Export PNG"
+                icon={<MdDownload />}
+                label="Download as PNG"
                 onClick={exportPng}
               />
 
               <MenuItem
-                icon={<CiShare1 />}
+                icon={<MdOutlineIosShare />}
                 label="Share Formation"
                 onClick={shareFormation}
               />
