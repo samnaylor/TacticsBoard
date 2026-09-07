@@ -2,6 +2,14 @@ import type { formations } from "./data";
 
 export type Screen = "pitch" | "players";
 
+export type SquadDialog = "load" | "new" | "save" | null;
+
+export interface ToastItem {
+  id: string;
+  message: string;
+  duration: number;
+}
+
 export type PlayerInteraction =
   | { type: "idle" }
   | { type: "selected"; slot: number }

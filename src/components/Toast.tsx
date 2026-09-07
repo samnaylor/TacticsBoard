@@ -1,35 +1,27 @@
 import { useEffect } from "react";
-import { HiOutlineClipboard } from "react-icons/hi";
 import IconButton from "./IconButton";
-import { MdClose } from "react-icons/md";
+import { MdClose, MdInfoOutline } from "react-icons/md";
+import type { ToastItem } from "../types";
 
-export interface ToastItem {
-  id: string;
-  message: string;
-  duration: number;
+interface ToastProps extends ToastItem {
+  onDismiss: (id: string) => void;
 }
 
-interface ToastProps {
-  message: string;
-  duration: number;
-  onDismiss: () => void;
-}
-
-const Toast = ({ message, duration, onDismiss }: ToastProps) => {
+const Toast = ({ id, message, duration, onDismiss }: ToastProps) => {
   useEffect(() => {
     const autoCloseTimer = setTimeout(() => {
-      onDismiss();
+      onDismiss(id);
     }, duration);
 
     return () => clearTimeout(autoCloseTimer);
-  }, [duration, onDismiss]);
+  }, [duration, id, onDismiss]);
 
   return (
     <div
       className="bg-black/85 flex items-center w-full p-4 text-body rounded-md shadow-xs border border-white/25"
       role="alert"
     >
-      <HiOutlineClipboard className="w-6 h-6" />
+      <MdInfoOutline className="h-6 w-6" />
 
       <div className="ms-2.5 text-sm border-s border-default ps-3.5 flex-1 wrap-break-word">
         {message}
@@ -39,7 +31,7 @@ const Toast = ({ message, duration, onDismiss }: ToastProps) => {
         label="Dismiss"
         variant="ghost"
         className="p-2 hover:text-white"
-        onClick={onDismiss}
+        onClick={() => onDismiss(id)}
       >
         <MdClose />
       </IconButton>

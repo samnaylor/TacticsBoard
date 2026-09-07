@@ -26,9 +26,10 @@ export const exportPng = async () => {
   });
 
   const link = document.createElement("a");
+  const state = useTacticsState.getState();
   const title =
-    (document.getElementById("squad-title") as HTMLInputElement).value ||
-    "football-squad";
+    state.savedSquads.find((squad) => squad.id === state.activeSquadId)
+      ?.title ?? "football-squad";
 
   link.download = `${title}.png`;
   link.href = dataUrl;

@@ -8,10 +8,12 @@ import { decodeSharedState } from "./utils";
 import Toast from "./components/Toast";
 import LoadSquadModal from "./components/LoadSquadModal";
 import EditPlayerModal from "./components/EditPlayerModal";
+import SaveSquadModal from "./components/SaveSquadModal";
+import NewSquadModal from "./components/NewSquadModal";
 
 const App = () => {
   const screen = useTacticsState((state) => state.screen);
-  const loading = useTacticsState((state) => state.loading);
+  const squadDialog = useTacticsState((state) => state.squadDialog);
   const editingPlayer = useTacticsState(
     (state) => state.playerInteraction.type === "editing",
   );
@@ -48,17 +50,14 @@ const App = () => {
       <div className="fixed bottom-10 left-1/2 -translate-x-1/2 z-100 flex flex-col gap-3 w-full max-w-sm pointer-events-none">
         {toasts.map((toast) => (
           <div key={toast.id} className="pointer-events-auto w-full">
-            <Toast
-              key={toast.id}
-              message={toast.message}
-              duration={toast.duration}
-              onDismiss={() => removeToast(toast.id)}
-            />
+            <Toast {...toast} onDismiss={removeToast} />
           </div>
         ))}
       </div>
 
-      {loading && <LoadSquadModal />}
+      {squadDialog === "load" && <LoadSquadModal />}
+      {squadDialog === "new" && <NewSquadModal />}
+      {squadDialog === "save" && <SaveSquadModal />}
       {editingPlayer && <EditPlayerModal />}
 
       <Footer />

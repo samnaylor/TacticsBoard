@@ -1,5 +1,6 @@
 import type React from "react";
 import {
+  MdAdd,
   MdClose,
   MdColorLens,
   MdDownload,
@@ -28,13 +29,17 @@ const DrawerMenu = ({ open, setOpen }: Props) => {
   const dragDropEnabled = useTacticsState((state) => state.dragDropEnabled);
   const colourScheme = useTacticsState((state) => state.colourScheme);
   const screen = useTacticsState((state) => state.screen);
-  const resetAll = useTacticsState((state) => state.resetAll);
+  const resetBoard = useTacticsState((state) => state.resetBoard);
   const setScreen = useTacticsState((state) => state.setScreen);
   const toggleColourScheme = useTacticsState(
     (state) => state.toggleColourScheme,
   );
   const toggleDragDrop = useTacticsState((state) => state.toggleDragDrop);
-  // const savedSquads = useTacticsState(state => state.savedSquads);
+  const requestNewSquad = useTacticsState((state) => state.requestNewSquad);
+  const requestSaveSquad = useTacticsState((state) => state.requestSaveSquad);
+  const openLoadSquadDialog = useTacticsState(
+    (state) => state.openLoadSquadDialog,
+  );
 
   const onClose = () => setOpen(false);
 
@@ -96,17 +101,30 @@ const DrawerMenu = ({ open, setOpen }: Props) => {
               <Divider label="Squads" />
 
               <MenuItem
+                icon={<MdAdd />}
+                label="Create New Squad"
+                onClick={() => {
+                  onClose();
+                  requestNewSquad();
+                }}
+              />
+
+              <MenuItem
                 icon={<MdSave />}
                 label="Save Current Squad"
-                onClick={() => {}}
-                disabled
+                onClick={() => {
+                  onClose();
+                  requestSaveSquad();
+                }}
               />
 
               <MenuItem
                 icon={<MdFolderOpen />}
                 label="Load Saved Squad"
-                onClick={() => {}}
-                disabled
+                onClick={() => {
+                  onClose();
+                  openLoadSquadDialog();
+                }}
               />
 
               <Divider label="Actions" />
@@ -125,9 +143,9 @@ const DrawerMenu = ({ open, setOpen }: Props) => {
 
               <MenuItem
                 icon={<RiResetLeftFill />}
-                label="Reset All"
+                label="Reset Board"
                 onClick={() => {
-                  resetAll();
+                  resetBoard();
                   onClose();
                 }}
               />

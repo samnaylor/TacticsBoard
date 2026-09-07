@@ -16,7 +16,7 @@ const PlayerEditor = () => {
         <Divider label="Starting XI" />
 
         {Array.from({ length: PITCH_COUNT }).map((_, slot) => (
-          <PlayerNameInput slot={slot} />
+          <PlayerNameInput key={slot} slot={slot} />
         ))}
 
         <Divider label="Bench" />

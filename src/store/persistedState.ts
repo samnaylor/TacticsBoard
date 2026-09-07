@@ -14,6 +14,7 @@ export interface PersistedState {
   dragDropEnabled: boolean;
 
   savedSquads: SavedSquad[];
+  activeSquadId: string | null;
 }
 
 export const createDefaultPersistedState = (): PersistedState => ({
@@ -24,4 +25,32 @@ export const createDefaultPersistedState = (): PersistedState => ({
   colourScheme: "home",
   dragDropEnabled: true,
   savedSquads: [],
+  activeSquadId: null,
 });
+
+export const migratePersistedState = (
+  persistedState: unknown,
+): PersistedState => {
+  const defaults = createDefaultPersistedState();
+
+  if (!persistedState || typeof persistedState !== "object") {
+    return defaults;
+  }
+
+  const stored = persistedState as Partial<PersistedState>;
+  const savedSquads = Array.isArray(stored.savedSquads)
+    ? stored.savedSquads
+    : defaults.savedSquads;
+  const activeSquadId =
+    typeof stored.activeSquadId === "string" &&
+    savedSquads.some((squad) => squad.id === stored.activeSquadId)
+      ? stored.activeSquadId
+      : null;
+
+  return {
+    ...defaults,
+    ...stored,
+    savedSquads,
+    activeSquadId,
+  };
+};

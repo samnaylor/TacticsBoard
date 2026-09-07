@@ -7,6 +7,16 @@ import { useTacticsState } from "../store/state";
 import { useRef } from "react";
 import { formations, PITCH_COUNT } from "../data";
 import type { Formation } from "../types";
+import {
+  MdAdd,
+  MdDownload,
+  MdFolderOpen,
+  MdOutlineIosShare,
+  MdSave,
+} from "react-icons/md";
+import { RiResetLeftFill } from "react-icons/ri";
+import IconButton from "./IconButton";
+import { exportPng, shareFormation } from "../utils";
 
 const Pitch = () => {
   const dragDropEnabled = useTacticsState((state) => state.dragDropEnabled);
@@ -21,6 +31,12 @@ const Pitch = () => {
   const clearPlayerInteraction = useTacticsState(
     (state) => state.clearPlayerInteraction,
   );
+  const requestNewSquad = useTacticsState((state) => state.requestNewSquad);
+  const requestSaveSquad = useTacticsState((state) => state.requestSaveSquad);
+  const openLoadSquadDialog = useTacticsState(
+    (state) => state.openLoadSquadDialog,
+  );
+  const resetLayout = useTacticsState((state) => state.resetLayout);
 
   const pitchRef = useRef<HTMLDivElement>(null);
   const restrictionRef = useRef<HTMLDivElement>(null);
@@ -67,21 +83,59 @@ const Pitch = () => {
     >
       <div className="flex min-h-0 w-full flex-1 flex-col overflow-hidden">
         <main className="mx-auto flex w-full min-w-0 max-w-190 flex-1 flex-col items-center justify-center gap-1 px-3 py-3 sm:px-5">
-          <div className="flex flex-row w-full max-w-130 min-w-0 items-center px-4 gap-8">
-            <input
-              id="squad-title"
-              type="text"
-              placeholder="Squad title"
-              maxLength={30}
-              className="border-b border-white/25 w-full min-w-0 p-1.5 outline-none text-md text-[#f1faf0] focus:border-[#c59154]"
-            />
+          <div className="flex w-full max-w-130 min-w-0 flex-wrap items-center justify-between gap-2 px-4">
+            <div className="flex shrink-0 items-center rounded-lg border border-white/15 bg-black/10 p-0.5">
+              <IconButton
+                label="Create new squad"
+                onClick={requestNewSquad}
+                className="p-1.5"
+              >
+                <MdAdd className="h-5 w-5" />
+              </IconButton>
+              <IconButton
+                label="Save squad"
+                onClick={requestSaveSquad}
+                className="p-1.5"
+              >
+                <MdSave className="h-5 w-5" />
+              </IconButton>
+              <IconButton
+                label="Load squad"
+                onClick={openLoadSquadDialog}
+                className="p-1.5"
+              >
+                <MdFolderOpen className="h-5 w-5" />
+              </IconButton>
+              <IconButton
+                label="Share formation"
+                onClick={shareFormation}
+                className="p-1.5"
+              >
+                <MdOutlineIosShare className="h-5 w-5" />
+              </IconButton>
+              <IconButton
+                label="Download as PNG"
+                onClick={exportPng}
+                className="p-1.5"
+              >
+                <MdDownload className="h-5 w-5" />
+              </IconButton>
+              <IconButton
+                label="Reset formation"
+                onClick={resetLayout}
+                className="p-1.5"
+              >
+                <RiResetLeftFill className="h-5 w-5" />
+              </IconButton>
+            </div>
 
             <select
               value={formation}
               onChange={(event) =>
                 changeFormation(event.target.value as Formation)
               }
-              className="rounded-md text-center border border-white/25 bg-black/10 p-1.5 text-[13px] text-[#f1faf0] outline-none focus:border-[#e9c46a]"
+              aria-label="Formation"
+              className="min-w-0 rounded-md border border-white/25 bg-black/10 p-1.5 text-center text-[13px] text-[#f1faf0] outline-none focus:border-[#e9c46a]"
             >
               {Object.keys(formations).map((name) => (
                 <option key={name} value={name}>

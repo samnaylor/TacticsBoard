@@ -1,9 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
-import { MdClose } from "react-icons/md";
 import { useTacticsState } from "../store/state";
-import IconButton from "./IconButton";
 import { playerLabel } from "../utils";
-import { motion } from "motion/react";
+import Modal from "./Modal";
 
 const EditPlayerModal = () => {
   const playerInteraction = useTacticsState((state) => state.playerInteraction);
@@ -19,33 +17,15 @@ const EditPlayerModal = () => {
   const [value, setValue] = useState(customName ?? playerLabel(editingPlayer));
 
   const inputRef = useRef<HTMLInputElement>(null);
-  const dialogRef = useRef<HTMLDialogElement>(null);
 
   useEffect(() => {
-    const dialog = dialogRef.current;
-
-    if (!dialog || dialog.open) {
-      return;
-    }
-
-    dialog.showModal();
-
-    requestAnimationFrame(() => {
+    const animationFrame = requestAnimationFrame(() => {
       inputRef.current?.focus();
       inputRef.current?.select();
     });
 
-    return () => {
-      if (dialog.open) {
-        dialog.close();
-      }
-    };
+    return () => cancelAnimationFrame(animationFrame);
   }, []);
-
-  const closeDialog = () => {
-    closePlayerEditor();
-    dialogRef.current?.close();
-  };
 
   const handleSubmit = (event: React.SubmitEvent) => {
     event.preventDefault();
@@ -53,45 +33,13 @@ const EditPlayerModal = () => {
     const trimmed = value.trim();
 
     changeName(editingPlayer, trimmed);
-    closeDialog();
-  };
-
-  const handleCancel = (event: React.SyntheticEvent<HTMLDialogElement>) => {
-    event.preventDefault();
-    closeDialog();
-  };
-
-  const handleBackdropClick = (event: React.MouseEvent<HTMLDialogElement>) => {
-    if (event.target === event.currentTarget) {
-      closeDialog();
-    }
+    closePlayerEditor();
   };
 
   return (
-    <motion.dialog
-      ref={dialogRef}
-      onCancel={handleCancel}
-      onClick={handleBackdropClick}
-      initial={{ opacity: 0, scale: 0.75 }}
-      animate={{ opacity: 1, scale: 1 }}
-      exit={{ opacity: 0, scale: 0.75 }}
-      transition={{ duration: 0.3 }}
-      className="m-auto w-[calc(100%-2rem)] max-w-sm rounded-2xl border border-white/10 bg-[#14261c] p-0 text-white shadow-2xl backdrop:bg-black/50 backdrop:backdrop-blur-[2px]"
-    >
-      <form onSubmit={handleSubmit} className="relative p-5">
-        <IconButton
-          label="Close"
-          onClick={closeDialog}
-          className="absolute right-4 top-4 p-1"
-          aria-label="Close"
-        >
-          <MdClose size={24} />
-        </IconButton>
-
-        <h2 className="mb-4 text-lg font-bold">Edit player name</h2>
-
+    <Modal title="Edit player name" onClose={closePlayerEditor}>
+      <form onSubmit={handleSubmit}>
         <input
-          autoFocus
           ref={inputRef}
           value={value}
           type="text"
@@ -103,7 +51,7 @@ const EditPlayerModal = () => {
         <div className="mt-4 flex justify-end gap-2">
           <button
             type="button"
-            onClick={closeDialog}
+            onClick={closePlayerEditor}
             className="rounded-lg px-4 py-2 text-sm font-semibold text-white/60 transition hover:bg-white/10 hover:text-white"
           >
             Cancel
@@ -118,7 +66,7 @@ const EditPlayerModal = () => {
           </button>
         </div>
       </form>
-    </motion.dialog>
+    </Modal>
   );
 };
 

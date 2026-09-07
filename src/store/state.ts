@@ -6,21 +6,27 @@ import type {
   PlayerInteraction,
   SavedSquad,
   Screen,
+  SquadDialog,
+  ToastItem,
 } from "../types";
 import {
   createDefaultPersistedState,
+  migratePersistedState,
   PERSISTENCE_VERSION,
   type PersistedState,
 } from "./persistedState";
 import { deduplicatingStorage } from "./storage";
 import type { SharedState } from "./sharedState";
-import type { ToastItem } from "../components/Toast";
+import {
+  copySquadContent,
+  hasSameSquadContent,
+  normaliseSquadTitle,
+} from "./squads";
 
 export interface State extends PersistedState {
   screen: Screen;
   toasts: ToastItem[];
-  loading: boolean;
-  loadedSquadId: string | null;
+  squadDialog: SquadDialog;
   playerInteraction: PlayerInteraction;
 
   renamePlayer: (slot: number, newName: string) => void;
@@ -44,7 +50,7 @@ export interface State extends PersistedState {
 
   resetNames: () => void;
   resetLayout: () => void;
-  resetAll: () => void;
+  resetBoard: () => void;
 
   setScreen: (screen: Screen) => void;
 
@@ -53,10 +59,13 @@ export interface State extends PersistedState {
   addToast: (message: string, duration: number) => void;
   removeToast: (id: string) => void;
 
-  setLoading: (value: boolean) => void;
-  setLoadedSquadId: (value: string | null) => void;
+  requestNewSquad: () => void;
+  createNewSquad: () => void;
+  requestSaveSquad: () => void;
+  openLoadSquadDialog: () => void;
+  closeSquadDialog: () => void;
   saveSquad: (title: string) => void;
-  updateSavedSquad: (id: string) => void;
+  updateActiveSquad: () => void;
   loadSavedSquad: (id: string) => void;
   deleteSavedSquad: (id: string) => void;
 }
@@ -67,8 +76,19 @@ export const createInitialState = () => ({
   ...createDefaultPersistedState(),
   screen: "pitch" as const,
   toasts: [],
-  loading: false,
-  loadedSquadId: null,
+  squadDialog: null,
+  playerInteraction: { type: "idle" } as const,
+});
+
+const addToast = (toasts: ToastItem[], message: string, duration = 2500) => [
+  ...toasts,
+  { id: crypto.randomUUID(), message, duration },
+];
+
+const createCleanSquadState = () => ({
+  ...copySquadContent(createDefaultPersistedState()),
+  activeSquadId: null,
+  squadDialog: null,
   playerInteraction: { type: "idle" } as const,
 });
 
@@ -213,78 +233,115 @@ export const useTacticsState = create<State>()(
 
       resetLayout: () => set({ customPositions: null }),
 
-      resetAll: () => set(createInitialState()),
+      resetBoard: () => set(() => createCleanSquadState()),
 
       setScreen: (screen) =>
         set({ screen, playerInteraction: { type: "idle" } }),
 
-      setLoading: (value) => set({ loading: value }),
-
-      setLoadedSquadId: (value) => set({ loadedSquadId: value }),
-
       loadSharedState: (sharedState) =>
         set({
           formation: sharedState.formation,
-          customNames: sharedState.customNames,
-          customPositions: sharedState.customPositions,
+          customNames: [...sharedState.customNames],
+          customPositions: sharedState.customPositions
+            ? sharedState.customPositions.map(({ x, y }) => ({ x, y }))
+            : null,
           benchCount: sharedState.benchCount,
+          activeSquadId: null,
           playerInteraction: { type: "idle" },
         }),
 
       addToast: (message, duration) =>
-        set((state) => {
-          const id = crypto.randomUUID();
-          const toasts = [...state.toasts, { id, message, duration }];
-
-          return { toasts };
-        }),
+        set((state) => ({
+          toasts: addToast(state.toasts, message, duration),
+        })),
 
       removeToast: (id) =>
         set((state) => ({
           toasts: state.toasts.filter((toast) => toast.id !== id),
         })),
 
+      requestNewSquad: () =>
+        set((state) => {
+          const activeSquad = state.savedSquads.find(
+            (squad) => squad.id === state.activeSquadId,
+          );
+          const comparisonSquad = activeSquad ?? createDefaultPersistedState();
+
+          if (!hasSameSquadContent(state, comparisonSquad)) {
+            return { squadDialog: "new" };
+          }
+
+          return { ...createCleanSquadState(), screen: "pitch" };
+        }),
+
+      createNewSquad: () =>
+        set({ ...createCleanSquadState(), screen: "pitch" }),
+
+      requestSaveSquad: () =>
+        set((state) => {
+          const activeSquad = state.savedSquads.find(
+            (squad) => squad.id === state.activeSquadId,
+          );
+
+          if (activeSquad && hasSameSquadContent(state, activeSquad)) {
+            return {
+              toasts: addToast(state.toasts, "No changes to save"),
+            };
+          }
+
+          return {
+            activeSquadId: activeSquad ? state.activeSquadId : null,
+            squadDialog: "save",
+          };
+        }),
+
+      openLoadSquadDialog: () => set({ squadDialog: "load" }),
+
+      closeSquadDialog: () => set({ squadDialog: null }),
+
       saveSquad: (title) =>
         set((state) => {
+          const trimmedTitle = normaliseSquadTitle(title);
+
+          if (!trimmedTitle) {
+            return state;
+          }
+
           const savedSquad: SavedSquad = {
             id: crypto.randomUUID(),
-            title,
-            formation: state.formation,
-            customNames: [...state.customNames],
-            customPositions: state.customPositions
-              ? state.customPositions.map(({ x, y }) => ({ x, y }))
-              : null,
-            benchCount: state.benchCount,
+            title: trimmedTitle,
+            ...copySquadContent(state),
           };
 
           return {
             savedSquads: [...state.savedSquads, savedSquad],
-            loadedSquadId: savedSquad.id,
+            activeSquadId: savedSquad.id,
+            squadDialog: null,
+            toasts: addToast(state.toasts, `Saved “${trimmedTitle}”`),
           };
         }),
 
-      updateSavedSquad: (id) =>
+      updateActiveSquad: () =>
         set((state) => {
-          const existing = state.savedSquads.find((squad) => squad.id === id);
+          const existing = state.savedSquads.find(
+            (squad) => squad.id === state.activeSquadId,
+          );
 
           if (!existing) {
-            return state;
+            return { activeSquadId: null, squadDialog: "save" };
           }
 
           return {
             savedSquads: state.savedSquads.map((squad) =>
-              squad.id === id
+              squad.id === existing.id
                 ? {
                     ...squad,
-                    formation: state.formation,
-                    customNames: [...state.customNames],
-                    customPositions: state.customPositions
-                      ? state.customPositions.map(({ x, y }) => ({ x, y }))
-                      : null,
-                    benchCount: state.benchCount,
+                    ...copySquadContent(state),
                   }
                 : squad,
             ),
+            squadDialog: null,
+            toasts: addToast(state.toasts, `Updated “${existing.title}”`),
           };
         }),
 
@@ -297,21 +354,29 @@ export const useTacticsState = create<State>()(
           }
 
           return {
-            formation: squad.formation,
-            loadedSquadId: squad.id,
-            customNames: [...squad.customNames],
-            customPositions: squad.customPositions
-              ? squad.customPositions.map(({ x, y }) => ({ x, y }))
-              : null,
-            benchCount: squad.benchCount,
+            ...copySquadContent(squad),
+            activeSquadId: squad.id,
+            squadDialog: null,
             playerInteraction: { type: "idle" },
+            toasts: addToast(state.toasts, `Loaded “${squad.title}”`),
           };
         }),
 
       deleteSavedSquad: (id) =>
-        set((state) => ({
-          savedSquads: state.savedSquads.filter((squad) => squad.id !== id),
-        })),
+        set((state) => {
+          const squad = state.savedSquads.find((squad) => squad.id === id);
+
+          if (!squad) {
+            return state;
+          }
+
+          return {
+            savedSquads: state.savedSquads.filter((squad) => squad.id !== id),
+            activeSquadId:
+              state.activeSquadId === id ? null : state.activeSquadId,
+            toasts: addToast(state.toasts, `Deleted “${squad.title}”`),
+          };
+        }),
     }),
     {
       name: storageKey,
@@ -325,8 +390,9 @@ export const useTacticsState = create<State>()(
         colourScheme: state.colourScheme,
         dragDropEnabled: state.dragDropEnabled,
         savedSquads: state.savedSquads,
+        activeSquadId: state.activeSquadId,
       }),
-      migrate: createDefaultPersistedState,
+      migrate: migratePersistedState,
     },
   ),
 );

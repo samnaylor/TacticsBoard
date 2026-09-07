@@ -1,34 +1,16 @@
-import {
-  MdDownload,
-  MdFolderOpen,
-  MdFormatListNumbered,
-  MdMenu,
-  MdOutlineIosShare,
-  MdSave,
-} from "react-icons/md";
+import { MdFormatListNumbered, MdMenu } from "react-icons/md";
 import { useTacticsState } from "../store/state";
 import logo from "../assets/addinghamfc.webp";
 import DrawerMenu from "./DrawerMenu";
 import { useState } from "react";
-import { RiResetLeftFill } from "react-icons/ri";
 import { GiSoccerField } from "react-icons/gi";
 import IconButton from "./IconButton";
-import { exportPng, shareFormation } from "../utils";
 
 const Header = () => {
   const screen = useTacticsState((state) => state.screen);
-  const resetNames = useTacticsState((state) => state.resetNames);
-  const resetLayout = useTacticsState((state) => state.resetLayout);
   const setScreen = useTacticsState((state) => state.setScreen);
-  const setLoading = useTacticsState((state) => state.setLoading);
-  const loadedSquadId = useTacticsState((state) => state.loadedSquadId);
-  const saveSquad = useTacticsState((state) => state.saveSquad);
-  const updateSavedSquad = useTacticsState((state) => state.updateSavedSquad);
 
   const [menuOpen, setMenuOpen] = useState(false);
-
-  const resetLabel =
-    screen === "pitch" ? "Reset formation" : "Reset player names";
 
   return (
     <header className="sticky top-0 z-50 border-b border-white/10 bg-[#0d1b14]/95 px-3 py-3 backdrop-blur">
@@ -65,60 +47,6 @@ const Header = () => {
         </div>
 
         <div className="ml-auto flex items-center justify-center">
-          <IconButton
-            label="Save"
-            className="p-1.5 hidden md:block"
-            onClick={() => {
-              if (!loadedSquadId) {
-                saveSquad("test");
-                return;
-              }
-
-              updateSavedSquad(loadedSquadId);
-            }}
-          >
-            <MdSave className="w-6 h-6" />
-          </IconButton>
-
-          <IconButton
-            label="Load"
-            className="p-1.5 hidden md:block"
-            onClick={() => setLoading(true)}
-          >
-            <MdFolderOpen className="w-6 h-6" />
-          </IconButton>
-
-          <IconButton
-            label="Share"
-            className="p-1.5 hidden md:block"
-            onClick={shareFormation}
-          >
-            <MdOutlineIosShare className="w-6 h-6" />
-          </IconButton>
-
-          <IconButton
-            label="Download"
-            className="p-1.5 hidden md:block"
-            onClick={exportPng}
-          >
-            <MdDownload className="w-6 h-6" />
-          </IconButton>
-
-          <IconButton
-            label={resetLabel}
-            onClick={() => {
-              if (screen === "pitch") {
-                resetLayout();
-                return;
-              }
-
-              resetNames();
-            }}
-            className="p-1.5"
-          >
-            <RiResetLeftFill className="w-6 h-6" />
-          </IconButton>
-
           <IconButton
             label="Open menu"
             onClick={() => setMenuOpen(true)}
