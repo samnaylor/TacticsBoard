@@ -3,7 +3,6 @@ import Bench from "./Bench";
 import PitchMarkings from "./PitchMarkings";
 import Player from "./Player";
 import logo from "../assets/addinghamfc.webp";
-import EditPlayerModal from "./EditPlayerModal";
 import { useTacticsState } from "../store/state";
 import { useRef } from "react";
 import { formations, PITCH_COUNT } from "../data";
@@ -13,9 +12,7 @@ const Pitch = () => {
   const dragDropEnabled = useTacticsState((state) => state.dragDropEnabled);
   const formation = useTacticsState((state) => state.formation);
   const customPositions = useTacticsState((state) => state.customPositions);
-  const editingPlayer = useTacticsState(
-    (state) => state.playerInteraction.type === "editing",
-  );
+
   const swapNames = useTacticsState((state) => state.swapNames);
   const changeFormation = useTacticsState((state) => state.changeFormation);
   const movePlayerPosition = useTacticsState(
@@ -140,8 +137,6 @@ const Pitch = () => {
           </div>
         </main>
       </div>
-
-      {editingPlayer && <EditPlayerModal />}
     </DragDropProvider>
   );
 };

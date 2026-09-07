@@ -20,6 +20,10 @@ const Header = () => {
   const resetNames = useTacticsState((state) => state.resetNames);
   const resetLayout = useTacticsState((state) => state.resetLayout);
   const setScreen = useTacticsState((state) => state.setScreen);
+  const setLoading = useTacticsState((state) => state.setLoading);
+  const loadedSquadId = useTacticsState((state) => state.loadedSquadId);
+  const saveSquad = useTacticsState((state) => state.saveSquad);
+  const updateSavedSquad = useTacticsState((state) => state.updateSavedSquad);
 
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -63,27 +67,40 @@ const Header = () => {
         <div className="ml-auto flex items-center justify-center">
           <IconButton
             label="Save"
-            className="p-1.5"
-            onClick={() => {}}
-            disabled
+            className="p-1.5 hidden md:block"
+            onClick={() => {
+              if (!loadedSquadId) {
+                saveSquad("test");
+                return;
+              }
+
+              updateSavedSquad(loadedSquadId);
+            }}
           >
             <MdSave className="w-6 h-6" />
           </IconButton>
 
           <IconButton
             label="Load"
-            className="p-1.5"
-            onClick={() => {}}
-            disabled
+            className="p-1.5 hidden md:block"
+            onClick={() => setLoading(true)}
           >
             <MdFolderOpen className="w-6 h-6" />
           </IconButton>
 
-          <IconButton label="Share" className="p-1.5" onClick={shareFormation}>
+          <IconButton
+            label="Share"
+            className="p-1.5 hidden md:block"
+            onClick={shareFormation}
+          >
             <MdOutlineIosShare className="w-6 h-6" />
           </IconButton>
 
-          <IconButton label="Download" className="p-1.5" onClick={exportPng}>
+          <IconButton
+            label="Download"
+            className="p-1.5 hidden md:block"
+            onClick={exportPng}
+          >
             <MdDownload className="w-6 h-6" />
           </IconButton>
 

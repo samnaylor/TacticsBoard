@@ -6,9 +6,15 @@ import { useTacticsState } from "./store/state";
 import { useEffect } from "react";
 import { decodeSharedState } from "./utils";
 import Toast from "./components/Toast";
+import LoadSquadModal from "./components/LoadSquadModal";
+import EditPlayerModal from "./components/EditPlayerModal";
 
 const App = () => {
   const screen = useTacticsState((state) => state.screen);
+  const loading = useTacticsState((state) => state.loading);
+  const editingPlayer = useTacticsState(
+    (state) => state.playerInteraction.type === "editing",
+  );
   const toasts = useTacticsState((state) => state.toasts);
   const removeToast = useTacticsState((state) => state.removeToast);
 
@@ -51,6 +57,9 @@ const App = () => {
           </div>
         ))}
       </div>
+
+      {loading && <LoadSquadModal />}
+      {editingPlayer && <EditPlayerModal />}
 
       <Footer />
     </div>

@@ -3,6 +3,7 @@ import { MdClose } from "react-icons/md";
 import { useTacticsState } from "../store/state";
 import IconButton from "./IconButton";
 import { playerLabel } from "../utils";
+import { motion } from "motion/react";
 
 const EditPlayerModal = () => {
   const playerInteraction = useTacticsState((state) => state.playerInteraction);
@@ -67,10 +68,14 @@ const EditPlayerModal = () => {
   };
 
   return (
-    <dialog
+    <motion.dialog
       ref={dialogRef}
       onCancel={handleCancel}
       onClick={handleBackdropClick}
+      initial={{ opacity: 0, scale: 0.75 }}
+      animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.75 }}
+      transition={{ duration: 0.3 }}
       className="m-auto w-[calc(100%-2rem)] max-w-sm rounded-2xl border border-white/10 bg-[#14261c] p-0 text-white shadow-2xl backdrop:bg-black/50 backdrop:backdrop-blur-[2px]"
     >
       <form onSubmit={handleSubmit} className="relative p-5">
@@ -113,7 +118,7 @@ const EditPlayerModal = () => {
           </button>
         </div>
       </form>
-    </dialog>
+    </motion.dialog>
   );
 };
 

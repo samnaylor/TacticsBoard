@@ -19,6 +19,8 @@ import type { ToastItem } from "../components/Toast";
 export interface State extends PersistedState {
   screen: Screen;
   toasts: ToastItem[];
+  loading: boolean;
+  loadedSquadId: string | null;
   playerInteraction: PlayerInteraction;
 
   renamePlayer: (slot: number, newName: string) => void;
@@ -51,6 +53,8 @@ export interface State extends PersistedState {
   addToast: (message: string, duration: number) => void;
   removeToast: (id: string) => void;
 
+  setLoading: (value: boolean) => void;
+  setLoadedSquadId: (value: string | null) => void;
   saveSquad: (title: string) => void;
   updateSavedSquad: (id: string) => void;
   loadSavedSquad: (id: string) => void;
@@ -63,6 +67,8 @@ export const createInitialState = () => ({
   ...createDefaultPersistedState(),
   screen: "pitch" as const,
   toasts: [],
+  loading: false,
+  loadedSquadId: null,
   playerInteraction: { type: "idle" } as const,
 });
 
@@ -212,6 +218,10 @@ export const useTacticsState = create<State>()(
       setScreen: (screen) =>
         set({ screen, playerInteraction: { type: "idle" } }),
 
+      setLoading: (value) => set({ loading: value }),
+
+      setLoadedSquadId: (value) => set({ loadedSquadId: value }),
+
       loadSharedState: (sharedState) =>
         set({
           formation: sharedState.formation,
@@ -249,6 +259,7 @@ export const useTacticsState = create<State>()(
 
           return {
             savedSquads: [...state.savedSquads, savedSquad],
+            loadedSquadId: savedSquad.id,
           };
         }),
 
@@ -287,6 +298,7 @@ export const useTacticsState = create<State>()(
 
           return {
             formation: squad.formation,
+            loadedSquadId: squad.id,
             customNames: [...squad.customNames],
             customPositions: squad.customPositions
               ? squad.customPositions.map(({ x, y }) => ({ x, y }))
