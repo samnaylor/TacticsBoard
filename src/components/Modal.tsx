@@ -50,7 +50,7 @@ const Modal = ({ title, onClose, children }: Props) => {
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.75 }}
       transition={{ duration: 0.2 }}
-      className="m-auto w-[calc(100%-2rem)] max-w-sm rounded-2xl border border-white/10 bg-[#14261c] p-0 text-white shadow-2xl backdrop:bg-black/50 backdrop:backdrop-blur-[2px]"
+      className="m-auto w-[calc(100%-2rem)] max-w-sm rounded-2xl border border-white/25 bg-[#14261c] p-0 text-white shadow-2xl backdrop:bg-black/50 backdrop:backdrop-blur-xs"
     >
       <div className="relative p-5">
         <IconButton

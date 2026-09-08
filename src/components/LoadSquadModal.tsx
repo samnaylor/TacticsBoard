@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { MdCheck, MdDeleteOutline } from "react-icons/md";
+import { MdDeleteOutline } from "react-icons/md";
 import { PITCH_COUNT } from "../data";
 import { useTacticsState } from "../store/state";
 import IconButton from "./IconButton";
@@ -36,7 +36,7 @@ const LoadSquadModal = () => {
             return (
               <li
                 key={squad.id}
-                className="flex items-center gap-1 rounded-xl border border-white/10 bg-black/10 p-1 transition hover:border-white/20 hover:bg-white/[0.04]"
+                className="flex items-center gap-1 rounded-xl border border-white/10 bg-black/10 p-1 transition hover:border-white/20 hover:bg-white/4"
               >
                 <button
                   type="button"
@@ -48,9 +48,7 @@ const LoadSquadModal = () => {
                       {squad.title}
                     </span>
                     {isActive && (
-                      <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-emerald-300/15 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-emerald-200">
-                        <MdCheck aria-hidden="true" /> Current
-                      </span>
+                      <span className="shrink-0 items-center rounded-full bg-emerald-200/50 p-1 text-[10px] font-bold" />
                     )}
                   </span>
                   <span className="mt-1 block text-xs text-white/45">
@@ -72,7 +70,7 @@ const LoadSquadModal = () => {
       )}
 
       {deletingSquad && (
-        <div className="mt-4 rounded-xl border border-red-300/20 bg-red-300/[0.06] p-3">
+        <div className="mt-4 rounded-xl border border-red-300/20 bg-red-300/6 p-3">
           <p className="text-sm text-white/75">
             Delete “{deletingSquad.title}”? This cannot be undone.
           </p>
