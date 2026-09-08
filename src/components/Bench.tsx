@@ -2,6 +2,7 @@ import Player from "./Player";
 import { useTacticsState } from "../store/state";
 import IconButton from "./IconButton";
 import { MAX_BENCH_COUNT, PITCH_COUNT } from "../data";
+import Divider from "./Divider";
 
 interface BenchProps {
   restrictionRef: React.RefObject<HTMLDivElement | null>;
@@ -16,12 +17,12 @@ const Bench = ({ restrictionRef }: BenchProps) => {
     <section className="w-full">
       <div className="mb-2 flex items-end justify-between px-1">
         <div className="w-full">
-          <div className="flex w-full items-center justify-between">
-            <h2 className="text-base font-bold tracking-tight">Bench</h2>
+          <div className="flex w-full items-center">
+            <Divider label="Bench" fontSize={12} />
 
             <div
               data-export-ignore
-              className="flex items-center justify-center bg-black/10 border border-white/50 rounded"
+              className="flex items-center justify-center bg-black/10 border border-white/50 rounded ml-6"
             >
               <IconButton
                 label="Add substitute"

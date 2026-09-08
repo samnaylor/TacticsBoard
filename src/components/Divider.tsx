@@ -1,13 +1,17 @@
 interface DividerProps {
   label: string;
+  fontSize?: number;
 }
 
-const Divider = ({ label }: DividerProps) => {
+const Divider = ({ label, fontSize = 10 }: DividerProps) => {
   return (
-    <div className="py-2 flex items-center gap-3">
+    <div className="py-2 px-4 flex flex-1 items-center gap-3">
       <div className="w-6 h-px bg-white/40" />
       <span
-        className={`text-[10px] font-medium uppercase tracking-wider text-white/50`}
+        className={`font-medium uppercase tracking-wider text-white/50`}
+        style={{
+          fontSize,
+        }}
       >
         {label}
       </span>
