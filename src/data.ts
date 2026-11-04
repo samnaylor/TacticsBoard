@@ -107,12 +107,26 @@ export const formation_3142: FormationSlot[] = [
   { x: 50, y: 80, number: 1 }, // GK
   { x: 25, y: 67, number: 4 }, // CB
   { x: 50, y: 67, number: 5 }, // CB
-  { x: 75, y: 67, number: 6 }, // CB
+  { x: 75, y: 67, number: 2 }, // CB
   { x: 15, y: 45, number: 3 }, // LWB
-  { x: 85, y: 45, number: 2 }, // RWB
+  { x: 85, y: 45, number: 7 }, // RWB
   { x: 35, y: 45, number: 8 }, // CM
-  { x: 65, y: 45, number: 7 }, // CM
-  { x: 50, y: 55, number: 10 }, // DM
+  { x: 65, y: 45, number: 10 }, // CM
+  { x: 50, y: 55, number: 6 }, // DM
+  { x: 38, y: 20, number: 11 }, // ST
+  { x: 62, y: 20, number: 9 }, // ST
+];
+
+export const formation_3412: FormationSlot[] = [
+  { x: 50, y: 80, number: 1 }, // GK
+  { x: 25, y: 62, number: 4 }, // CB
+  { x: 50, y: 62, number: 5 }, // CB
+  { x: 75, y: 62, number: 2 }, // CB
+  { x: 15, y: 45, number: 3 }, // LWB
+  { x: 85, y: 45, number: 7 }, // RWB
+  { x: 35, y: 45, number: 8 }, // CM
+  { x: 65, y: 45, number: 6 }, // CM
+  { x: 50, y: 35, number: 10 }, // AM
   { x: 38, y: 20, number: 11 }, // ST
   { x: 62, y: 20, number: 9 }, // ST
 ];
@@ -125,6 +139,7 @@ const unorderedFormations: Record<string, FormationSlot[]> = {
   "4-3-3 (DM)": formation_433_DM,
   "4-3-3 (AM)": formation_433_AM,
   "4-2-4": formation_424,
+  "3-4-1-2": formation_3412,
 };
 
 export const formations = Object.keys(unorderedFormations)
